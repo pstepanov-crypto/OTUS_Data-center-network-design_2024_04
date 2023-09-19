@@ -4,3 +4,4 @@
 
  - Собрать схему CLOS;
  - Распределить адресное пространство.
+Homework/01/images/topology.jpeg
