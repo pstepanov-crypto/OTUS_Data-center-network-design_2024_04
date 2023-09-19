@@ -9,11 +9,12 @@
 
 ### Собранная схема сети
 
-![](https://github.com/MaxoBuk/OTUS_Data-center-network-design/blob/main/Homework/01/images/topology.jpeg)
+![](https://github.com/MaxoBuk/OTUS_Data-center-network-design/blob/main/Homework/01_work/images/topology.jpeg)
 
 ---
 
 ### Таблица адресов
+
 
 | hostname | interface |   IP/MASK   |
 | :------: | :-------: | :----------: |
@@ -40,23 +41,33 @@
 | spine-2 |  eth 1/3  | 10.4.2.2/31 |
 
 ### Конфигурация оборудования
- - #### leaf-1
+
+- #### leaf-1
+
 ```
 config
 ```
- - #### leaf-2
+
+- #### leaf-2
+
 ```
 config
 ```
- - #### leaf-3
+
+- #### leaf-3
+
 ```
 config
 ```
- - #### spine-1
+
+- #### spine-1
+
 ```
 config
 ```
- - #### spine-2
+
+- #### spine-2
+
 ```
 config
 ```
