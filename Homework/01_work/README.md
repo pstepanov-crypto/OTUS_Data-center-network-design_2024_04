@@ -9,7 +9,7 @@
 
 ### Собранная схема сети
 
-![](MaxoBuk/OTUS_Data-center-network-design/Homework/01_work/images/CLOS.png)
+![](https://github.com/MaxoBuk/OTUS_Data-center-network-design/blob/main/Homework/01_work/images/CLOS.png)
 
 ---
 
