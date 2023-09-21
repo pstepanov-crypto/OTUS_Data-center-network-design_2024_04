@@ -9,7 +9,7 @@
 
 ### Собранная схема сети
 
-![](Homework/01_work/images/topology.jpeg)
+![](Homework/01_work/images/CLOS.jpg)
 
 ---
 
