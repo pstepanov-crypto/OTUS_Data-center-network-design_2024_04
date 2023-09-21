@@ -11,7 +11,6 @@
 
 ![](https://github.com/MaxoBuk/OTUS_Data-center-network-design/blob/main/Homework/01_work/images/CLOS.png)
 
----
 
 ### Таблица адресов
 
