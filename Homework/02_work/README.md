@@ -11,6 +11,7 @@
 
 ![](https://github.com/MaxoBuk/OTUS_Data-center-network-design/blob/main/Homework/02_work/images/Underlay_OSPF.png)
 
+
 ### Конфигурация оборудования
 
 - #### [leaf-1](Homework/02_work/conf/leaf-1.conf)
