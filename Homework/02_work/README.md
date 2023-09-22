@@ -9,7 +9,7 @@
 
 ### Схема сети
 
-![](https://github.com/MaxoBuk/OTUS_Data-center-network-design/blob/main/Homework/02_work/images/Underlay_OSPF.png)
+![](https://github.com/MaxoBuk/OTUS_Data-center-network-design/blob/main/Homework/02_work/images/Underlay OSPF.png)
 
 ### Конфигурация оборудования
 
