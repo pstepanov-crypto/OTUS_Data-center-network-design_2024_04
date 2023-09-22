@@ -14,7 +14,7 @@
 
 ### Конфигурация оборудования
 
-- #### leaf-1
+- #### [leaf-1](Homework/02_work/conf/leaf-1.conf)
 
 ```
 feature ospf
@@ -60,7 +60,7 @@ interface loopback2
   ip router ospf Underlay area 0.0.0.0
 ```
 
-- #### leaf-2
+- #### [leaf-2](Homework/02_work/conf/leaf-2.conf)
 
 ```
 feature ospf
@@ -106,7 +106,7 @@ interface loopback2
   ip router ospf Underlay area 0.0.0.0
 ```
 
-- #### leaf-3
+- #### [leaf-3](Homework/02_work/conf/leaf-3.conf)
 
 ```
 feature ospf
@@ -152,7 +152,7 @@ interface loopback2
   ip router ospf Underlay area 0.0.0.0
 ```
 
-- #### spine-1
+- #### [spine-1](Homework/02_work/conf/spine-1.conf)
 
 ```
 feature ospf
@@ -213,7 +213,7 @@ interface loopback1
   ip router ospf Underlay area 0.0.0.0
 ```
 
-- #### spine-2
+- #### [spine-2](Homework/02_work/conf/spine-2.conf)
 
 ```
 feature ospf
@@ -274,7 +274,7 @@ interface loopback1
   ip router ospf Underlay area 0.0.0.0
 ```
 ---
-### Проверка настроек
+### Проверка связанности по протоколу OSPF
 
 - #### spine-1
 
