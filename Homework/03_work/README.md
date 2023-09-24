@@ -15,7 +15,7 @@
 
 ### Конфигурация оборудования
 
-- #### [leaf-1](conf/leaf-1.conf)
+- #### [leaf-1](config/leaf-1.conf)
 
 ```
 feature isis
@@ -71,7 +71,7 @@ router isis Underlay
   passive-interface default level-1
 ```
 
-- #### [leaf-2](conf/leaf-2.conf)
+- #### [leaf-2](config/leaf-2.conf)
 
 ```
 feature isis
@@ -127,7 +127,7 @@ router isis Underlay
   passive-interface default level-1
 ```
 
-- #### [leaf-3](conf/leaf-3.conf)
+- #### [leaf-3](config/leaf-3.conf)
 
 ```
 feature isis
@@ -183,7 +183,7 @@ router isis Underlay
   passive-interface default level-1
 ```
 
-- #### [spine-1](conf/spine-1.conf)
+- #### [spine-1](config/spine-1.conf)
 
 ```
 feature isis
@@ -258,7 +258,7 @@ router isis Underlay
   passive-interface default level-1
 ```
 
-- #### [spine-2](conf/spine-2.conf)
+- #### [spine-2](config/spine-2.conf)
 
 ```
 feature isis
