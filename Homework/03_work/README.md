@@ -38,6 +38,7 @@ interface Ethernet1/1
   no ip redirects
   ip address 10.4.1.1/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine1leaf1
@@ -53,6 +54,7 @@ interface Ethernet1/2
   no ip redirects
   ip address 10.4.2.1/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine2leaf1
@@ -94,6 +96,7 @@ interface Ethernet1/1
   no ip redirects
   ip address 10.4.1.3/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine1leaf2
@@ -109,6 +112,7 @@ interface Ethernet1/2
   no ip redirects
   ip address 10.4.2.3/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine2leaf2
@@ -150,6 +154,7 @@ interface Ethernet1/1
   no ip redirects
   ip address 10.4.1.5/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine1leaf3
@@ -165,6 +170,7 @@ interface Ethernet1/2
   no ip redirects
   ip address 10.4.2.5/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine2leaf3
@@ -210,6 +216,7 @@ interface Ethernet1/1
   no ip redirects
   ip address 10.4.1.0/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine1leaf1
@@ -225,6 +232,7 @@ interface Ethernet1/2
   no ip redirects
   ip address 10.4.1.2/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine1leaf2
@@ -240,6 +248,7 @@ interface Ethernet1/3
   no ip redirects
   ip address 10.4.1.4/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine1leaf3
@@ -285,6 +294,7 @@ interface Ethernet1/1
   no ip redirects
   ip address 10.4.2.0/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine2leaf1
@@ -300,6 +310,7 @@ interface Ethernet1/2
   no ip redirects
   ip address 10.4.2.2/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine2leaf2
@@ -315,6 +326,7 @@ interface Ethernet1/3
   no ip redirects
   ip address 10.4.2.4/31
   no isis hello-padding
+  isis network point-to-point
   isis circuit-type level-1
   isis authentication-type md5 level-1
   isis authentication key-chain spine2leaf3
