@@ -11,11 +11,11 @@
 
 ### Схема сети
 
-![](https://github.com/MaxoBuk/OTUS_Data-center-network-design/blob/main/Homework/03_work/images/Underlay_ISIS.png)
+![](images/Underlay_ISIS.png)
 
 ### Конфигурация оборудования
 
-- #### [leaf-1](Homework/03_work/conf/leaf-1.conf)
+- #### [leaf-1](conf/leaf-1.conf)
 
 ```
 feature isis
@@ -71,7 +71,7 @@ router isis Underlay
   passive-interface default level-1
 ```
 
-- #### [leaf-2](Homework/03_work/conf/leaf-2.conf)
+- #### [leaf-2](conf/leaf-2.conf)
 
 ```
 feature isis
@@ -127,7 +127,7 @@ router isis Underlay
   passive-interface default level-1
 ```
 
-- #### [leaf-3](Homework/03_work/conf/leaf-3.conf)
+- #### [leaf-3](conf/leaf-3.conf)
 
 ```
 feature isis
@@ -183,7 +183,7 @@ router isis Underlay
   passive-interface default level-1
 ```
 
-- #### [spine-1](Homework/03_work/conf/spine-1.conf)
+- #### [spine-1](conf/spine-1.conf)
 
 ```
 feature isis
@@ -258,7 +258,7 @@ router isis Underlay
   passive-interface default level-1
 ```
 
-- #### [spine-2](Homework/03_work/conf/spine-2.conf)
+- #### [spine-2](conf/spine-2.conf)
 
 ```
 feature isis
