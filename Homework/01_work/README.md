@@ -10,7 +10,7 @@
 
 ### Собранная схема сети
 
-![](https://github.com/MaxoBuk/OTUS_Data-center-network-design/blob/main/Homework/01_work/images/CLOS.png)
+![](images/CLOS.png)
 
 
 ### Таблица адресов
@@ -41,7 +41,7 @@
 
 ### Конфигурация оборудования
 
-- #### [leaf-1](Homework/01_work/conf/leaf-1.conf)
+- #### [leaf-1](config/leaf-1.conf)
 
 ```
 hostname leaf-1
@@ -62,7 +62,7 @@ interface loopback2
   ip address 10.1.0.1/32
 ```
 
-- #### [leaf-2](Homework/01_work/conf/leaf-2.conf)
+- #### [leaf-2](config/leaf-2.conf)
 
 ```
 hostname leaf-2
@@ -83,7 +83,7 @@ interface loopback2
   ip address 10.1.0.2/32
 ```
 
-- #### [leaf-3](Homework/01_work/conf/leaf-3.conf)
+- #### [leaf-3](config/leaf-3.conf)
 
 ```
 hostname leaf-3
@@ -104,7 +104,7 @@ interface loopback2
   ip address 10.1.0.3/32
 ```
 
-- #### [spine-1](Homework/01_work/conf/spine-1.conf)
+- #### [spine-1](config/spine-1.conf)
 
 ```
 hostname spine-1
@@ -131,7 +131,7 @@ interface loopback1
   ip address 10.1.1.0/32
 ```
 
-- #### [spine-2](Homework/01_work/conf/spine-2.conf)
+- #### [spine-2](config/spine-2.conf)
 
 ```
 hostname spine-2

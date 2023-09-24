@@ -10,12 +10,12 @@
 
 ### Схема сети
 
-![](https://github.com/MaxoBuk/OTUS_Data-center-network-design/blob/main/Homework/02_work/images/Underlay_OSPF.png)
+![](images/Underlay_OSPF.png)
 
 
 ### Конфигурация оборудования
 
-- #### [leaf-1](Homework/02_work/conf/leaf-1.conf)
+- #### [leaf-1](config/leaf-1.conf)
 
 ```
 feature ospf
@@ -61,7 +61,7 @@ interface loopback2
   ip router ospf Underlay area 0.0.0.0
 ```
 
-- #### [leaf-2](Homework/02_work/conf/leaf-2.conf)
+- #### [leaf-2](config/leaf-2.conf)
 
 ```
 feature ospf
@@ -107,7 +107,7 @@ interface loopback2
   ip router ospf Underlay area 0.0.0.0
 ```
 
-- #### [leaf-3](Homework/02_work/conf/leaf-3.conf)
+- #### [leaf-3](config/leaf-3.conf)
 
 ```
 feature ospf
@@ -153,7 +153,7 @@ interface loopback2
   ip router ospf Underlay area 0.0.0.0
 ```
 
-- #### [spine-1](Homework/02_work/conf/spine-1.conf)
+- #### [spine-1](config/spine-1.conf)
 
 ```
 feature ospf
@@ -214,7 +214,7 @@ interface loopback1
   ip router ospf Underlay area 0.0.0.0
 ```
 
-- #### [spine-2](Homework/02_work/conf/spine-2.conf)
+- #### [spine-2](config/spine-2.conf)
 
 ```
 feature ospf
