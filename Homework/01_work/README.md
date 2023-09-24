@@ -80,7 +80,7 @@ interface Ethernet1/2
   no shutdown
   
 interface loopback2
-  ip address 10.1.0.3/32
+  ip address 10.1.0.2/32
 ```
 
 - #### [leaf-3](Homework/01_work/conf/leaf-3.conf)
@@ -101,7 +101,7 @@ interface Ethernet1/2
   no shutdown
   
 interface loopback2
-  ip address 10.1.0.5/32
+  ip address 10.1.0.3/32
 ```
 
 - #### [spine-1](Homework/01_work/conf/spine-1.conf)
@@ -176,8 +176,8 @@ PING 10.4.1.1 (10.4.1.1): 56 data bytes
 round-trip min/avg/max = 3.86/5.58/7.214 ms
 spine-1#
 spine-1#
-spine-1# ping 10.4.1.3
-PING 10.4.1.3 (10.4.1.3): 56 data bytes
+spine-1# ping 10.4.1.2
+PING 10.4.1.2 (10.4.1.2): 56 data bytes
 64 bytes from 10.4.1.3: icmp_seq=0 ttl=254 time=2.793 ms
 64 bytes from 10.4.1.3: icmp_seq=1 ttl=254 time=3.027 ms
 64 bytes from 10.4.1.3: icmp_seq=2 ttl=254 time=3.117 ms
