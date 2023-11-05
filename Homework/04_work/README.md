@@ -28,6 +28,7 @@ route-map RM_CONN permit 10
 
 router bgp 65001
    router-id 10.1.0.1
+   timers bgp 3 9
    maximum-paths 2 ecmp 2
    neighbor SPINE peer group
    neighbor SPINE remote-as 65000
@@ -56,6 +57,7 @@ route-map RM_CONN permit 10
 
 router bgp 65002
    router-id 10.1.0.2
+   timers bgp 3 9
    maximum-paths 2 ecmp 2
    neighbor SPINE peer group
    neighbor SPINE remote-as 65000
@@ -83,6 +85,7 @@ route-map RM_CONN permit 10
 
 router bgp 65003
    router-id 10.1.0.3
+   timers bgp 3 9
    maximum-paths 2 ecmp 2
    neighbor SPINE peer group
    neighbor SPINE remote-as 65000
@@ -113,6 +116,7 @@ peer-filter LEAF
 
 router bgp 65000
    router-id 10.1.1.0
+   timers bgp 3 9
    maximum-paths 2 ecmp 2
    bgp listen range 10.4.1.0/24 peer-group LEAF peer-filter LEAF
    neighbor LEAF peer group
@@ -140,6 +144,7 @@ peer-filter LEAF
 
 router bgp 65000
    router-id 10.1.2.0
+   timers bgp 3 9
    maximum-paths 2 ecmp 2
    bgp listen range 10.4.2.0/24 peer-group LEAF peer-filter LEAF
    neighbor LEAF peer group
