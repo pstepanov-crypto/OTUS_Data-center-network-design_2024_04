@@ -11,7 +11,7 @@
 
 ### Схема сети
 
-![](images/Underlay_eBGP.png)
+![](images/Overlay VXLAN L2.png)
 
 ### Конфигурация оборудования
 
