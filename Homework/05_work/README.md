@@ -4,7 +4,7 @@
 
 ### Задача:
 
-- Настроить Overlay на основе VxLAN EVPN для L2 связанности между клиентами
+- Настроить BGP peering между Leaf и Spine в AF l2vpn evpn
 - Проверить связанность между клиентами
 
 ## Выполнение:
@@ -344,6 +344,23 @@ Neighbor Status Codes: m - Under maintenance
 - #### leaf-1
 
 ```
+leaf-1#sh ip route
+
+ C        10.1.0.1/32 is directly connected, Loopback1
+ B E      10.1.0.2/32 [200/0] via 10.4.1.0, Ethernet1
+                              via 10.4.2.0, Ethernet2
+ B E      10.1.0.3/32 [200/0] via 10.4.1.0, Ethernet1
+                              via 10.4.2.0, Ethernet2
+ B E      10.1.1.0/32 [200/0] via 10.4.1.0, Ethernet1
+ B E      10.1.2.0/32 [200/0] via 10.4.2.0, Ethernet2
+ C        10.4.1.0/31 is directly connected, Ethernet1
+ C        10.4.2.0/31 is directly connected, Ethernet2
+ C        10.100.0.1/32 is directly connected, Loopback100
+ B E      10.100.0.2/32 [200/0] via 10.4.1.0, Ethernet1
+                                via 10.4.2.0, Ethernet2
+ B E      10.100.0.3/32 [200/0] via 10.4.1.0, Ethernet1
+                                via 10.4.2.0, Ethernet2
+
 leaf-1#sh ip bgp summary
 BGP summary information for VRF default
 Router identifier 10.1.0.1, local AS number 65001
