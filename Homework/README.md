@@ -9,3 +9,5 @@
 [04 Настройка Underlay сети (eBGP)](04_work)
 
 [05 Настройка Overlay сети (VxLan L2)](05_work)
+
+[05 Настройка Overlay сети (VxLan L3)](06_work)
