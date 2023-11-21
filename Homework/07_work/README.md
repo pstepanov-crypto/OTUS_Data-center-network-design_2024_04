@@ -1,6 +1,6 @@
 # Домашнее задание №7
 
-## Overlay. VxLAN EVPN L3
+## Overlay. VxLAN VPC
 
 ### Задача:
 
@@ -237,7 +237,7 @@ router bgp 65003
       redistribute connected
 ```
 
-- #### [leaf-3](config/server-1.conf)
+- #### [server-1](config/server-1.conf)
 
 ```
 vlan 13,23
@@ -366,9 +366,6 @@ AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Li
                                  10.100.0.3            -       100     0       65000 65003 i
  *  ec   RD: 65003:10001 ip-prefix 192.168.23.0/24
                                  10.100.0.3            -       100     0       65000 65003 i
-
-```
-```
 
 ```
 ```
@@ -713,7 +710,6 @@ Current weight/Max weight: 2/16
        Ethernet1       19:29:01                 LACP           Active      1
        Ethernet2       19:29:01                 LACP           Active      1
 ```
-
 
 - #### client-5
 
