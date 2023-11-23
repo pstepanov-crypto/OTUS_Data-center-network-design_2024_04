@@ -13,3 +13,5 @@
 [06 Настройка Overlay сети (VxLan L3)](06_work)
 
 [07 Настройка Overlay сети (vPC)](07_work)
+
+[05 Настройка Overlay сети (Route)](08_work)
