@@ -15,5 +15,3 @@
 [07 Настройка Overlay сети (vPC)](07_work)
 
 [08 Настройка Overlay сети (Route)](08_work)
-
-09 11
