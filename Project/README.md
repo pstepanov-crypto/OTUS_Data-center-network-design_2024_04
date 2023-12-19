@@ -28,14 +28,14 @@
 
 #### POD 1
 - [dc01-sp01](config/dc01-sp01.conf)
-- [dc01-sp02](config/dc01-sp01.conf)
+- [dc01-sp02](config/dc01-sp02.conf)
 - [dc01-le01](config/dc01-le01.conf)
 - [dc01-le03](config/dc01-le03.conf)
-- [dc01-bgw01](config/dc01-le05.conf)
+- [dc01-bgw01](config/dc01-bgw01.conf)
 
 #### POD 2
 - [dc02-sp01](config/dc02-sp01.conf)
-- [dc02-sp02](config/dc02-sp01.conf)
+- [dc02-sp02](config/dc02-sp02.conf)
 - [dc02-le01](config/dc02-le01.conf)
 - [dc02-le02](config/dc02-le02.conf)
 - [dc02-bgw01](config/dc02-bgw01.conf)
@@ -221,8 +221,31 @@ Destination/Mask   Proto   Pre Cost        NextHop         Interface
 * >i [5][0][32][192.168.20.8]/80
                         10.12.5.0                  100        0       65200i
 *  i                    10.12.5.0                  100        0       65200i
-<IRF-01>
+```
+```
+<IRF-03>disp bgp peer ipv4 vpn-instance PROD
 
+ BGP local router ID: 10.13.5.1
+ Local AS number: 65100
+ Total number of peers: 1                 Peers in established state: 1
+
+  * - Dynamically created peer
+  Peer                    AS  MsgRcvd  MsgSent OutQ PrefRcv Up/Down  State
+
+  10.23.1.1            65200      192      196    0       2 02:33:46 Established
+<IRF-03>
+<IRF-03>
+<IRF-03>
+<IRF-03>disp bgp peer ipv4 vpn-instance DEV
+
+ BGP local router ID: 10.13.5.2
+ Local AS number: 65100
+ Total number of peers: 1                 Peers in established state: 1
+
+  * - Dynamically created peer
+  Peer                    AS  MsgRcvd  MsgSent OutQ PrefRcv Up/Down  State
+
+  10.23.1.2            65200      181      184    0       2 02:30:01 Established
 ```
 ```
 <server-01>ping -vpn-instance PROD 192.168.10.2
@@ -269,10 +292,145 @@ Neighbor ID     Instance VRF      Pri State                  Dead Time   Address
 ```
 ### Проверка (Overlay. POD 2)
 ```
-a
+dc02-le01#show bgp evpn summary
+BGP summary information for VRF default
+Router identifier 10.22.1.0, local AS number 65200
+Neighbor Status Codes: m - Under maintenance
+  Neighbor         V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
+  10.21.1.0        4 65200           5498      5481    0    0 03:53:39 Estab   19     19
+  10.21.2.0        4 65200           5487      5489    0    0 03:53:39 Estab   19     19
+```
+```
+dc02-le01#show bgp evpn summary
+BGP summary information for VRF default
+Router identifier 10.22.1.0, local AS number 65200
+Neighbor Status Codes: m - Under maintenance
+  Neighbor         V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
+  10.21.1.0        4 65200           5521      5504    0    0 03:54:40 Estab   19     19
+  10.21.2.0        4 65200           5511      5513    0    0 03:54:40 Estab   19     19
+```
+```
+dc02-bgw01#show bgp evpn summary
+BGP summary information for VRF default
+Router identifier 10.23.1.0, local AS number 65200
+Neighbor Status Codes: m - Under maintenance
+  Neighbor         V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
+  10.21.1.0        4 65200           5950      5904    0    0 04:12:04 Estab   17     17
+  10.21.2.0        4 65200           5659      5638    0    0 04:00:17 Estab   17     17
+```
+```
+dc02-bgw02#show bgp evpn summary
+BGP summary information for VRF default
+Router identifier 10.23.2.0, local AS number 65200
+Neighbor Status Codes: m - Under maintenance
+  Neighbor         V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
+  10.21.1.0        4 65200           5955      5892    0    0 04:12:22 Estab   22     22
+  10.21.2.0        4 65200           5679      5637    0    0 04:00:38 Estab   22     22
+```
+```
+dc02-bgw01#sh mlag
+MLAG Configuration:
+domain-id                          :               mlag1
+local-interface                    :            Vlan4094
+peer-address                       :           10.26.0.1
+peer-link                          :       Port-Channel1
+peer-config                        :          consistent
+
+MLAG Status:
+state                              :              Active
+negotiation status                 :           Connected
+peer-link status                   :                  Up
+local-int status                   :                  Up
+system-id                          :   52:00:00:76:bd:1d
+dual-primary detection             :            Disabled
+dual-primary interface errdisabled :               False
+
+MLAG Ports:
+Disabled                           :                   0
+Configured                         :                   0
+Inactive                           :                   0
+Active-partial                     :                   0
+Active-full                        :                   0
+```
+### Проверка (Route. POD 1)
+```
+dc02-le01#show ip route vrf PROD
+
+ B I      10.23.1.1/32 [200/0] via VTEP 10.23.1.254 VNI 109999 router-mac 50:00:00:76:bd:1d local-interface Vxlan1
+ B I      10.27.1.1/32 [200/0] via VTEP 10.23.1.254 VNI 109999 router-mac 50:00:00:ba:b7:36 local-interface Vxlan1
+ C        192.168.10.0/24 is directly connected, Vlan10
+ B I      192.168.30.0/24 [200/0] via VTEP 10.22.2.254 VNI 109999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
+
+dc02-le01#show ip route vrf DEV
+
+ B I      10.27.1.3/32 [200/0] via VTEP 10.23.1.254 VNI 209999 router-mac 50:00:00:ba:b7:36 local-interface Vxlan1
+ B I      192.168.20.8/32 [200/0] via VTEP 10.22.2.254 VNI 209999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
+ C        192.168.20.0/24 is directly connected, Vlan20
+```
+```
+dc02-bgw01#sh ip route vrf PROD
+
+ S        10.13.5.1/32 [1/0] via 10.27.1.1, Vlan10
+ C        10.23.1.1/32 is directly connected, Loopback1
+ C        10.27.1.0/31 is directly connected, Vlan10
+ B I      192.168.10.0/24 [200/0] via VTEP 10.22.1.254 VNI 109999 router-mac 50:00:00:5f:63:6e local-interface Vxlan1
+                                  via VTEP 10.22.2.254 VNI 109999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
+ B I      192.168.30.0/24 [200/0] via VTEP 10.22.2.254 VNI 109999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
+
+dc02-bgw01#sh ip route vrf DEV
+
+ S        10.13.5.2/32 [1/0] via 10.27.1.3, Vlan20
+ C        10.23.1.2/32 is directly connected, Loopback2
+ C        10.27.1.2/31 is directly connected, Vlan20
+ B I      192.168.20.6/32 [200/0] via VTEP 10.22.1.254 VNI 209999 router-mac 50:00:00:5f:63:6e local-interface Vxlan1
+ B I      192.168.20.8/32 [200/0] via VTEP 10.22.2.254 VNI 209999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
+ B I      192.168.20.0/24 [200/0] via VTEP 10.22.2.254 VNI 209999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
+                                  via VTEP 10.22.1.254 VNI 209999 router-mac 50:00:00:5f:63:6e local-interface Vxlan1
 ```
 ```
 
 ```
+```
+dc02-bgw01#show vxlan vni
+VNI to VLAN Mapping for Vxlan1
+VNI          VLAN       Source       Interface       802.1Q Tag
+------------ ---------- ------------ --------------- ----------
+100010       10         static       Ethernet5       10
+                                     Vxlan1          10
+200020       20         static       Ethernet5       20
+                                     Vxlan1          20
 
+VNI to dynamic VLAN Mapping for Vxlan1
+VNI          VLAN       VRF        Source
+------------ ---------- ---------- ------------
+109999       4090       PROD       evpn
+209999       4091       DEV        evpn
+```
+```
+dc02-le01#show vxlan vni
+VNI to VLAN Mapping for Vxlan1
+VNI          VLAN       Source       Interface       802.1Q Tag
+------------ ---------- ------------ --------------- ----------
+100010       10         static       Ethernet3       untagged
+                                     Vxlan1          10
+200020       20         static       Ethernet4       untagged
+                                     Vxlan1          20
 
+VNI to dynamic VLAN Mapping for Vxlan1
+VNI          VLAN       VRF        Source
+------------ ---------- ---------- ------------
+109999       4093       PROD       evpn
+209999       4094       DEV        evpn
+```
+```
+clinet-05> ping 192.168.10.7
+
+84 bytes from 192.168.10.7 icmp_seq=1 ttl=64 time=38.481 ms
+84 bytes from 192.168.10.7 icmp_seq=2 ttl=64 time=10.631 ms
+```
+```
+client-06> ping 192.168.20.8
+
+84 bytes from 192.168.20.8 icmp_seq=1 ttl=64 time=9.813 ms
+84 bytes from 192.168.20.8 icmp_seq=2 ttl=64 time=14.500 ms
+```
