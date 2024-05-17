@@ -10,7 +10,7 @@
 
 ### Схема сети
 
-![](images/Underlay_OSPF.png)
+![](images/ospf.PNG)
 
 
 ### Конфигурация оборудования
