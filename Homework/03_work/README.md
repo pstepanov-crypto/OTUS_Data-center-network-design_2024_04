@@ -110,7 +110,7 @@ interface loopback2
   ip router isis UNDERLAY
 
 router isis UNDERLAY
-  net 49.0005.0100.0100.0001.00
+  net 49.0005.0100.0100.0002.00
   is-type level-1
   address-family ipv4 unicast
   passive-interface default level-1
@@ -160,7 +160,7 @@ interface loopback2
   ip router isis UNDERLAY
 
 router isis UNDERLAY
-  net 49.0005.0100.0100.0001.00
+  net 49.0005.0100.0100.0003.00
   is-type level-1
   address-family ipv4 unicast
   passive-interface default level-1
