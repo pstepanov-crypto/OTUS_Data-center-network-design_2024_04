@@ -12,7 +12,7 @@
 
 ### Схема сети
 
-![](images/ISIS_underlay.png)
+![](images/ISIS_underlay.PNG)
 
 ### Конфигурация оборудования
 
