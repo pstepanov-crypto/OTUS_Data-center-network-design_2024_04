@@ -316,37 +316,34 @@ IP Route Table for VRF "default"
 '[x/y]' denotes [preference/metric]
 '%<string>' in via output denotes VRF <string>
 
-10.1.0.2/32, ubest/mbest: 3/0
-    *via 10.6.1.1, Eth1/1, [115/41], 00:00:13, isis-UNDERLAY, L1
-    *via 10.6.1.3, Eth1/2, [115/41], 00:00:13, isis-UNDERLAY, L1
-    *via 10.6.1.5, Eth1/3, [115/41], 00:00:13, isis-UNDERLAY, L1
+10.1.0.1/32, ubest/mbest: 1/0
+    *via 10.6.1.1, Eth1/1, [115/41], 00:02:07, isis-UNDERLAY, L1
+10.1.0.2/32, ubest/mbest: 1/0
+    *via 10.6.1.3, Eth1/2, [115/41], 00:02:15, isis-UNDERLAY, L1
+10.1.0.3/32, ubest/mbest: 1/0
+    *via 10.6.1.5, Eth1/3, [115/41], 00:01:59, isis-UNDERLAY, L1
 10.1.2.0/32, ubest/mbest: 2/0, attached
-    *via 10.1.2.0, Lo1, [0/0], 01:25:23, local
-    *via 10.1.2.0, Lo1, [0/0], 01:25:23, direct
+    *via 10.1.2.0, Lo1, [0/0], 01:48:44, local
+    *via 10.1.2.0, Lo1, [0/0], 01:48:44, direct
 10.6.1.0/31, ubest/mbest: 1/0, attached
-    *via 10.6.1.0, Eth1/1, [0/0], 00:01:03, direct
+    *via 10.6.1.0, Eth1/1, [0/0], 00:24:24, direct
 10.6.1.0/32, ubest/mbest: 1/0, attached
-    *via 10.6.1.0, Eth1/1, [0/0], 00:01:03, local
+    *via 10.6.1.0, Eth1/1, [0/0], 00:24:24, local
 10.6.1.2/31, ubest/mbest: 1/0, attached
-    *via 10.6.1.2, Eth1/2, [0/0], 00:00:55, direct
+    *via 10.6.1.2, Eth1/2, [0/0], 00:24:16, direct
 10.6.1.2/32, ubest/mbest: 1/0, attached
-    *via 10.6.1.2, Eth1/2, [0/0], 00:00:55, local
+    *via 10.6.1.2, Eth1/2, [0/0], 00:24:16, local
 10.6.1.4/31, ubest/mbest: 1/0, attached
-    *via 10.6.1.4, Eth1/3, [0/0], 00:00:49, direct
+    *via 10.6.1.4, Eth1/3, [0/0], 00:24:10, direct
 10.6.1.4/32, ubest/mbest: 1/0, attached
-    *via 10.6.1.4, Eth1/3, [0/0], 00:00:49, local
-10.6.2.0/31, ubest/mbest: 3/0
-    *via 10.6.1.1, Eth1/1, [115/120], 00:00:04, isis-UNDERLAY, L1
-    *via 10.6.1.3, Eth1/2, [115/120], 00:00:04, isis-UNDERLAY, L1
-    *via 10.6.1.5, Eth1/3, [115/120], 00:00:04, isis-UNDERLAY, L1
-10.6.2.2/31, ubest/mbest: 3/0
-    *via 10.6.1.1, Eth1/1, [115/80], 00:00:13, isis-UNDERLAY, L1
-    *via 10.6.1.3, Eth1/2, [115/80], 00:00:13, isis-UNDERLAY, L1
-    *via 10.6.1.5, Eth1/3, [115/80], 00:00:13, isis-UNDERLAY, L1
-10.6.2.4/31, ubest/mbest: 3/0
-    *via 10.6.1.1, Eth1/1, [115/120], 00:00:04, isis-UNDERLAY, L1
-    *via 10.6.1.3, Eth1/2, [115/120], 00:00:04, isis-UNDERLAY, L1
-    *via 10.6.1.5, Eth1/3, [115/120], 00:00:04, isis-UNDERLAY, L1
+    *via 10.6.1.4, Eth1/3, [0/0], 00:24:10, local
+10.6.2.0/31, ubest/mbest: 1/0
+    *via 10.6.1.1, Eth1/1, [115/80], 00:02:07, isis-UNDERLAY, L1
+10.6.2.2/31, ubest/mbest: 1/0
+    *via 10.6.1.3, Eth1/2, [115/80], 00:02:15, isis-UNDERLAY, L1
+10.6.2.4/31, ubest/mbest: 1/0
+    *via 10.6.1.5, Eth1/3, [115/80], 00:01:59, isis-UNDERLAY, L1
+
 
 ```
 
@@ -369,36 +366,33 @@ IP Route Table for VRF "default"
 '[x/y]' denotes [preference/metric]
 '%<string>' in via output denotes VRF <string>
 
-10.1.0.2/32, ubest/mbest: 3/0
-    *via 10.6.2.1, Eth1/1, [115/41], 00:01:19, isis-UNDERLAY, L1
-    *via 10.6.2.3, Eth1/2, [115/41], 00:01:19, isis-UNDERLAY, L1
-    *via 10.6.2.5, Eth1/3, [115/41], 00:01:19, isis-UNDERLAY, L1
+10.1.0.1/32, ubest/mbest: 1/0
+    *via 10.6.2.1, Eth1/1, [115/41], 00:02:50, isis-UNDERLAY, L1
+10.1.0.2/32, ubest/mbest: 1/0
+    *via 10.6.2.3, Eth1/2, [115/41], 00:03:06, isis-UNDERLAY, L1
+10.1.0.3/32, ubest/mbest: 1/0
+    *via 10.6.2.5, Eth1/3, [115/41], 00:02:50, isis-UNDERLAY, L1
 10.1.2.0/32, ubest/mbest: 2/0, attached
-    *via 10.1.2.0, Lo1, [0/0], 01:12:16, local
-    *via 10.1.2.0, Lo1, [0/0], 01:12:15, direct
-10.6.1.0/31, ubest/mbest: 3/0
-    *via 10.6.2.1, Eth1/1, [115/120], 00:01:19, isis-UNDERLAY, L1
-    *via 10.6.2.3, Eth1/2, [115/120], 00:01:19, isis-UNDERLAY, L1
-    *via 10.6.2.5, Eth1/3, [115/120], 00:01:19, isis-UNDERLAY, L1
-10.6.1.2/31, ubest/mbest: 3/0
-    *via 10.6.2.1, Eth1/1, [115/80], 00:01:19, isis-UNDERLAY, L1
-    *via 10.6.2.3, Eth1/2, [115/80], 00:01:19, isis-UNDERLAY, L1
-    *via 10.6.2.5, Eth1/3, [115/80], 00:01:19, isis-UNDERLAY, L1
-10.6.1.4/31, ubest/mbest: 3/0
-    *via 10.6.2.1, Eth1/1, [115/120], 00:01:19, isis-UNDERLAY, L1
-    *via 10.6.2.3, Eth1/2, [115/120], 00:01:19, isis-UNDERLAY, L1
-    *via 10.6.2.5, Eth1/3, [115/120], 00:01:19, isis-UNDERLAY, L1
+    *via 10.1.2.0, Lo1, [0/0], 01:30:22, local
+    *via 10.1.2.0, Lo1, [0/0], 01:30:21, direct
+10.6.1.0/31, ubest/mbest: 1/0
+    *via 10.6.2.1, Eth1/1, [115/80], 00:02:50, isis-UNDERLAY, L1
+10.6.1.2/31, ubest/mbest: 1/0
+    *via 10.6.2.3, Eth1/2, [115/80], 00:03:06, isis-UNDERLAY, L1
+10.6.1.4/31, ubest/mbest: 1/0
+    *via 10.6.2.5, Eth1/3, [115/80], 00:02:50, isis-UNDERLAY, L1
 10.6.2.0/31, ubest/mbest: 1/0, attached
-    *via 10.6.2.0, Eth1/1, [0/0], 00:04:41, direct
+    *via 10.6.2.0, Eth1/1, [0/0], 00:22:47, direct
 10.6.2.0/32, ubest/mbest: 1/0, attached
-    *via 10.6.2.0, Eth1/1, [0/0], 00:04:41, local
+    *via 10.6.2.0, Eth1/1, [0/0], 00:22:47, local
 10.6.2.2/31, ubest/mbest: 1/0, attached
-    *via 10.6.2.2, Eth1/2, [0/0], 00:04:33, direct
+    *via 10.6.2.2, Eth1/2, [0/0], 00:22:39, direct
 10.6.2.2/32, ubest/mbest: 1/0, attached
-    *via 10.6.2.2, Eth1/2, [0/0], 00:04:33, local
+    *via 10.6.2.2, Eth1/2, [0/0], 00:22:39, local
 10.6.2.4/31, ubest/mbest: 1/0, attached
-    *via 10.6.2.4, Eth1/3, [0/0], 00:04:26, direct
+    *via 10.6.2.4, Eth1/3, [0/0], 00:22:32, direct
 10.6.2.4/32, ubest/mbest: 1/0, attached
-    *via 10.6.2.4, Eth1/3, [0/0], 00:04:26, local
+    *via 10.6.2.4, Eth1/3, [0/0], 00:22:32, local
+
 
 ```
