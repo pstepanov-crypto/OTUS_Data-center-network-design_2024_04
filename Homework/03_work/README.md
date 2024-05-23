@@ -350,14 +350,14 @@ IP Route Table for VRF "default"
 - #### spine-2
 
 ```
-spine-2# sh isis adjacency
-IS-IS process: Underlay VRF: default
+Spine-2#  sh isis adjacency
+IS-IS process: UNDERLAY VRF: default
 IS-IS adjacency database:
 Legend: '!': No AF level connectivity in given topology
 System ID       SNPA            Level  State  Hold Time  Interface
-leaf-1          5001.0000.1b08  1      UP     00:00:31   Ethernet1/1
-leaf-2          5002.0000.1b08  1      UP     00:00:27   Ethernet1/2
-leaf-3          5003.0000.1b08  1      UP     00:00:26   Ethernet1/3
+Leaf-3          N/A             1      UP     00:00:26   Ethernet1/1
+Leaf-3          N/A             1      UP     00:00:25   Ethernet1/2
+Leaf-3          N/A             1      UP     00:00:32   Ethernet1/3
 
 spine-2# sh ip route
 IP Route Table for VRF "default"
