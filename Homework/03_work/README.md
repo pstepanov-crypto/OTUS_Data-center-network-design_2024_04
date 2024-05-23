@@ -356,9 +356,9 @@ IS-IS process: UNDERLAY VRF: default
 IS-IS adjacency database:
 Legend: '!': No AF level connectivity in given topology
 System ID       SNPA            Level  State  Hold Time  Interface
-Leaf-3          N/A             1      UP     00:00:26   Ethernet1/1
-Leaf-3          N/A             1      UP     00:00:25   Ethernet1/2
-Leaf-3          N/A             1      UP     00:00:32   Ethernet1/3
+Leaf-1          N/A             1      UP     00:00:32   Ethernet1/1
+Leaf-2          N/A             1      UP     00:00:26   Ethernet1/2
+Leaf-3          N/A             1      UP     00:00:27   Ethernet1/3
 
 Spine-2# sh ip route
 IP Route Table for VRF "default"
