@@ -19,142 +19,231 @@
 - #### [leaf-1](config/leaf-1.conf)
 
 ```
-ip routing
+feature bgp
+feature bfd
 
-ip prefix-list PL_LOOP
-   seq 10 permit 10.1.0.1/32
+route-map UNDERLAY_CONNECTED_TO_BGP permit 10
+  set metric 100
+vrf context management
 
-route-map RM_CONN permit 10
-   match ip address prefix-list PL_LOOP
+interface Ethernet1/1
+  description spine-1
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.1.1/31
+  no shutdown
+
+interface Ethernet1/2
+  description spine-2
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.2.1/31
+  no shutdown
+
+interface loopback1
+  ip address 10.1.0.1/32
 
 router bgp 65001
-   router-id 10.1.0.1
-   timers bgp 3 9
-   maximum-paths 2 ecmp 2
-   neighbor SPINE peer group
-   neighbor SPINE remote-as 65000
-   neighbor SPINE bfd
-   neighbor SPINE allowas-in 1
-   neighbor SPINE rib-in pre-policy retain all
-   neighbor SPINE password 7 9cdhNWhDdTM=
-   neighbor SPINE send-community
-   neighbor SPINE maximum-routes 1000
-   neighbor 10.4.1.0 peer group SPINE
-   neighbor 10.4.2.0 peer group SPINE
-   redistribute connected route-map RM_CONN
+  router-id 10.1.0.1
+  reconnect-interval 12
+  log-neighbor-changes
+  address-family ipv4 unicast
+    redistribute direct route-map UNDERLAY_CONNECTED_TO_BGP
+    maximum-paths 10
+  template peer SPINE
+    bfd
+    timers 3 9
+    address-family ipv4 unicast
+  neighbor 10.6.1.0
+    inherit peer SPINE
+    remote-as 65000
+  neighbor 10.6.2.0
+    inherit peer SPINE
+    remote-as 65000
 
 ```
 
 - #### [leaf-2](config/leaf-2.conf)
 
 ```
-ip routing
+feature bgp
+feature bfd
 
-ip prefix-list PL_LOOP
-   seq 10 permit 10.1.0.2/32
+route-map UNDERLAY_CONNECTED_TO_BGP permit 10
+  set metric 100
+vrf context management
 
-route-map RM_CONN permit 10
-   match ip address prefix-list PL_LOOP
+interface Ethernet1/1
+  description spine-1
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.1.3/31
+  no shutdown
+
+interface Ethernet1/2
+  description spine-2
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.2.3/31
+  no shutdown
+
+interface loopback1
+  ip address 10.1.0.2/32
 
 router bgp 65002
-   router-id 10.1.0.2
-   timers bgp 3 9
-   maximum-paths 2 ecmp 2
-   neighbor SPINE peer group
-   neighbor SPINE remote-as 65000
-   neighbor SPINE bfd
-   neighbor SPINE allowas-in 1
-   neighbor SPINE rib-in pre-policy retain all
-   neighbor SPINE password 7 9cdhNWhDdTM=
-   neighbor SPINE send-community
-   neighbor SPINE maximum-routes 1000
-   neighbor 10.4.1.2 peer group SPINE
-   neighbor 10.4.2.2 peer group SPINE
-   redistribute connected route-map RM_CONN
+  router-id 10.1.0.2
+  reconnect-interval 12
+  log-neighbor-changes
+  address-family ipv4 unicast
+    redistribute direct route-map UNDERLAY_CONNECTED_TO_BGP
+    maximum-paths 10
+  template peer SPINE
+    bfd
+    timers 3 9
+    address-family ipv4 unicast
+  neighbor 10.6.1.2
+    inherit peer SPINE
+    remote-as 65000
+  neighbor 10.6.2.2
+    inherit peer SPINE
+    remote-as 65000
 ```
 
 - #### [leaf-3](config/leaf-3.conf)
 
 ```
-ip routing
+feature bgp
+feature bfd
 
-ip prefix-list PL_LOOP
-   seq 10 permit 10.1.0.3/32
+route-map UNDERLAY_CONNECTED_TO_BGP permit 10
+  set metric 100
+vrf context management
 
-route-map RM_CONN permit 10
-   match ip address prefix-list PL_LOOP
+interface Ethernet1/1
+  description spine-1
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.1.5/31
+  no shutdown
+
+interface Ethernet1/2
+  description spine-2
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.2.5/31
+  no shutdown
+
+interface loopback1
+  ip address 10.1.0.3/32
 
 router bgp 65003
-   router-id 10.1.0.3
-   timers bgp 3 9
-   maximum-paths 2 ecmp 2
-   neighbor SPINE peer group
-   neighbor SPINE remote-as 65000
-   neighbor SPINE bfd
-   neighbor SPINE allowas-in 1
-   neighbor SPINE rib-in pre-policy retain all
-   neighbor SPINE password 7 9cdhNWhDdTM=
-   neighbor SPINE send-community
-   neighbor SPINE maximum-routes 1000
-   neighbor 10.4.1.4 peer group SPINE
-   neighbor 10.4.2.4 peer group SPINE
-   redistribute connected route-map RM_CONN
+  router-id 10.1.0.3
+  reconnect-interval 12
+  log-neighbor-changes
+  address-family ipv4 unicast
+    redistribute direct route-map UNDERLAY_CONNECTED_TO_BGP
+    maximum-paths 10
+  template peer SPINE
+    bfd
+    timers 3 9
+    address-family ipv4 unicast
+  neighbor 10.6.1.4
+    inherit peer SPINE
+    remote-as 65000
+  neighbor 10.6.2.4
+    inherit peer SPINE
+    remote-as 65000
 ```
 
 - #### [spine-1](config/spine-1.conf)
 
 ```
-ip routing
 
-ip prefix-list PL_LOOP
-   seq 10 permit 10.1.1.0/32
+feature bgp
+feature bfd
 
-route-map RM_CONN permit 10
-   match ip address prefix-list PL_LOOP
+route-map RM_Leaves_BGP permit 10
+  match as-number 65001, 65002, 65003
 
-peer-filter LEAF
-   10 match as-range 65001-65003 result accept
+interface Ethernet1/1
+  description leaf-1
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.1.0/31
+  no shutdown
+
+interface Ethernet1/2
+  description leaf-2
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.1.2/31
+  no shutdown
+
+interface Ethernet1/3
+  description leaf-3
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.1.4/31
+  no shutdown
+
+interface loopback1
+  ip address 10.1.1.0/32
 
 router bgp 65000
-   router-id 10.1.1.0
-   timers bgp 3 9
-   maximum-paths 2 ecmp 2
-   bgp listen range 10.4.1.0/24 peer-group LEAF peer-filter LEAF
-   neighbor LEAF peer group
-   neighbor LEAF bfd
-   neighbor LEAF rib-in pre-policy retain all
-   neighbor LEAF password 7 7zCpOlU0aME=
-   neighbor LEAF send-community
-   neighbor LEAF maximum-routes 1000
-   redistribute connected route-map RM_CONN
+  router-id 10.1.1.0
+  timers bgp 3 9
+  reconnect-interval 12
+  log-neighbor-changes
+  address-family ipv4 unicast
+    maximum-paths 10
+  neighbor 10.6.1.0/27 remote-as route-map RM_Leaves_BGP
+    bfd
+    address-family ipv4 unicast
 ```
 
 - #### [spine-2](config/spine-2.conf)
 
 ```
-ip routing
+feature bgp
+feature bfd
 
-ip prefix-list PL_LOOP
-   seq 10 permit 10.1.2.0/32
+route-map RM_Leaves_BGP permit 10
+  match as-number 65001, 65002, 65003
 
-route-map RM_CONN permit 10
-   match ip address prefix-list PL_LOOP
+interface Ethernet1/1
+  description leaf-1
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.2.0/31
+  no shutdown
 
-peer-filter LEAF
-   10 match as-range 65001-65003 result accept
+interface Ethernet1/2
+  description leaf-2
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.2.2/31
+  no shutdown
+
+interface Ethernet1/3
+  description leaf-3
+  no switchport
+  bfd interval 100 min_rx 100 multiplier 3
+  ip address 10.6.2.4/31
+  no shutdown
+
+interface loopback1
+  ip address 10.1.2.0/32
 
 router bgp 65000
-   router-id 10.1.2.0
-   timers bgp 3 9
-   maximum-paths 2 ecmp 2
-   bgp listen range 10.4.2.0/24 peer-group LEAF peer-filter LEAF
-   neighbor LEAF peer group
-   neighbor LEAF bfd
-   neighbor LEAF rib-in pre-policy retain all
-   neighbor LEAF password 7 7zCpOlU0aME=
-   neighbor LEAF send-community
-   neighbor LEAF maximum-routes 1000
-   redistribute connected route-map RM_CONN
+  router-id 10.1.2.0
+  timers bgp 3 9
+  reconnect-interval 12
+  log-neighbor-changes
+  address-family ipv4 unicast
+    maximum-paths 10
+  neighbor 10.6.2.0/27 remote-as route-map RM_Leaves_BGP
+    bfd
+    address-family ipv4 unicast
 ```
 
 ---
@@ -164,199 +253,350 @@ router bgp 65000
 - #### spine-1
 
 ```
-spine-1#show ip bgp summary
-BGP summary information for VRF default
-Router identifier 10.1.1.0, local AS number 65000
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.4.1.1         4  65001             12        13    0    0 00:06:48 Estab   2      1
-  10.4.1.3         4  65002            265       337    0    0 01:24:51 Estab   2      1
-  10.4.1.5         4  65003            265       337    0    0 01:24:05 Estab   2      1
+Spine-1# sh ip bgp summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.6.1.1        4 65001     483     481       13    0    0 00:23:58 3
+10.6.1.3        4 65002     305     304       13    0    0 00:15:02 3
+10.6.1.5        4 65003     229     227       13    0    0 00:11:08 3
 
-spine-1#show ip route
 
-VRF: default
-Codes: C - connected, S - static, K - kernel,
-       O - OSPF, IA - OSPF inter area, E1 - OSPF external type 1,
-       E2 - OSPF external type 2, N1 - OSPF NSSA external type 1,
-       N2 - OSPF NSSA external type2, B - BGP, B I - iBGP, B E - eBGP,
-       R - RIP, I L1 - IS-IS level 1, I L2 - IS-IS level 2,
-       O3 - OSPFv3, A B - BGP Aggregate, A O - OSPF Summary,
-       NG - Nexthop Group Static Route, V - VXLAN Control Service,
-       DH - DHCP client installed default route, M - Martian,
-       DP - Dynamic Policy Route, L - VRF Leaked,
-       G  - gRIBI, RC - Route Cache Route
+Spine-1# sh ip route
+10.1.0.1/32, ubest/mbest: 1/0
+    *via 10.6.1.1, [20/100], 00:24:12, bgp-65000, external, tag 65001
+10.1.0.2/32, ubest/mbest: 1/0
+    *via 10.6.1.3, [20/100], 00:15:16, bgp-65000, external, tag 65002
+10.1.0.3/32, ubest/mbest: 1/0
+    *via 10.6.1.5, [20/100], 00:11:23, bgp-65000, external, tag 65003
+10.1.1.0/32, ubest/mbest: 2/0, attached
+    *via 10.1.1.0, Lo1, [0/0], 01:29:37, local
+    *via 10.1.1.0, Lo1, [0/0], 01:29:37, direct
+10.6.1.0/31, ubest/mbest: 1/0, attached
+    *via 10.6.1.0, Eth1/1, [0/0], 01:30:07, direct
+10.6.1.0/32, ubest/mbest: 1/0, attached
+    *via 10.6.1.0, Eth1/1, [0/0], 01:30:07, local
+10.6.1.2/31, ubest/mbest: 1/0, attached
+    *via 10.6.1.2, Eth1/2, [0/0], 01:30:02, direct
+10.6.1.2/32, ubest/mbest: 1/0, attached
+    *via 10.6.1.2, Eth1/2, [0/0], 01:30:02, local
+10.6.1.4/31, ubest/mbest: 1/0, attached
+    *via 10.6.1.4, Eth1/3, [0/0], 01:29:59, direct
+10.6.1.4/32, ubest/mbest: 1/0, attached
+    *via 10.6.1.4, Eth1/3, [0/0], 01:29:59, local
+10.6.2.0/31, ubest/mbest: 1/0
+    *via 10.6.1.1, [20/100], 00:24:12, bgp-65000, external, tag 65001
+10.6.2.2/31, ubest/mbest: 1/0
+    *via 10.6.1.3, [20/100], 00:15:16, bgp-65000, external, tag 65002
+10.6.2.4/31, ubest/mbest: 1/0
+    *via 10.6.1.5, [20/100], 00:11:23, bgp-65000, external, tag 65003
 
-Gateway of last resort is not set
+Spine-1# ping 10.6.1.1
+PING 10.6.1.1 (10.6.1.1): 56 data bytes
+64 bytes from 10.6.1.1: icmp_seq=0 ttl=254 time=20.642 ms
+64 bytes from 10.6.1.1: icmp_seq=1 ttl=254 time=8.059 ms
+64 bytes from 10.6.1.1: icmp_seq=2 ttl=254 time=6.369 ms
+64 bytes from 10.6.1.1: icmp_seq=3 ttl=254 time=8.487 ms
+64 bytes from 10.6.1.1: icmp_seq=4 ttl=254 time=5.06 ms
 
- B E      10.1.0.1/32 [200/0] via 10.4.1.1, Ethernet1
- B E      10.1.0.2/32 [200/0] via 10.4.1.3, Ethernet2
- B E      10.1.0.3/32 [200/0] via 10.4.1.5, Ethernet3
- C        10.1.1.0/32 is directly connected, Loopback1
- C        10.4.1.0/31 is directly connected, Ethernet1
- C        10.4.1.2/31 is directly connected, Ethernet2
- C        10.4.1.4/31 is directly connected, Ethernet3
+--- 10.6.1.1 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 5.06/9.723/20.642 ms
+Spine-1# ping 10.6.1.3
+PING 10.6.1.3 (10.6.1.3): 56 data bytes
+64 bytes from 10.6.1.3: icmp_seq=0 ttl=254 time=18.258 ms
+64 bytes from 10.6.1.3: icmp_seq=1 ttl=254 time=5.617 ms
+64 bytes from 10.6.1.3: icmp_seq=2 ttl=254 time=4.589 ms
+64 bytes from 10.6.1.3: icmp_seq=3 ttl=254 time=4.821 ms
+64 bytes from 10.6.1.3: icmp_seq=4 ttl=254 time=5.014 ms
 
-spine-1#show bfd peers
-VRF name: default
------------------
-DstAddr               MyDisc         YourDisc       Interface/Transport         Type               LastUp       LastDown            LastDiag    State
--------------- ---------------- ---------------- ------------------------- ------------ -------------------- -------------- ------------------- -----
-10.4.1.1          3210810017       1345640997              Ethernet1(9)       normal       11/05/23 16:23             NA       No Diagnostic       Up
-10.4.1.3          3794903262       2625880677             Ethernet2(10)       normal       11/05/23 15:05             NA       No Diagnostic       Up
-10.4.1.5           178888515        349303187             Ethernet3(11)       normal       11/05/23 15:06             NA       No Diagnostic       Up
+--- 10.6.1.3 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 4.589/7.659/18.258 ms
+Spine-1# ping 10.6.1.5
+PING 10.6.1.5 (10.6.1.5): 56 data bytes
+64 bytes from 10.6.1.5: icmp_seq=0 ttl=254 time=24.532 ms
+64 bytes from 10.6.1.5: icmp_seq=1 ttl=254 time=10.842 ms
+64 bytes from 10.6.1.5: icmp_seq=2 ttl=254 time=5.833 ms
+64 bytes from 10.6.1.5: icmp_seq=3 ttl=254 time=3.741 ms
+64 bytes from 10.6.1.5: icmp_seq=4 ttl=254 time=4.149 ms
+
+--- 10.6.1.5 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 3.741/9.819/24.532 ms
+
+
 ```
 
 - #### spine-2
 
 ```
-spine-2#show ip bgp summary
-BGP summary information for VRF default
-Router identifier 10.1.2.0, local AS number 65000
+Leaf-1#  sh ip bgp summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.6.1.0        4 65000     583     580       12    0    0 00:28:53 6
+10.6.2.0        4 65000     547     544       12    0    0 00:27:03 6
 
-  Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.4.2.1         4  65001             21        20    0    0 00:13:34 Estab   4      1
-  10.4.2.3         4  65002             36        35    0    0 00:18:33 Estab   4      1
-  10.4.2.5         4  65003             36        35    0    0 00:18:33 Estab   4      1
 
-spine-2#show ip route
 
- B E      10.1.0.1/32 [200/0] via 10.4.2.1, Ethernet1
- B E      10.1.0.2/32 [200/0] via 10.4.2.3, Ethernet2
- B E      10.1.0.3/32 [200/0] via 10.4.2.5, Ethernet3
- C        10.1.2.0/32 is directly connected, Loopback1
- C        10.4.2.0/31 is directly connected, Ethernet1
- C        10.4.2.2/31 is directly connected, Ethernet2
- C        10.4.2.4/31 is directly connected, Ethernet3
- 
-spine-2#show bfd peers
-VRF name: default
------------------
-DstAddr               MyDisc         YourDisc       Interface/Transport         Type               LastUp             LastDown            LastDiag    State
--------------- ---------------- ---------------- ------------------------- ------------ -------------------- -------------------- ------------------- -----
-10.4.2.1          1502997836        209664590              Ethernet1(9)       normal       11/05/23 16:23                   NA       No Diagnostic       Up
-10.4.2.3           894390704       1024033939             Ethernet2(10)       normal       11/05/23 16:23       11/05/23 16:23       No Diagnostic       Up
-10.4.2.5            41538789       1991262938             Ethernet3(11)       normal       11/05/23 16:23       11/05/23 16:23       No Diagnostic       Up
+Spine-2# sh ip route
+10.1.0.1/32, ubest/mbest: 1/0
+    *via 10.6.2.1, [20/100], 00:25:52, bgp-65000, external, tag 65001
+10.1.0.2/32, ubest/mbest: 1/0
+    *via 10.6.2.3, [20/100], 00:18:47, bgp-65000, external, tag 65002
+10.1.0.3/32, ubest/mbest: 1/0
+    *via 10.6.2.5, [20/100], 00:14:53, bgp-65000, external, tag 65003
+10.1.2.0/32, ubest/mbest: 2/0, attached
+    *via 10.1.2.0, Lo1, [0/0], 01:08:26, local
+    *via 10.1.2.0, Lo1, [0/0], 01:08:26, direct
+10.6.1.0/31, ubest/mbest: 1/0
+    *via 10.6.2.1, [20/100], 00:25:52, bgp-65000, external, tag 65001
+10.6.1.2/31, ubest/mbest: 1/0
+    *via 10.6.2.3, [20/100], 00:18:47, bgp-65000, external, tag 65002
+10.6.1.4/31, ubest/mbest: 1/0
+    *via 10.6.2.5, [20/100], 00:14:53, bgp-65000, external, tag 65003
+10.6.2.0/31, ubest/mbest: 1/0, attached
+    *via 10.6.2.0, Eth1/1, [0/0], 01:10:47, direct
+10.6.2.0/32, ubest/mbest: 1/0, attached
+    *via 10.6.2.0, Eth1/1, [0/0], 01:10:47, local
+10.6.2.2/31, ubest/mbest: 1/0, attached
+    *via 10.6.2.2, Eth1/2, [0/0], 01:10:46, direct
+10.6.2.2/32, ubest/mbest: 1/0, attached
+    *via 10.6.2.2, Eth1/2, [0/0], 01:10:46, local
+10.6.2.4/31, ubest/mbest: 1/0, attached
+    *via 10.6.2.4, Eth1/3, [0/0], 01:10:45, direct
+10.6.2.4/32, ubest/mbest: 1/0, attached
+    *via 10.6.2.4, Eth1/3, [0/0], 01:10:45, local
+
+Spine-2# ping 10.6.2.1
+PING 10.6.2.1 (10.6.2.1): 56 data bytes
+64 bytes from 10.6.2.1: icmp_seq=0 ttl=254 time=99.148 ms
+64 bytes from 10.6.2.1: icmp_seq=1 ttl=254 time=40.701 ms
+64 bytes from 10.6.2.1: icmp_seq=2 ttl=254 time=14.554 ms
+64 bytes from 10.6.2.1: icmp_seq=3 ttl=254 time=13.114 ms
+64 bytes from 10.6.2.1: icmp_seq=4 ttl=254 time=9.11 ms
+
+--- 10.6.2.1 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 9.11/35.325/99.148 ms
+Spine-2# ping 10.6.2.3
+PING 10.6.2.3 (10.6.2.3): 56 data bytes
+64 bytes from 10.6.2.3: icmp_seq=0 ttl=254 time=29.398 ms
+64 bytes from 10.6.2.3: icmp_seq=1 ttl=254 time=6.689 ms
+64 bytes from 10.6.2.3: icmp_seq=2 ttl=254 time=4.664 ms
+64 bytes from 10.6.2.3: icmp_seq=3 ttl=254 time=8.365 ms
+64 bytes from 10.6.2.3: icmp_seq=4 ttl=254 time=5.565 ms
+
+--- 10.6.2.3 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 4.664/10.936/29.398 ms
+Spine-2# ping 10.6.2.5
+PING 10.6.2.5 (10.6.2.5): 56 data bytes
+64 bytes from 10.6.2.5: icmp_seq=0 ttl=254 time=38.933 ms
+64 bytes from 10.6.2.5: icmp_seq=1 ttl=254 time=12.014 ms
+64 bytes from 10.6.2.5: icmp_seq=2 ttl=254 time=14.058 ms
+64 bytes from 10.6.2.5: icmp_seq=3 ttl=254 time=8.868 ms
+64 bytes from 10.6.2.5: icmp_seq=4 ttl=254 time=14.12 ms
+
+--- 10.6.2.5 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 8.868/17.598/38.933 ms
+
+
 ```
 
 - #### leaf-1
 
 ```
-leaf-1#show ip bgp summary
-BGP summary information for VRF default
-Router identifier 10.1.0.1, local AS number 65001
-
-  Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.4.1.0         4  65000            942       973    0    0 00:13:38 Estab   3      3
-  10.4.2.0         4  65000            702       735    0    0 00:13:33 Estab   3      3
+Leaf-1#  sh ip bgp summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.6.1.0        4 65000     583     580       12    0    0 00:28:53 6
+10.6.2.0        4 65000     547     544       12    0    0 00:27:03 6
 
 
-leaf-1#show ip route
 
- C        10.1.0.1/32 is directly connected, Loopback1
- B E      10.1.0.2/32 [200/0] via 10.4.1.0, Ethernet1
-                              via 10.4.2.0, Ethernet2
- B E      10.1.0.3/32 [200/0] via 10.4.1.0, Ethernet1
-                              via 10.4.2.0, Ethernet2
- B E      10.1.1.0/32 [200/0] via 10.4.1.0, Ethernet1
- B E      10.1.2.0/32 [200/0] via 10.4.2.0, Ethernet2
- C        10.4.1.0/31 is directly connected, Ethernet1
- C        10.4.2.0/31 is directly connected, Ethernet2
- 
-leaf-1#ping 10.1.0.2 source 10.1.0.1
-PING 10.1.0.2 (10.1.0.2) from 10.1.0.1 : 72(100) bytes of data.
-80 bytes from 10.1.0.2: icmp_seq=1 ttl=63 time=9.09 ms
-80 bytes from 10.1.0.2: icmp_seq=2 ttl=63 time=4.56 ms
-80 bytes from 10.1.0.2: icmp_seq=3 ttl=63 time=4.53 ms
-80 bytes from 10.1.0.2: icmp_seq=4 ttl=63 time=4.68 ms
-80 bytes from 10.1.0.2: icmp_seq=5 ttl=63 time=4.29 ms
+lLeaf-1# sh ip route
+10.1.0.1/32, ubest/mbest: 2/0, attached
+    *via 10.1.0.1, Lo1, [0/0], 00:55:54, local
+    *via 10.1.0.1, Lo1, [0/0], 00:55:54, direct
+10.1.0.2/32, ubest/mbest: 2/0
+    *via 10.6.1.0, [20/0], 00:20:42, bgp-65001, external, tag 65000
+    *via 10.6.2.0, [20/0], 00:20:43, bgp-65001, external, tag 65000
+10.1.0.3/32, ubest/mbest: 2/0
+    *via 10.6.1.0, [20/0], 00:16:49, bgp-65001, external, tag 65000
+    *via 10.6.2.0, [20/0], 00:16:49, bgp-65001, external, tag 65000
+10.6.1.0/31, ubest/mbest: 1/0, attached
+    *via 10.6.1.1, Eth1/1, [0/0], 01:05:35, direct
+10.6.1.1/32, ubest/mbest: 1/0, attached
+    *via 10.6.1.1, Eth1/1, [0/0], 01:05:35, local
+10.6.1.2/31, ubest/mbest: 2/0
+    *via 10.6.1.0, [20/0], 00:20:42, bgp-65001, external, tag 65000
+    *via 10.6.2.0, [20/0], 00:20:43, bgp-65001, external, tag 65000
+10.6.1.4/31, ubest/mbest: 2/0
+    *via 10.6.1.0, [20/0], 00:16:49, bgp-65001, external, tag 65000
+    *via 10.6.2.0, [20/0], 00:16:49, bgp-65001, external, tag 65000
+10.6.2.0/31, ubest/mbest: 1/0, attached
+    *via 10.6.2.1, Eth1/2, [0/0], 01:05:34, direct
+10.6.2.1/32, ubest/mbest: 1/0, attached
+    *via 10.6.2.1, Eth1/2, [0/0], 01:05:34, local
+10.6.2.2/31, ubest/mbest: 2/0
+    *via 10.6.1.0, [20/0], 00:20:42, bgp-65001, external, tag 65000
+    *via 10.6.2.0, [20/0], 00:20:43, bgp-65001, external, tag 65000
+10.6.2.4/31, ubest/mbest: 2/0
+    *via 10.6.1.0, [20/0], 00:16:49, bgp-65001, external, tag 65000
+    *via 10.6.2.0, [20/0], 00:16:49, bgp-65001, external, tag 65000
 
-leaf-1#ping 10.1.0.3 source 10.1.0.1
-PING 10.1.0.3 (10.1.0.3) from 10.1.0.1 : 72(100) bytes of data.
-80 bytes from 10.1.0.3: icmp_seq=1 ttl=63 time=8.09 ms
-80 bytes from 10.1.0.3: icmp_seq=2 ttl=63 time=5.38 ms
-80 bytes from 10.1.0.3: icmp_seq=3 ttl=63 time=6.30 ms
-80 bytes from 10.1.0.3: icmp_seq=4 ttl=63 time=5.38 ms
-80 bytes from 10.1.0.3: icmp_seq=5 ttl=63 time=5.07 ms
+Leaf-1# ping 10.6.1.0
+PING 10.6.1.0 (10.6.1.0): 56 data bytes
+64 bytes from 10.6.1.0: icmp_seq=0 ttl=254 time=30.073 ms
+64 bytes from 10.6.1.0: icmp_seq=1 ttl=254 time=8.815 ms
+64 bytes from 10.6.1.0: icmp_seq=2 ttl=254 time=7.748 ms
+64 bytes from 10.6.1.0: icmp_seq=3 ttl=254 time=6.179 ms
+64 bytes from 10.6.1.0: icmp_seq=4 ttl=254 time=5.088 ms
+
+--- 10.6.1.0 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 5.088/11.58/30.073 ms
+Leaf-1# ping 10.6.2.0
+PING 10.6.2.0 (10.6.2.0): 56 data bytes
+64 bytes from 10.6.2.0: icmp_seq=0 ttl=254 time=13.861 ms
+64 bytes from 10.6.2.0: icmp_seq=1 ttl=254 time=6.425 ms
+64 bytes from 10.6.2.0: icmp_seq=2 ttl=254 time=4.211 ms
+64 bytes from 10.6.2.0: icmp_seq=3 ttl=254 time=4.903 ms
+64 bytes from 10.6.2.0: icmp_seq=4 ttl=254 time=5.417 ms
+
+--- 10.6.2.0 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 4.211/6.963/13.861 ms
+Leaf-1#
+
+
 ```
 
 - #### leaf-2
 
 ```
-leaf-2#show ip bgp summary
-BGP summary information for VRF default
-Router identifier 10.1.0.2, local AS number 65002
+Leaf-2#    sh ip bgp ipv4 summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.6.1.2        4 65000     445     441       18    0    0 00:21:54 6
+10.6.2.2        4 65000     445     441       18    0    0 00:21:54 6
 
-  Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.4.1.2         4  65000            559       478    0    0 01:31:41 Estab   3      3
-  10.4.2.2         4  65000            495       496    0    0 00:18:32 Estab   3      3
 
-leaf-2#show ip route
+Leaf-2# sh ip route
+10.1.0.1/32, ubest/mbest: 2/0
+    *via 10.6.1.2, [20/0], 00:22:06, bgp-65002, external, tag 65000
+    *via 10.6.2.2, [20/0], 00:22:06, bgp-65002, external, tag 65000
+10.1.0.2/32, ubest/mbest: 2/0, attached
+    *via 10.1.0.2, Lo1, [0/0], 00:24:44, local
+    *via 10.1.0.2, Lo1, [0/0], 00:24:44, direct
+10.1.0.3/32, ubest/mbest: 2/0
+    *via 10.6.1.2, [20/0], 00:18:12, bgp-65002, external, tag 65000
+    *via 10.6.2.2, [20/0], 00:18:12, bgp-65002, external, tag 65000
+10.6.1.0/31, ubest/mbest: 2/0
+    *via 10.6.1.2, [20/0], 00:22:06, bgp-65002, external, tag 65000
+    *via 10.6.2.2, [20/0], 00:22:06, bgp-65002, external, tag 65000
+10.6.1.2/31, ubest/mbest: 1/0, attached
+    *via 10.6.1.3, Eth1/1, [0/0], 00:26:04, direct
+10.6.1.3/32, ubest/mbest: 1/0, attached
+    *via 10.6.1.3, Eth1/1, [0/0], 00:26:04, local
+10.6.1.4/31, ubest/mbest: 2/0
+    *via 10.6.1.2, [20/0], 00:18:12, bgp-65002, external, tag 65000
+    *via 10.6.2.2, [20/0], 00:18:12, bgp-65002, external, tag 65000
+10.6.2.0/31, ubest/mbest: 2/0
+    *via 10.6.1.2, [20/0], 00:22:06, bgp-65002, external, tag 65000
+    *via 10.6.2.2, [20/0], 00:22:06, bgp-65002, external, tag 65000
+10.6.2.2/31, ubest/mbest: 1/0, attached
+    *via 10.6.2.3, Eth1/2, [0/0], 00:26:03, direct
+10.6.2.3/32, ubest/mbest: 1/0, attached
+    *via 10.6.2.3, Eth1/2, [0/0], 00:26:03, local
+10.6.2.4/31, ubest/mbest: 2/0
+    *via 10.6.1.2, [20/0], 00:18:12, bgp-65002, external, tag 65000
+    *via 10.6.2.2, [20/0], 00:18:12, bgp-65002, external, tag 65000
 
- B E      10.1.0.1/32 [200/0] via 10.4.1.2, Ethernet1
-                              via 10.4.2.2, Ethernet2
- C        10.1.0.2/32 is directly connected, Loopback1
- B E      10.1.0.3/32 [200/0] via 10.4.1.2, Ethernet1
-                              via 10.4.2.2, Ethernet2
- B E      10.1.1.0/32 [200/0] via 10.4.1.2, Ethernet1
- B E      10.1.2.0/32 [200/0] via 10.4.2.2, Ethernet2
- C        10.4.1.2/31 is directly connected, Ethernet1
- C        10.4.2.2/31 is directly connected, Ethernet2
+Leaf-2# ping 10.6.1.2
+PING 10.6.1.2 (10.6.1.2): 56 data bytes
+64 bytes from 10.6.1.2: icmp_seq=0 ttl=254 time=14.834 ms
+64 bytes from 10.6.1.2: icmp_seq=1 ttl=254 time=3.457 ms
+64 bytes from 10.6.1.2: icmp_seq=2 ttl=254 time=3.907 ms
+64 bytes from 10.6.1.2: icmp_seq=3 ttl=254 time=10.959 ms
+64 bytes from 10.6.1.2: icmp_seq=4 ttl=254 time=7.094 ms
 
-leaf-2#ping 10.1.0.1 source 10.1.0.2
-PING 10.1.0.1 (10.1.0.1) from 10.1.0.2 : 72(100) bytes of data.
-80 bytes from 10.1.0.1: icmp_seq=1 ttl=63 time=5.47 ms
-80 bytes from 10.1.0.1: icmp_seq=2 ttl=63 time=5.72 ms
-80 bytes from 10.1.0.1: icmp_seq=3 ttl=63 time=4.83 ms
-80 bytes from 10.1.0.1: icmp_seq=4 ttl=63 time=7.84 ms
-80 bytes from 10.1.0.1: icmp_seq=5 ttl=63 time=4.96 ms
+--- 10.6.1.2 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 3.457/8.05/14.834 ms
+Leaf-2# ping 10.6.2.2
+PING 10.6.2.2 (10.6.2.2): 56 data bytes
+64 bytes from 10.6.2.2: icmp_seq=0 ttl=254 time=9.053 ms
+64 bytes from 10.6.2.2: icmp_seq=1 ttl=254 time=10.575 ms
+64 bytes from 10.6.2.2: icmp_seq=2 ttl=254 time=8.211 ms
+64 bytes from 10.6.2.2: icmp_seq=3 ttl=254 time=5.977 ms
+64 bytes from 10.6.2.2: icmp_seq=4 ttl=254 time=6.112 ms
 
-leaf-2#ping 10.1.0.3 source 10.1.0.2
-PING 10.1.0.3 (10.1.0.3) from 10.1.0.2 : 72(100) bytes of data.
-80 bytes from 10.1.0.3: icmp_seq=1 ttl=63 time=7.04 ms
-80 bytes from 10.1.0.3: icmp_seq=2 ttl=63 time=4.80 ms
-80 bytes from 10.1.0.3: icmp_seq=3 ttl=63 time=4.90 ms
-80 bytes from 10.1.0.3: icmp_seq=4 ttl=63 time=7.11 ms
-80 bytes from 10.1.0.3: icmp_seq=5 ttl=63 time=5.38 ms
+--- 10.6.2.2 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 5.977/7.985/10.575 ms
+
 
 ```
 
 - #### leaf-3
 
 ```
-leaf-3#show ip bgp summary
-BGP summary information for VRF default
-Router identifier 10.1.0.3, local AS number 65003
+Leaf-3# sh ip bgp ipv4 summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.6.1.4        4 65000     389     385       12    0    0 00:19:04 6
+10.6.2.4        4 65000     389     385       12    0    0 00:19:04 6
 
-  Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.4.1.4         4  65000            343       271    0    0 01:30:55 Estab   3      3
-  10.4.2.4         4  65000            279       279    0    0 00:18:32 Estab   3      3
 
-leaf-3#show ip route
+Leaf-3# sh ip route
+10.1.0.1/32, ubest/mbest: 2/0
+    *via 10.6.1.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+    *via 10.6.2.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+10.1.0.2/32, ubest/mbest: 2/0
+    *via 10.6.1.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+    *via 10.6.2.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+10.1.0.3/32, ubest/mbest: 2/0, attached
+    *via 10.1.0.3, Lo1, [0/0], 00:21:12, local
+    *via 10.1.0.3, Lo1, [0/0], 00:21:12, direct
+10.6.1.0/31, ubest/mbest: 2/0
+    *via 10.6.1.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+    *via 10.6.2.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+10.6.1.2/31, ubest/mbest: 2/0
+    *via 10.6.1.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+    *via 10.6.2.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+10.6.1.4/31, ubest/mbest: 1/0, attached
+    *via 10.6.1.5, Eth1/1, [0/0], 00:21:03, direct
+10.6.1.5/32, ubest/mbest: 1/0, attached
+    *via 10.6.1.5, Eth1/1, [0/0], 00:21:03, local
+10.6.2.0/31, ubest/mbest: 2/0
+    *via 10.6.1.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+    *via 10.6.2.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+10.6.2.2/31, ubest/mbest: 2/0
+    *via 10.6.1.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+    *via 10.6.2.4, [20/0], 00:19:21, bgp-65003, external, tag 65000
+10.6.2.4/31, ubest/mbest: 1/0, attached
+    *via 10.6.2.5, Eth1/2, [0/0], 00:21:02, direct
+10.6.2.5/32, ubest/mbest: 1/0, attached
+    *via 10.6.2.5, Eth1/2, [0/0], 00:21:02, local
 
- B E      10.1.0.1/32 [200/0] via 10.4.1.4, Ethernet1
-                              via 10.4.2.4, Ethernet2
- B E      10.1.0.2/32 [200/0] via 10.4.1.4, Ethernet1
-                              via 10.4.2.4, Ethernet2
- C        10.1.0.3/32 is directly connected, Loopback1
- B E      10.1.1.0/32 [200/0] via 10.4.1.4, Ethernet1
- B E      10.1.2.0/32 [200/0] via 10.4.2.4, Ethernet2
- C        10.4.1.4/31 is directly connected, Ethernet1
- C        10.4.2.4/31 is directly connected, Ethernet2
- 
-leaf-3#ping 10.1.0.1 source 10.1.0.3
-PING 10.1.0.1 (10.1.0.1) from 10.1.0.3 : 72(100) bytes of data.
-80 bytes from 10.1.0.1: icmp_seq=1 ttl=63 time=5.47 ms
-80 bytes from 10.1.0.1: icmp_seq=2 ttl=63 time=4.47 ms
-80 bytes from 10.1.0.1: icmp_seq=3 ttl=63 time=5.46 ms
-80 bytes from 10.1.0.1: icmp_seq=4 ttl=63 time=6.10 ms
-80 bytes from 10.1.0.1: icmp_seq=5 ttl=63 time=4.66 ms
+Leaf-3# ping 10.6.1.4
+PING 10.6.1.4 (10.6.1.4): 56 data bytes
+64 bytes from 10.6.1.4: icmp_seq=0 ttl=254 time=20.712 ms
+64 bytes from 10.6.1.4: icmp_seq=1 ttl=254 time=7.166 ms
+64 bytes from 10.6.1.4: icmp_seq=2 ttl=254 time=6.264 ms
+64 bytes from 10.6.1.4: icmp_seq=3 ttl=254 time=8.374 ms
+64 bytes from 10.6.1.4: icmp_seq=4 ttl=254 time=7.269 ms
 
-leaf-3#ping 10.1.0.2 source 10.1.0.3
-PING 10.1.0.2 (10.1.0.2) from 10.1.0.3 : 72(100) bytes of data.
-80 bytes from 10.1.0.2: icmp_seq=1 ttl=63 time=5.43 ms
-80 bytes from 10.1.0.2: icmp_seq=2 ttl=63 time=4.31 ms
-80 bytes from 10.1.0.2: icmp_seq=3 ttl=63 time=4.58 ms
-80 bytes from 10.1.0.2: icmp_seq=4 ttl=63 time=4.98 ms
-80 bytes from 10.1.0.2: icmp_seq=5 ttl=63 time=6.11 ms
-```
+--- 10.6.1.4 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 6.264/9.957/20.712 ms
+Leaf-3# ping 10.6.2.4
+PING 10.6.2.4 (10.6.2.4): 56 data bytes
+64 bytes from 10.6.2.4: icmp_seq=0 ttl=254 time=13.935 ms
+64 bytes from 10.6.2.4: icmp_seq=1 ttl=254 time=5.358 ms
+64 bytes from 10.6.2.4: icmp_seq=2 ttl=254 time=8.187 ms
+64 bytes from 10.6.2.4: icmp_seq=3 ttl=254 time=6.44 ms
+64 bytes from 10.6.2.4: icmp_seq=4 ttl=254 time=8.18 ms
+
+--- 10.6.2.4 ping statistics ---
+5 packets transmitted, 5 packets received, 0.00% packet loss
+round-trip min/avg/max = 5.358/8.42/13.935 ms
+
+
