@@ -323,6 +323,19 @@ PING 10.6.1.5 (10.6.1.5): 56 data bytes
 5 packets transmitted, 5 packets received, 0.00% packet loss
 round-trip min/avg/max = 3.741/9.819/24.532 ms
 
+Spine-1# sh bfd ne
+OurAddr         NeighAddr       LD/RD                 RH/RS           Holdown(mu
+lt)     State       Int                   Vrf                              Type
+
+10.6.1.0        10.6.1.1        1090519041/0          Down            N/A(3)
+        Down        Eth1/1                default                          SH
+
+10.6.1.2        10.6.1.3        1090519042/0          Down            N/A(3)
+        Down        Eth1/2                default                          SH
+
+10.6.1.4        10.6.1.5        1090519043/0          Down            N/A(3)
+        Down        Eth1/3                default                          SH
+
 
 ```
 
