@@ -12,7 +12,7 @@
 
 ### Схема сети
 
-![](images/Underlay_eBGP.png)
+![](images/bgp_underlay.PNG)
 
 ### Конфигурация оборудования
 
