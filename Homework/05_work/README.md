@@ -986,8 +986,6 @@ Route Distinguisher: 10.1.0.3:3    (L3VNI 2000)
 - #### Проверка связанности хостов
 
 ```
-
-```
 VPCS1> ping 172.16.200.10
 84 bytes from 172.16.200.10 icmp_seq=1 ttl=62 time=15.258 ms
 84 bytes from 172.16.200.10 icmp_seq=2 ttl=62 time=14.683 ms
@@ -1018,4 +1016,5 @@ VPCS4> ping 172.16.100.10
   
 ```
 ```
+
 
