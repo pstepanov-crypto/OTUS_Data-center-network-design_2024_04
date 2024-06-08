@@ -642,10 +642,9 @@ router bgp 65200
 
 ---
 ### Проверка связанности клиентов по L2
-
 - #### spine-1
 ```
-Spine-1# sh bgp l2vpn evpn summary
+sh bgp l2vpn evpn summary
 Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 10.1.0.1        4 65200      22      21       14    0    0 00:15:47 1
 10.1.0.2        4 65200      23      21       14    0    0 00:16:25 1
