@@ -579,28 +579,26 @@ router bgp 65200
 - #### spine-1
 
 ```
-spine-1#sh bgp evpn summary
-BGP summary information for VRF default
-Router identifier 10.1.1.0, local AS number 65000
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.1.0.1         4 65001           2373      2366    0    0 01:40:03 Estab   2      2
-  10.1.0.2         4 65002           2362      2357    0    0 01:39:27 Estab   2      2
-  10.1.0.3         4 65003           2357      2355    0    0 01:39:15 Estab   2      2
+Spine-1# sh bgp l2vpn evpn summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.0.1        4 65200      22      21       14    0    0 00:15:47 1
+10.1.0.2        4 65200      23      21       14    0    0 00:16:25 1
+10.1.0.3        4 65200       7       6       14    0    0 00:00:30 1
+10.1.2.0        4 65200      22      22       14    0    0 00:16:02 0
+
 
 ```
 
 - #### spine-2
 
 ```
-spine-2#sh bgp evpn summary
-BGP summary information for VRF default
-Router identifier 10.1.2.0, local AS number 65000
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.1.0.1         4 65001             21        17    0    0 00:00:16 Estab   2      2
-  10.1.0.2         4 65002             20        17    0    0 00:00:13 Estab   2      2
-  10.1.0.3         4 65003             20        17    0    0 00:00:14 Estab   2      2
+Spine-2# sh bgp l2vpn evpn summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.0.1        4 65200      18      34       47    0    0 00:04:55 2
+10.1.0.2        4 65200      18      30       47    0    0 00:06:07 1
+10.1.0.3        4 65200      18      20       47    0    0 00:06:07 1
+10.1.1.0        4 65200      41      35       47    0    0 00:05:01 4
+
 ```
 
 - #### leaf-1
