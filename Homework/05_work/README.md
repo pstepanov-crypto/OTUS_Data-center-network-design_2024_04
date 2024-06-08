@@ -637,3 +637,25 @@ router bgp 65200
     inherit peer RRC
   neighbor 10.1.1.0
     inherit peer RR
+
+```
+
+- #### Проверка связанности
+
+```
+
+
+Spine-1# sh bgp l2vpn evpn summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.0.1        4 65200     112     110      130    0    0 01:37:36 5
+10.1.0.2        4 65200      93      97      130    0    0 00:00:04 3
+10.1.0.3        4 65200     105      93      130    0    0 01:22:20 7
+10.2.1.0        4 65200     116      84      130    0    0 01:17:17 15
+
+
+
+```
+
+
+
+```
