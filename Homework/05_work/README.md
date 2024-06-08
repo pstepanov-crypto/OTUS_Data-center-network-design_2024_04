@@ -19,75 +19,146 @@
 - #### [leaf-1](config/leaf-1.conf)
 
 ```
-interface Ethernet3
-   description to-client-1
-   switchport access vlan 10
-!
-interface Ethernet4
-   description to-client-2
-   switchport access vlan 20
-!
-interface Loopback1
-   ip address 10.1.0.1/32
-!
-interface Loopback100
-   description NVE Loopback
-   ip address 10.100.0.1/32
-!
-interface Vxlan1
-   vxlan source-interface Loopback100
-   vxlan udp-port 4789
-   vxlan vlan 10 vni 10010
-   vxlan vlan 20 vni 10020
-   vxlan learn-restrict any
-!
-ip routing
-!
-ip prefix-list PL_LOOP
-   seq 10 permit 10.1.0.1/32
-   seq 20 permit 10.100.0.1/32
-!
-route-map RM_CONN permit 10
-   match ip address prefix-list PL_LOOP
-!
-router bgp 65001
-   router-id 10.1.0.1
-   timers bgp 3 9
-   maximum-paths 2 ecmp 2
-   neighbor EVPN peer group
-   neighbor EVPN remote-as 65000
-   neighbor EVPN update-source Loopback1
-   neighbor EVPN ebgp-multihop 3
-   neighbor EVPN send-community extended
-   neighbor SPINE peer group
-   neighbor SPINE remote-as 65000
-   neighbor SPINE bfd
-   neighbor SPINE allowas-in 1
-   neighbor SPINE rib-in pre-policy retain all
-   neighbor SPINE password 7 9cdhNWhDdTM=
-   neighbor SPINE send-community extended
-   neighbor SPINE maximum-routes 1000
-   neighbor 10.1.1.0 peer group EVPN
-   neighbor 10.1.2.0 peer group EVPN
-   neighbor 10.4.1.0 peer group SPINE
-   neighbor 10.4.2.0 peer group SPINE
-   redistribute connected route-map RM_CONN
-   !
-   vlan 10
-      rd 65001:10010
-      route-target both 10:10010
-      redistribute learned
-   !
-   vlan 20
-      rd 65001:10020
-      route-target both 20:10020
-      redistribute learned
-   !
-   address-family evpn
-      neighbor EVPN activate
-   !
-   address-family ipv4
-      neighbor SPINE activate
+cfs eth distribute
+nv overlay evpn
+feature ospf
+feature bgp
+feature fabric forwarding
+feature interface-vlan
+feature vn-segment-vlan-based
+feature bfd
+clock timezone MSK 3 0
+feature nv overlay
+
+fabric forwarding anycast-gateway-mac 0000.dead.beef
+vlan 1,100,200,2000
+vlan 100
+  name Hosts
+  vn-segment 100
+vlan 200
+  name Servers
+  vn-segment 200
+vlan 2000
+  name VRF_MAIN_VXLAN_FORWARD
+  vn-segment 2000
+
+vrf context main
+  vni 2000
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
+vrf context management
+
+interface Vlan1
+
+interface Vlan100
+  no shutdown
+  vrf member main
+  no ip redirects
+  ip address 172.16.100.1/24
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
+
+interface Vlan200
+  no shutdown
+  vrf member main
+  no ip redirects
+  ip address 172.16.200.1/24
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
+
+interface Vlan2000
+  no shutdown
+  mtu 9216
+  vrf member main
+  no ip redirects
+  ip forward
+  no ipv6 redirects
+
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  advertise virtual-rmac
+  source-interface loopback2
+  member vni 100
+    ingress-replication protocol bgp
+  member vni 200
+    ingress-replication protocol bgp
+  member vni 2000 associate-vrf
+
+interface Ethernet1/1
+  description to-spine-1
+  no switchport
+  no ip redirects
+  ip address 10.6.1.1/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
+
+interface Ethernet1/2
+  description to-spine-2
+  no switchport
+  no ip redirects
+  ip address 10.6.2.1/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  ip ospf bfd
+  no shutdown
+
+interface Ethernet1/3
+  description VPC1
+  switchport access vlan 100
+
+interface mgmt0
+  vrf member management
+
+interface loopback2
+  ip address 10.1.0.1/32
+  ip router ospf UNDERLAY area 0.0.0.30
+icam monitor scale
+
+line console
+line vty
+router ospf UNDERLAY
+  bfd
+  router-id 10.1.0.1
+router bgp 65200
+  router-id 10.1.0.1
+  address-family ipv4 unicast
+    maximum-paths 2
+  address-family l2vpn evpn
+    advertise-pip
+  template peer RR
+    bfd
+    remote-as 65200
+    log-neighbor-changes
+    update-source loopback2
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+  neighbor 10.1.1.0
+    inherit peer RR
+    address-family l2vpn evpn
+  neighbor 10.2.1.0
+    inherit peer RR
+    address-family l2vpn evpn
+  vrf main
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+      maximum-paths 2
+evpn
+  vni 100 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 200 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+
 ```
 
 - #### [leaf-2](config/leaf-2.conf)
@@ -169,148 +240,338 @@ router bgp 65002
 - #### [leaf-3](config/leaf-3.conf)
 
 ```
-interface Ethernet3
-   description to-clien-5
-   switchport access vlan 100
-!
-interface Ethernet4
-   description to-clien-6
-   switchport access vlan 200
-!
-interface Loopback1
-   ip address 10.1.0.3/32
-!
-interface Loopback100
-   description NVE Loopback
-   ip address 10.100.0.3/32
-!
-interface Management1
-!
-interface Vxlan1
-   vxlan source-interface Loopback100
-   vxlan udp-port 4789
-   vxlan vlan 100 vni 10010
-   vxlan vlan 200 vni 10020
-   vxlan learn-restrict any
-!
-ip routing
-!
-ip prefix-list PL_LOOP
-   seq 10 permit 10.1.0.3/32
-   seq 20 permit 10.100.0.3/32
-!
-route-map RM_CONN permit 10
-   match ip address prefix-list PL_LOOP
-!
-router bgp 65003
-   router-id 10.1.0.3
-   timers bgp 3 9
-   maximum-paths 2 ecmp 2
-   neighbor EVPN peer group
-   neighbor EVPN remote-as 65000
-   neighbor EVPN update-source Loopback1
-   neighbor EVPN ebgp-multihop 3
-   neighbor EVPN send-community extended
-   neighbor SPINE peer group
-   neighbor SPINE remote-as 65000
-   neighbor SPINE bfd
-   neighbor SPINE allowas-in 1
-   neighbor SPINE rib-in pre-policy retain all
-   neighbor SPINE password 7 9cdhNWhDdTM=
-   neighbor SPINE send-community
-   neighbor SPINE maximum-routes 1000
-   neighbor 10.1.1.0 peer group EVPN
-   neighbor 10.1.2.0 peer group EVPN
-   neighbor 10.4.1.4 peer group SPINE
-   neighbor 10.4.2.4 peer group SPINE
-   redistribute connected route-map RM_CONN
-   !
-   vlan 100
-      rd 65003:10010
-      route-target both 10:10010
-      redistribute learned
-   !
-   vlan 200
-      rd 65003:10020
-      route-target both 20:10020
-      redistribute learned
-   !
-   address-family evpn
-      neighbor EVPN activate
-   !
-   address-family ipv4
-      neighbor SPINE activate
+nv overlay evpn
+feature ospf
+feature bgp
+feature fabric forwarding
+feature interface-vlan
+feature vn-segment-vlan-based
+feature bfd
+clock timezone MSK 3 0
+feature nv overlay
+
+fabric forwarding anycast-gateway-mac 0000.dead.beef
+vlan 1,100,200,2000
+vlan 100
+  name Hosts
+  vn-segment 100
+vlan 200
+  name Servers
+  vn-segment 200
+vlan 2000
+  name VRF_MAIN_VXLAN_FORWARD
+  vn-segment 2000
+
+vrf context main
+  vni 2000
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
+vrf context management
+
+interface Vlan1
+
+interface Vlan100
+  no shutdown
+  vrf member main
+  no ip redirects
+  ip address 172.16.100.1/24
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
+
+interface Vlan200
+  no shutdown
+  vrf member main
+  no ip redirects
+  ip address 172.16.200.1/24
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
+
+interface Vlan2000
+  no shutdown
+  mtu 9216
+  vrf member main
+  no ip redirects
+  ip forward
+  no ipv6 redirects
+
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  advertise virtual-rmac
+  source-interface loopback2
+  member vni 100
+    ingress-replication protocol bgp
+  member vni 200
+    ingress-replication protocol bgp
+  member vni 2000 associate-vrf
+
+interface Ethernet1/1
+  description to-spine-1
+  no switchport
+  no ip redirects
+  ip address 10.6.1.5/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
+
+interface Ethernet1/2
+  description to-spine-2
+  no switchport
+  no ip redirects
+  ip address 10.6.2.5/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
+
+interface Ethernet1/3
+  description VPC3
+  switchport access vlan 100
+
+interface Ethernet1/4
+  description VPC4
+  switchport access vlan 200
+
+interface mgmt0
+  vrf member management
+
+interface loopback2
+  ip address 10.1.0.3/32
+  ip router ospf UNDERLAY area 0.0.0.30
+icam monitor scale
+
+line console
+line vty
+router ospf UNDERLAY
+  bfd
+  router-id 10.1.0.3
+  passive-interface default
+router bgp 65200
+  router-id 10.1.0.3
+  address-family ipv4 unicast
+    maximum-paths 2
+  address-family l2vpn evpn
+    advertise-pip
+  template peer RR
+    bfd
+    remote-as 65200
+    log-neighbor-changes
+    update-source loopback2
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+  neighbor 10.1.1.0
+    inherit peer RR
+    address-family l2vpn evpn
+  neighbor 10.2.1.0
+    inherit peer RR
+    address-family l2vpn evpn
+  vrf main
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+      maximum-paths 2
+evpn
+  vni 100 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 200 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+
+
 ```
 
 - #### [spine-1](config/spine-1.conf)
 
 ```
-peer-filter EVPN
-   10 match as-range 65001-65003 result accept
-!
-peer-filter LEAF
-   10 match as-range 65001-65003 result accept
-!
-router bgp 65000
-   router-id 10.1.1.0
-   timers bgp 3 9
-   maximum-paths 2 ecmp 2
-   bgp listen range 10.1.0.0/24 peer-group EVPN peer-filter EVPN
-   bgp listen range 10.4.1.0/24 peer-group LEAF peer-filter LEAF
-   neighbor EVPN peer group
-   neighbor EVPN next-hop-unchanged
-   neighbor EVPN update-source Loopback1
-   neighbor EVPN ebgp-multihop 3
-   neighbor EVPN send-community extended
-   neighbor LEAF peer group
-   neighbor LEAF bfd
-   neighbor LEAF rib-in pre-policy retain all
-   neighbor LEAF password 7 7zCpOlU0aME=
-   neighbor LEAF send-community
-   neighbor LEAF maximum-routes 1000
-   redistribute connected route-map RM_CONN
-   !
-   address-family evpn
-      neighbor EVPN activate
-   !
-   address-family ipv4
-      neighbor LEAF activate
+cfs eth distribute
+nv overlay evpn
+feature ospf
+feature bgp
+feature fabric forwarding
+feature interface-vlan
+feature vn-segment-vlan-based
+feature bfd
+clock timezone MSK 3 0
+feature nv overlay
+
+fabric forwarding anycast-gateway-mac 0000.dead.beef
+vlan 1
+
+vrf context management
+
+interface Vlan1
+
+interface Ethernet1/1
+  description to-leaf-1
+  no switchport
+  no ip redirects
+  ip address 10.6.1.0/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  ip ospf bfd
+  no shutdown
+
+interface Ethernet1/2
+  description to-leaf-2
+  no switchport
+  no ip redirects
+  ip address 10.6.1.2/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
+
+interface Ethernet1/3
+  description to-leaf-3
+  no switchport
+  no ip redirects
+  ip address 10.6.1.4/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
+
+interface mgmt0
+  vrf member management
+
+interface loopback1
+  ip address 10.1.1.0/32
+  ip router ospf UNDERLAY area 0.0.0.30
+icam monitor scale
+
+line console
+line vty
+router ospf UNDERLAY
+  bfd
+  router-id 10.1.1.0
+router bgp 65200
+  router-id 10.1.1.0
+  address-family l2vpn evpn
+    maximum-paths 2
+    retain route-target all
+  template peer RR
+    remote-as 65200
+    update-source loopback1
+    address-family l2vpn evpn
+      send-community extended
+      route-reflector-client
+  template peer RRC
+    remote-as 65200
+    log-neighbor-changes
+    update-source loopback1
+    address-family l2vpn evpn
+      send-community extended
+      route-reflector-client
+  neighbor 10.1.0.1
+    inherit peer RRC
+  neighbor 10.1.0.2
+    inherit peer RRC
+  neighbor 10.1.0.3
+    inherit peer RRC
+  neighbor 10.2.1.0
+    inherit peer RR
+
 ```
 
 - #### [spine-2](config/spine-2.conf)
 
 ```
-peer-filter EVPN
-   10 match as-range 65001-65003 result accept
-!
-peer-filter LEAF
-   10 match as-range 65001-65003 result accept
-!
-router bgp 65000
-   router-id 10.1.2.0
-   timers bgp 3 9
-   maximum-paths 2 ecmp 2
-   bgp listen range 10.1.0.0/24 peer-group EVPN peer-filter EVPN
-   bgp listen range 10.4.2.0/24 peer-group LEAF peer-filter LEAF
-   neighbor EVPN peer group
-   neighbor EVPN next-hop-unchanged
-   neighbor EVPN update-source Loopback1
-   neighbor EVPN ebgp-multihop 3
-   neighbor EVPN send-community extended
-   neighbor LEAF peer group
-   neighbor LEAF bfd
-   neighbor LEAF rib-in pre-policy retain all
-   neighbor LEAF password 7 7zCpOlU0aME=
-   neighbor LEAF send-community
-   neighbor LEAF maximum-routes 1000
-   redistribute connected route-map RM_CONN
-   !
-   address-family evpn
-      neighbor EVPN activate
-   !
-   address-family ipv4
-      neighbor LEAF activate
-```
+nv overlay evpn
+feature ospf
+feature bgp
+feature fabric forwarding
+feature interface-vlan
+feature vn-segment-vlan-based
+feature bfd
+clock timezone MSK 3 0
+feature nv overlay
+
+fabric forwarding anycast-gateway-mac 0000.dead.beef
+vlan 1
+
+vrf context management
+
+interface Vlan1
+
+interface Ethernet1/1
+  description to-leaf-1
+  no switchport
+  no ip redirects
+  ip address 10.6.2.0/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
+
+interface Ethernet1/2
+  description to-leaf-2
+  no switchport
+  no ip redirects
+  ip address 10.6.2.2/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
+
+interface Ethernet1/3
+  description to-leaf-3
+  no switchport
+  no ip redirects
+  ip address 10.6.2.4/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
+
+interface mgmt0
+  vrf member management
+
+interface loopback1
+  ip address 10.2.1.0/32
+  ip router ospf UNDERLAY area 0.0.0.30
+icam monitor scale
+
+line console
+line vty
+router ospf UNDERLAY
+  bfd
+  router-id 10.2.1.0
+router bgp 65200
+  router-id 10.2.1.0
+  address-family l2vpn evpn
+    maximum-paths 2
+    retain route-target all
+  template peer RR
+    remote-as 65200
+    update-source loopback1
+    address-family l2vpn evpn
+      send-community extended
+      route-reflector-client
+  template peer RRC
+    remote-as 65200
+    log-neighbor-changes
+    update-source loopback1
+    address-family l2vpn evpn
+      send-community extended
+      route-reflector-client
+  neighbor 10.1.0.1
+    inherit peer RRC
+  neighbor 10.1.0.2
+    inherit peer RRC
+  neighbor 10.1.0.3
+    inherit peer RRC
+  neighbor 10.1.1.0
+    inherit peer RR
+
+
+
 ---
 
 ### Проверка связанности клиентов по L2
