@@ -641,11 +641,9 @@ router bgp 65200
 
 
 ---
-
 ### Проверка связанности клиентов по L2
 
 - #### spine-1
-
 ```
 Spine-1# sh bgp l2vpn evpn summary
 Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
@@ -653,12 +651,9 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 10.1.0.2        4 65200      23      21       14    0    0 00:16:25 1
 10.1.0.3        4 65200       7       6       14    0    0 00:00:30 1
 10.1.2.0        4 65200      22      22       14    0    0 00:16:02 0
-
-
 ```
 
 - #### spine-2
-
 ```
 Spine-2# sh bgp l2vpn evpn summary
 Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
@@ -666,38 +661,67 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 10.1.0.2        4 65200      18      30       47    0    0 00:06:07 1
 10.1.0.3        4 65200      18      20       47    0    0 00:06:07 1
 10.1.1.0        4 65200      41      35       47    0    0 00:05:01 4
-
 ```
 
 - #### leaf-1
 
 ```
-leaf-1#sh ip route
+Leaf-1# sh ip route
+10.1.0.1/32, ubest/mbest: 2/0, attached
+    *via 10.1.0.1, Lo2, [0/0], 04:36:21, local
+    *via 10.1.0.1, Lo2, [0/0], 04:36:20, direct
+10.1.0.2/32, ubest/mbest: 2/0
+    *via 10.6.1.0, Eth1/1, [110/81], 00:02:04, ospf-UNDERLAY, intra
+    *via 10.6.2.0, Eth1/2, [110/81], 00:01:56, ospf-UNDERLAY, intra
+10.1.0.3/32, ubest/mbest: 2/0
+    *via 10.6.1.0, Eth1/1, [110/81], 01:23:35, ospf-UNDERLAY, intra
+    *via 10.6.2.0, Eth1/2, [110/81], 01:18:38, ospf-UNDERLAY, intra
+10.1.1.0/32, ubest/mbest: 1/0
+    *via 10.6.1.0, Eth1/1, [110/41], 03:28:55, ospf-UNDERLAY, intra
+10.2.1.0/32, ubest/mbest: 1/0
+    *via 10.6.2.0, Eth1/2, [110/41], 01:18:39, ospf-UNDERLAY, intra
+10.6.1.0/31, ubest/mbest: 1/0, attached
+    *via 10.6.1.1, Eth1/1, [0/0], 03:30:04, direct
+10.6.1.1/32, ubest/mbest: 1/0, attached
+    *via 10.6.1.1, Eth1/1, [0/0], 03:30:04, local
+10.6.1.2/31, ubest/mbest: 1/0
+    *via 10.6.1.0, Eth1/1, [110/80], 03:28:55, ospf-UNDERLAY, intra
+10.6.1.4/31, ubest/mbest: 1/0
+    *via 10.6.1.0, Eth1/1, [110/80], 03:28:55, ospf-UNDERLAY, intra
+10.6.2.0/31, ubest/mbest: 1/0, attached
+    *via 10.6.2.1, Eth1/2, [0/0], 03:29:32, direct
+10.6.2.1/32, ubest/mbest: 1/0, attached
+    *via 10.6.2.1, Eth1/2, [0/0], 03:29:32, local
+10.6.2.2/31, ubest/mbest: 1/0
+    *via 10.6.2.0, Eth1/2, [110/80], 01:18:39, ospf-UNDERLAY, intra
+10.6.2.4/31, ubest/mbest: 1/0
+    *via 10.6.2.0, Eth1/2, [110/80], 01:18:39, ospf-UNDERLAY, intra
+    
+Leaf-1# sh ip route vrf main
+172.16.100.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 00:48:27, direct
+172.16.100.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 00:48:27, local
+172.16.100.10/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.10, Vlan100, [190/0], 00:43:37, hmm
+172.16.100.20/32, ubest/mbest: 1/0
+    *via 10.1.0.3%default, [200/0], 00:40:34, bgp-65200, internal, tag 65200, se
+gid: 2000 tunnelid: 0xa010003 encap: VXLAN
 
- C        10.1.0.1/32 is directly connected, Loopback1
- B E      10.1.0.2/32 [200/0] via 10.4.1.0, Ethernet1
-                              via 10.4.2.0, Ethernet2
- B E      10.1.0.3/32 [200/0] via 10.4.1.0, Ethernet1
-                              via 10.4.2.0, Ethernet2
- B E      10.1.1.0/32 [200/0] via 10.4.1.0, Ethernet1
- B E      10.1.2.0/32 [200/0] via 10.4.2.0, Ethernet2
- C        10.4.1.0/31 is directly connected, Ethernet1
- C        10.4.2.0/31 is directly connected, Ethernet2
- C        10.100.0.1/32 is directly connected, Loopback100
- B E      10.100.0.2/32 [200/0] via 10.4.1.0, Ethernet1
-                                via 10.4.2.0, Ethernet2
- B E      10.100.0.3/32 [200/0] via 10.4.1.0, Ethernet1
-                                via 10.4.2.0, Ethernet2
+172.16.200.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 00:48:15, direct
+172.16.200.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 00:48:15, local
+172.16.200.20/32, ubest/mbest: 1/0
+    *via 10.1.0.3%default, [200/0], 00:32:13, bgp-65200, internal, tag 65200, se
+gid: 2000 tunnelid: 0xa010003 encap: VXLAN
 
-leaf-1#sh ip bgp summary
-BGP summary information for VRF default
-Router identifier 10.1.0.1, local AS number 65001
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.1.1.0         4 65000           5249      5254    0    0 01:43:58 Estab   5      5
-  10.1.2.0         4 65000           4612      4603    0    0 01:40:03 Estab   5      5
-  10.4.1.0         4 65000           5208      5217    0    0 03:41:50 Estab   5      5
-  10.4.2.0         4 65000           5215      5204    0    0 03:16:13 Estab   5      5
+
+Leaf-1# sh bgp l2vpn evpn summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.1.0        4 65200     163     109      270    0    0 01:41:16 10
+10.2.1.0        4 65200     150      94      270    0    0 01:20:51 10
+
 
 leaf-1#show vxlan address-table
           Vxlan Mac Address Table
