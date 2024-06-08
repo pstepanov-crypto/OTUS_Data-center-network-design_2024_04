@@ -12,7 +12,7 @@
 
 ### Схема сети
 
-![](images/Overlay_VXLAN_L2.png)
+![](images/IBGP_EVPN.PNG)
 
 ### Конфигурация оборудования
 
