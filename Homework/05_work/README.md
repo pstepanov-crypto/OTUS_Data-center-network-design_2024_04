@@ -22,21 +22,6 @@
 ```
 Leaf-1# sh run
 
-!Command: show running-config
-!Running configuration last done at: Mon Jun 10 21:18:12 2024
-!Time: Mon Jun 10 21:25:12 2024
-
-version 9.3(6) Bios:version
-hostname Leaf-1
-vdc Leaf-1 id 1
-  limit-resource vlan minimum 16 maximum 4094
-  limit-resource vrf minimum 2 maximum 4096
-  limit-resource port-channel minimum 0 maximum 511
-  limit-resource u4route-mem minimum 248 maximum 248
-  limit-resource u6route-mem minimum 96 maximum 96
-  limit-resource m4route-mem minimum 58 maximum 58
-  limit-resource m6route-mem minimum 8 maximum 8
-
 cfs eth distribute
 nv overlay evpn
 feature ospf
@@ -47,19 +32,6 @@ feature vn-segment-vlan-based
 feature bfd
 clock timezone MSK 3 0
 feature nv overlay
-
-no password strength-check
-username admin password 5 $5$JPBBJC$39zZxY8lfCntMPJjDj1hYfg9PQhrNJ1ljfDwJa16x7D
- role network-admin
-ip domain-lookup
-copp profile strict
-snmp-server user admin network-admin auth md5 0x895d2007842db7a4c451eb526dbceb97
- priv 0x895d2007842db7a4c451eb526dbceb97 localizedkey
-rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
-rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
-rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
-rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
-rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
 
 vlan 1,100,200
 vlan 100
@@ -126,7 +98,6 @@ router bgp 65200
     maximum-paths 2
   address-family l2vpn evpn
   template peer RR
-    bfd
     remote-as 65200
     log-neighbor-changes
     update-source loopback2
@@ -156,21 +127,6 @@ evpn
 ```
 Leaf-2# sh run
 
-!Command: show running-config
-!Running configuration last done at: Mon Jun 10 21:18:32 2024
-!Time: Mon Jun 10 21:25:56 2024
-
-version 9.3(6) Bios:version
-hostname Leaf-2
-vdc Leaf-2 id 1
-  limit-resource vlan minimum 16 maximum 4094
-  limit-resource vrf minimum 2 maximum 4096
-  limit-resource port-channel minimum 0 maximum 511
-  limit-resource u4route-mem minimum 248 maximum 248
-  limit-resource u6route-mem minimum 96 maximum 96
-  limit-resource m4route-mem minimum 58 maximum 58
-  limit-resource m6route-mem minimum 8 maximum 8
-
 nv overlay evpn
 feature ospf
 feature bgp
@@ -180,19 +136,6 @@ feature vn-segment-vlan-based
 feature bfd
 clock timezone MSK 3 0
 feature nv overlay
-
-no password strength-check
-username admin password 5 $5$DEAFHG$Zk.XbwUQTiB2PvouRV2K/aLYocC1uuf0Fcki8pZpiU.
- role network-admin
-ip domain-lookup
-copp profile strict
-snmp-server user admin network-admin auth md5 0xc481d9a6d678df710f38b255962f8b3a
- priv 0xc481d9a6d678df710f38b255962f8b3a localizedkey
-rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
-rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
-rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
-rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
-rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
 
 vlan 1,100,200
 vlan 100
@@ -250,7 +193,6 @@ icam monitor scale
 line console
 line vty
 router ospf UNDERLAY
-  bfd
   router-id 10.1.0.2
   passive-interface default
 router bgp 65200
@@ -259,7 +201,6 @@ router bgp 65200
     maximum-paths 2
   address-family l2vpn evpn
   template peer RR
-    bfd
     remote-as 65200
     log-neighbor-changes
     update-source loopback2
@@ -289,21 +230,6 @@ evpn
 ```
 Leaf-3# sh run
 
-!Command: show running-config
-!Running configuration last done at: Mon Jun 10 21:19:32 2024
-!Time: Mon Jun 10 21:27:09 2024
-
-version 9.3(6) Bios:version
-hostname Leaf-3
-vdc Leaf-3 id 1
-  limit-resource vlan minimum 16 maximum 4094
-  limit-resource vrf minimum 2 maximum 4096
-  limit-resource port-channel minimum 0 maximum 511
-  limit-resource u4route-mem minimum 248 maximum 248
-  limit-resource u6route-mem minimum 96 maximum 96
-  limit-resource m4route-mem minimum 58 maximum 58
-  limit-resource m6route-mem minimum 8 maximum 8
-
 nv overlay evpn
 feature ospf
 feature bgp
@@ -313,19 +239,6 @@ feature vn-segment-vlan-based
 feature bfd
 clock timezone MSK 3 0
 feature nv overlay
-
-no password strength-check
-username admin password 5 $5$JMJNCB$OOFbfAItbvnY2saWifJ3sb8F9ixXOOJDD7Vo8PKL98A
- role network-admin
-ip domain-lookup
-copp profile strict
-snmp-server user admin network-admin auth md5 0x137a914874e02521bb89c5e3d99e5bb1
- priv 0x137a914874e02521bb89c5e3d99e5bb1 localizedkey
-rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
-rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
-rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
-rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
-rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
 
 vlan 1,100,200
 vlan 100
@@ -396,8 +309,7 @@ router bgp 65200
     maximum-paths 2
   address-family l2vpn evpn
   template peer RR
-    bfd
-    remote-as 65200
+     remote-as 65200
     log-neighbor-changes
     update-source loopback2
     address-family l2vpn evpn
@@ -428,21 +340,6 @@ evpn
 ```
 Spine-1# sh run
 
-!Command: show running-config
-!Running configuration last done at: Mon Jun 10 21:17:22 2024
-!Time: Mon Jun 10 21:28:17 2024
-
-version 9.3(6) Bios:version
-hostname Spine-1
-vdc Spine-1 id 1
-  limit-resource vlan minimum 16 maximum 4094
-  limit-resource vrf minimum 2 maximum 4096
-  limit-resource port-channel minimum 0 maximum 511
-  limit-resource u4route-mem minimum 248 maximum 248
-  limit-resource u6route-mem minimum 96 maximum 96
-  limit-resource m4route-mem minimum 58 maximum 58
-  limit-resource m6route-mem minimum 8 maximum 8
-
 cfs eth distribute
 nv overlay evpn
 feature ospf
@@ -453,19 +350,6 @@ feature vn-segment-vlan-based
 feature bfd
 clock timezone MSK 3 0
 feature nv overlay
-
-no password strength-check
-username admin password 5 $5$KAFNJO$u7QiS.zAoPxos78.g3/z7cj3yreOpZCoynqwp/4kBC3
- role network-admin
-ip domain-lookup
-copp profile strict
-snmp-server user admin network-admin auth md5 0xd4c034e25a2cdd5c19863dc066b032ca
- priv 0xd4c034e25a2cdd5c19863dc066b032ca localizedkey
-rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
-rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
-rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
-rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
-rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
 
 vlan 1
 
@@ -550,21 +434,6 @@ router bgp 65200
 ```
 Spine-2# sh run
 
-!Command: show running-config
-!Running configuration last done at: Mon Jun 10 21:17:20 2024
-!Time: Mon Jun 10 21:28:41 2024
-
-version 9.3(6) Bios:version
-hostname Spine-2
-vdc Spine-2 id 1
-  limit-resource vlan minimum 16 maximum 4094
-  limit-resource vrf minimum 2 maximum 4096
-  limit-resource port-channel minimum 0 maximum 511
-  limit-resource u4route-mem minimum 248 maximum 248
-  limit-resource u6route-mem minimum 96 maximum 96
-  limit-resource m4route-mem minimum 58 maximum 58
-  limit-resource m6route-mem minimum 8 maximum 8
-
 nv overlay evpn
 feature ospf
 feature bgp
@@ -574,19 +443,6 @@ feature vn-segment-vlan-based
 feature bfd
 clock timezone MSK 3 0
 feature nv overlay
-
-no password strength-check
-username admin password 5 $5$HBOMOE$hiqnpKsTgM0BymOAkSZELIvnAQ5yWs/nlFdJXjsrMe6
- role network-admin
-ip domain-lookup
-copp profile strict
-snmp-server user admin network-admin auth md5 0xee97324bd5fdb2274e6abaa6984bd751
- priv 0xee97324bd5fdb2274e6abaa6984bd751 localizedkey
-rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
-rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
-rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
-rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
-rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
 
 vlan 1
 
