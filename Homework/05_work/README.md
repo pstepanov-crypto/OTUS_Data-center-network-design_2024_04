@@ -17,6 +17,23 @@
 - #### [leaf-1](config/leaf-1.conf)
 
 ```
+Leaf-1# sh run
+
+!Command: show running-config
+!Running configuration last done at: Mon Jun 10 21:18:12 2024
+!Time: Mon Jun 10 21:25:12 2024
+
+version 9.3(6) Bios:version
+hostname Leaf-1
+vdc Leaf-1 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource u4route-mem minimum 248 maximum 248
+  limit-resource u6route-mem minimum 96 maximum 96
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
 cfs eth distribute
 nv overlay evpn
 feature ospf
@@ -28,62 +45,39 @@ feature bfd
 clock timezone MSK 3 0
 feature nv overlay
 
-fabric forwarding anycast-gateway-mac 0000.dead.beef
-vlan 1,100,200,2000
+no password strength-check
+username admin password 5 $5$JPBBJC$39zZxY8lfCntMPJjDj1hYfg9PQhrNJ1ljfDwJa16x7D
+ role network-admin
+ip domain-lookup
+copp profile strict
+snmp-server user admin network-admin auth md5 0x895d2007842db7a4c451eb526dbceb97
+ priv 0x895d2007842db7a4c451eb526dbceb97 localizedkey
+rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
+rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
+rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
+rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
+
+vlan 1,100,200
 vlan 100
   name Hosts
   vn-segment 100
 vlan 200
   name Servers
   vn-segment 200
-vlan 2000
-  name VRF_MAIN_VXLAN_FORWARD
-  vn-segment 2000
 
-vrf context main
-  vni 2000
-  rd auto
-  address-family ipv4 unicast
-    route-target both auto
-    route-target both auto evpn
 vrf context management
 
 interface Vlan1
 
-interface Vlan100
-  no shutdown
-  vrf member main
-  no ip redirects
-  ip address 172.16.100.1/24
-  no ipv6 redirects
-  fabric forwarding mode anycast-gateway
-
-interface Vlan200
-  no shutdown
-  vrf member main
-  no ip redirects
-  ip address 172.16.200.1/24
-  no ipv6 redirects
-  fabric forwarding mode anycast-gateway
-
-interface Vlan2000
-  no shutdown
-  mtu 9216
-  vrf member main
-  no ip redirects
-  ip forward
-  no ipv6 redirects
-
 interface nve1
   no shutdown
   host-reachability protocol bgp
-  advertise virtual-rmac
   source-interface loopback2
   member vni 100
     ingress-replication protocol bgp
   member vni 200
     ingress-replication protocol bgp
-  member vni 2000 associate-vrf
 
 interface Ethernet1/1
   description to-spine-1
@@ -128,7 +122,6 @@ router bgp 65200
   address-family ipv4 unicast
     maximum-paths 2
   address-family l2vpn evpn
-    advertise-pip
   template peer RR
     bfd
     remote-as 65200
@@ -143,10 +136,6 @@ router bgp 65200
   neighbor 10.2.1.0
     inherit peer RR
     address-family l2vpn evpn
-  vrf main
-    address-family ipv4 unicast
-      advertise l2vpn evpn
-      maximum-paths 2
 evpn
   vni 100 l2
     rd auto
@@ -162,6 +151,23 @@ evpn
 - #### [leaf-2](config/leaf-2.conf)
 
 ```
+Leaf-2# sh run
+
+!Command: show running-config
+!Running configuration last done at: Mon Jun 10 21:18:32 2024
+!Time: Mon Jun 10 21:25:56 2024
+
+version 9.3(6) Bios:version
+hostname Leaf-2
+vdc Leaf-2 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource u4route-mem minimum 248 maximum 248
+  limit-resource u6route-mem minimum 96 maximum 96
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
 nv overlay evpn
 feature ospf
 feature bgp
@@ -172,62 +178,39 @@ feature bfd
 clock timezone MSK 3 0
 feature nv overlay
 
-fabric forwarding anycast-gateway-mac 0000.dead.beef
-vlan 1,100,200,2000
+no password strength-check
+username admin password 5 $5$DEAFHG$Zk.XbwUQTiB2PvouRV2K/aLYocC1uuf0Fcki8pZpiU.
+ role network-admin
+ip domain-lookup
+copp profile strict
+snmp-server user admin network-admin auth md5 0xc481d9a6d678df710f38b255962f8b3a
+ priv 0xc481d9a6d678df710f38b255962f8b3a localizedkey
+rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
+rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
+rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
+rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
+
+vlan 1,100,200
 vlan 100
   name Hosts
   vn-segment 100
 vlan 200
   name Servers
   vn-segment 200
-vlan 2000
-  name VRF_MAIN_VXLAN_FORWARD
-  vn-segment 2000
 
-vrf context main
-  vni 2000
-  rd auto
-  address-family ipv4 unicast
-    route-target both auto
-    route-target both auto evpn
 vrf context management
 
 interface Vlan1
 
-interface Vlan100
-  no shutdown
-  vrf member main
-  no ip redirects
-  ip address 172.16.100.1/24
-  no ipv6 redirects
-  fabric forwarding mode anycast-gateway
-
-interface Vlan200
-  no shutdown
-  vrf member main
-  no ip redirects
-  ip address 172.16.200.1/24
-  no ipv6 redirects
-  fabric forwarding mode anycast-gateway
-
-interface Vlan2000
-  no shutdown
-  mtu 9216
-  vrf member main
-  no ip redirects
-  ip forward
-  no ipv6 redirects
-
 interface nve1
   no shutdown
   host-reachability protocol bgp
-  advertise virtual-rmac
   source-interface loopback2
   member vni 100
     ingress-replication protocol bgp
   member vni 200
     ingress-replication protocol bgp
-  member vni 2000 associate-vrf
 
 interface Ethernet1/1
   description to-spine-1
@@ -272,7 +255,6 @@ router bgp 65200
   address-family ipv4 unicast
     maximum-paths 2
   address-family l2vpn evpn
-    advertise-pip
   template peer RR
     bfd
     remote-as 65200
@@ -287,10 +269,6 @@ router bgp 65200
   neighbor 10.2.1.0
     inherit peer RR
     address-family l2vpn evpn
-  vrf main
-    address-family ipv4 unicast
-      advertise l2vpn evpn
-      maximum-paths 2
 evpn
   vni 100 l2
     rd auto
@@ -306,6 +284,23 @@ evpn
 - #### [leaf-3](config/leaf-3.conf)
 
 ```
+Leaf-3# sh run
+
+!Command: show running-config
+!Running configuration last done at: Mon Jun 10 21:19:32 2024
+!Time: Mon Jun 10 21:27:09 2024
+
+version 9.3(6) Bios:version
+hostname Leaf-3
+vdc Leaf-3 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource u4route-mem minimum 248 maximum 248
+  limit-resource u6route-mem minimum 96 maximum 96
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
 nv overlay evpn
 feature ospf
 feature bgp
@@ -316,62 +311,39 @@ feature bfd
 clock timezone MSK 3 0
 feature nv overlay
 
-fabric forwarding anycast-gateway-mac 0000.dead.beef
-vlan 1,100,200,2000
+no password strength-check
+username admin password 5 $5$JMJNCB$OOFbfAItbvnY2saWifJ3sb8F9ixXOOJDD7Vo8PKL98A
+ role network-admin
+ip domain-lookup
+copp profile strict
+snmp-server user admin network-admin auth md5 0x137a914874e02521bb89c5e3d99e5bb1
+ priv 0x137a914874e02521bb89c5e3d99e5bb1 localizedkey
+rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
+rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
+rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
+rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
+
+vlan 1,100,200
 vlan 100
   name Hosts
   vn-segment 100
 vlan 200
   name Servers
   vn-segment 200
-vlan 2000
-  name VRF_MAIN_VXLAN_FORWARD
-  vn-segment 2000
 
-vrf context main
-  vni 2000
-  rd auto
-  address-family ipv4 unicast
-    route-target both auto
-    route-target both auto evpn
 vrf context management
 
 interface Vlan1
 
-interface Vlan100
-  no shutdown
-  vrf member main
-  no ip redirects
-  ip address 172.16.100.1/24
-  no ipv6 redirects
-  fabric forwarding mode anycast-gateway
-
-interface Vlan200
-  no shutdown
-  vrf member main
-  no ip redirects
-  ip address 172.16.200.1/24
-  no ipv6 redirects
-  fabric forwarding mode anycast-gateway
-
-interface Vlan2000
-  no shutdown
-  mtu 9216
-  vrf member main
-  no ip redirects
-  ip forward
-  no ipv6 redirects
-
 interface nve1
   no shutdown
   host-reachability protocol bgp
-  advertise virtual-rmac
   source-interface loopback2
   member vni 100
     ingress-replication protocol bgp
   member vni 200
     ingress-replication protocol bgp
-  member vni 2000 associate-vrf
 
 interface Ethernet1/1
   description to-spine-1
@@ -420,7 +392,6 @@ router bgp 65200
   address-family ipv4 unicast
     maximum-paths 2
   address-family l2vpn evpn
-    advertise-pip
   template peer RR
     bfd
     remote-as 65200
@@ -435,10 +406,6 @@ router bgp 65200
   neighbor 10.2.1.0
     inherit peer RR
     address-family l2vpn evpn
-  vrf main
-    address-family ipv4 unicast
-      advertise l2vpn evpn
-      maximum-paths 2
 evpn
   vni 100 l2
     rd auto
@@ -448,6 +415,7 @@ evpn
     rd auto
     route-target import auto
     route-target export auto
+
 
 
 ```
