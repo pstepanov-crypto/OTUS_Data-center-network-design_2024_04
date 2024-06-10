@@ -423,6 +423,23 @@ evpn
 - #### [spine-1](config/spine-1.conf)
 
 ```
+Spine-1# sh run
+
+!Command: show running-config
+!Running configuration last done at: Mon Jun 10 21:17:22 2024
+!Time: Mon Jun 10 21:28:17 2024
+
+version 9.3(6) Bios:version
+hostname Spine-1
+vdc Spine-1 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource u4route-mem minimum 248 maximum 248
+  limit-resource u6route-mem minimum 96 maximum 96
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
 cfs eth distribute
 nv overlay evpn
 feature ospf
@@ -434,7 +451,19 @@ feature bfd
 clock timezone MSK 3 0
 feature nv overlay
 
-fabric forwarding anycast-gateway-mac 0000.dead.beef
+no password strength-check
+username admin password 5 $5$KAFNJO$u7QiS.zAoPxos78.g3/z7cj3yreOpZCoynqwp/4kBC3
+ role network-admin
+ip domain-lookup
+copp profile strict
+snmp-server user admin network-admin auth md5 0xd4c034e25a2cdd5c19863dc066b032ca
+ priv 0xd4c034e25a2cdd5c19863dc066b032ca localizedkey
+rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
+rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
+rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
+rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
+
 vlan 1
 
 vrf context management
@@ -488,14 +517,12 @@ router ospf UNDERLAY
 router bgp 65200
   router-id 10.1.1.0
   address-family l2vpn evpn
-    maximum-paths 2
-    retain route-target all
+    maximum-paths 10
   template peer RR
     remote-as 65200
     update-source loopback1
     address-family l2vpn evpn
       send-community extended
-      route-reflector-client
   template peer RRC
     remote-as 65200
     log-neighbor-changes
@@ -512,11 +539,29 @@ router bgp 65200
   neighbor 10.2.1.0
     inherit peer RR
 
+
 ```
 
 - #### [spine-2](config/spine-2.conf)
 
 ```
+Spine-2# sh run
+
+!Command: show running-config
+!Running configuration last done at: Mon Jun 10 21:17:20 2024
+!Time: Mon Jun 10 21:28:41 2024
+
+version 9.3(6) Bios:version
+hostname Spine-2
+vdc Spine-2 id 1
+  limit-resource vlan minimum 16 maximum 4094
+  limit-resource vrf minimum 2 maximum 4096
+  limit-resource port-channel minimum 0 maximum 511
+  limit-resource u4route-mem minimum 248 maximum 248
+  limit-resource u6route-mem minimum 96 maximum 96
+  limit-resource m4route-mem minimum 58 maximum 58
+  limit-resource m6route-mem minimum 8 maximum 8
+
 nv overlay evpn
 feature ospf
 feature bgp
@@ -527,7 +572,19 @@ feature bfd
 clock timezone MSK 3 0
 feature nv overlay
 
-fabric forwarding anycast-gateway-mac 0000.dead.beef
+no password strength-check
+username admin password 5 $5$HBOMOE$hiqnpKsTgM0BymOAkSZELIvnAQ5yWs/nlFdJXjsrMe6
+ role network-admin
+ip domain-lookup
+copp profile strict
+snmp-server user admin network-admin auth md5 0xee97324bd5fdb2274e6abaa6984bd751
+ priv 0xee97324bd5fdb2274e6abaa6984bd751 localizedkey
+rmon event 1 log trap public description FATAL(1) owner PMON@FATAL
+rmon event 2 log trap public description CRITICAL(2) owner PMON@CRITICAL
+rmon event 3 log trap public description ERROR(3) owner PMON@ERROR
+rmon event 4 log trap public description WARNING(4) owner PMON@WARNING
+rmon event 5 log trap public description INFORMATION(5) owner PMON@INFO
+
 vlan 1
 
 vrf context management
@@ -580,14 +637,12 @@ router ospf UNDERLAY
 router bgp 65200
   router-id 10.2.1.0
   address-family l2vpn evpn
-    maximum-paths 2
-    retain route-target all
+    maximum-paths 10
   template peer RR
     remote-as 65200
     update-source loopback1
     address-family l2vpn evpn
       send-community extended
-      route-reflector-client
   template peer RRC
     remote-as 65200
     log-neighbor-changes
@@ -604,6 +659,8 @@ router bgp 65200
   neighbor 10.1.1.0
     inherit peer RR
 
+
+
 ```
 
 - #### Проверка связанности Spine-1
@@ -611,12 +668,13 @@ router bgp 65200
 ```
 
 
-Spine-1# sh bgp l2vpn evpn summary
+Spine-1# show bgp l2vpn evpn summary
 Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-10.1.0.1        4 65200     112     110      130    0    0 01:37:36 5
-10.1.0.2        4 65200      93      97      130    0    0 00:00:04 3
-10.1.0.3        4 65200     105      93      130    0    0 01:22:20 7
-10.2.1.0        4 65200     116      84      130    0    0 01:17:17 15
+10.1.0.1        4 65200     417     405      297    0    0 00:57:49 2
+10.1.0.2        4 65200      81      76      297    0    0 00:57:36 3
+10.1.0.3        4 65200      89      78      297    0    0 00:56:31 3
+10.2.1.0        4 65200     162      85      297    0    0 00:13:39 8
+
 
 
 
@@ -627,12 +685,13 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 ```
 
 
-Spine-2# sh bgp l2vpn evpn summary
+Spine-2# show bgp l2vpn evpn summary
 Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-10.1.0.1        4 65200      97     112      167    0    0 01:17:08 5
-10.1.0.2        4 65200      78      95      167    0    0 00:00:34 3
-10.1.0.3        4 65200     106      98      167    0    0 01:18:20 7
-10.1.1.0        4 65200     146     109      167    0    0 01:17:14 15
+10.1.0.1        4 65200      78      80      249    0    0 00:58:05 2
+10.1.0.2        4 65200      81      78      249    0    0 00:58:04 3
+10.1.0.3        4 65200      89      79      249    0    0 00:56:44 3
+10.1.1.0        4 65200     155      86      249    0    0 00:13:57 8
+
 
 
 
@@ -646,14 +705,6 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 Leaf-1# sh bgp l2vpn evpn
    Network            Next Hop            Metric     LocPrf     Weight Path
 Route Distinguisher: 10.1.0.1:32867    (L2VNI 100)
-*>l[2]:[0]:[0]:[48]:[0050.7966.6812]:[0]:[0.0.0.0]/216
-                      10.1.0.1                          100      32768 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6814]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100          0 i
-*>l[2]:[0]:[0]:[48]:[0050.7966.6812]:[32]:[172.16.100.10]/272
-                      10.1.0.1                          100      32768 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6814]:[32]:[172.16.100.20]/272
-                      10.1.0.3                          100          0 i
 *>l[3]:[0]:[32]:[10.1.0.1]/88
                       10.1.0.1                          100      32768 i
 *>i[3]:[0]:[32]:[10.1.0.2]/88
@@ -666,8 +717,6 @@ Route Distinguisher: 10.1.0.1:32967    (L2VNI 200)
                       10.1.0.2                          100          0 i
 *>i[2]:[0]:[0]:[48]:[0050.7966.6815]:[0]:[0.0.0.0]/216
                       10.1.0.3                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6815]:[32]:[172.16.200.20]/272
-                      10.1.0.3                          100          0 i
 *>l[3]:[0]:[32]:[10.1.0.1]/88
                       10.1.0.1                          100      32768 i
 *>i[3]:[0]:[32]:[10.1.0.2]/88
@@ -675,62 +724,49 @@ Route Distinguisher: 10.1.0.1:32967    (L2VNI 200)
 *>i[3]:[0]:[32]:[10.1.0.3]/88
                       10.1.0.3                          100          0 i
 
-Route Distinguisher: 10.1.0.2:3
-*>i[2]:[0]:[0]:[48]:[5000.1100.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.2                          100          0 i
-* i                   10.1.0.2                          100          0 i
-
 Route Distinguisher: 10.1.0.2:32867
 *>i[3]:[0]:[32]:[10.1.0.2]/88
                       10.1.0.2                          100          0 i
 * i                   10.1.0.2                          100          0 i
 
 Route Distinguisher: 10.1.0.2:32967
-* i[2]:[0]:[0]:[48]:[0050.7966.6813]:[0]:[0.0.0.0]/216
+*>i[2]:[0]:[0]:[48]:[0050.7966.6813]:[0]:[0.0.0.0]/216
                       10.1.0.2                          100          0 i
-*>i                   10.1.0.2                          100          0 i
+* i                   10.1.0.2                          100          0 i
 *>i[3]:[0]:[32]:[10.1.0.2]/88
                       10.1.0.2                          100          0 i
 * i                   10.1.0.2                          100          0 i
 
-Route Distinguisher: 10.1.0.3:3
-* i[2]:[0]:[0]:[48]:[5000.1000.1b08]:[0]:[0.0.0.0]/216
+Route Distinguisher: 10.1.0.3:32867
+* i[3]:[0]:[32]:[10.1.0.3]/88
                       10.1.0.3                          100          0 i
 *>i                   10.1.0.3                          100          0 i
 
-Route Distinguisher: 10.1.0.3:32867
-* i[2]:[0]:[0]:[48]:[0050.7966.6814]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100          0 i
-*>i                   10.1.0.3                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6814]:[32]:[172.16.100.20]/272
+Route Distinguisher: 10.1.0.3:32967
+*>i[2]:[0]:[0]:[48]:[0050.7966.6815]:[0]:[0.0.0.0]/216
                       10.1.0.3                          100          0 i
 * i                   10.1.0.3                          100          0 i
 * i[3]:[0]:[32]:[10.1.0.3]/88
                       10.1.0.3                          100          0 i
 *>i                   10.1.0.3                          100          0 i
 
-Route Distinguisher: 10.1.0.3:32967
-* i[2]:[0]:[0]:[48]:[0050.7966.6815]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100          0 i
-*>i                   10.1.0.3                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6815]:[32]:[172.16.200.20]/272
-                      10.1.0.3                          100          0 i
-* i                   10.1.0.3                          100          0 i
-*>i[3]:[0]:[32]:[10.1.0.3]/88
-                      10.1.0.3                          100          0 i
-* i                   10.1.0.3                          100          0 i
 
-Route Distinguisher: 10.1.0.1:3    (L3VNI 2000)
-*>l[2]:[0]:[0]:[48]:[5000.0e00.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.1                          100      32768 i
-*>i[2]:[0]:[0]:[48]:[5000.1000.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100          0 i
-*>i[2]:[0]:[0]:[48]:[5000.1100.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.2                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6814]:[32]:[172.16.100.20]/272
-                      10.1.0.3                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6815]:[32]:[172.16.200.20]/272
-                      10.1.0.3                          100          0 i
+Leaf-1# show nve vni
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100      UnicastBGP        Up    CP   L2 [100]
+nve1      200      UnicastBGP        Up    CP   L2 [200]
+
+
+Leaf-1# show nve interface
+Interface: nve1, State: Up, encapsulation: VXLAN
+ VPC Capability: VPC-VIP-Only [not-notified]
+ Local Router MAC: 5000.0e00.1b08
+ Host Learning Mode: Control-Plane
+ Source-Interface: loopback2 (primary: 10.1.0.1, secondary: 0.0.0.0)
+
+
+
 
 ```
 
@@ -743,29 +779,9 @@ Route Distinguisher: 10.1.0.1:3    (L3VNI 2000)
 - #### Проверка связанности Leaf-2
 
 ```
-
 Leaf-2# sh bgp l2vpn evpn
-BGP routing table information for VRF default, address family L2VPN EVPN
-BGP table version is 62, Local Router ID is 10.1.0.2
-Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
-Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
-njected
-Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - b
-est2
-
    Network            Next Hop            Metric     LocPrf     Weight Path
-Route Distinguisher: 10.1.0.1:3
-*>i[2]:[0]:[0]:[48]:[5000.0e00.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.1                          100          0 i
-* i                   10.1.0.1                          100          0 i
-
 Route Distinguisher: 10.1.0.1:32867
-*>i[2]:[0]:[0]:[48]:[0050.7966.6812]:[0]:[0.0.0.0]/216
-                      10.1.0.1                          100          0 i
-* i                   10.1.0.1                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6812]:[32]:[172.16.100.10]/272
-                      10.1.0.1                          100          0 i
-* i                   10.1.0.1                          100          0 i
 *>i[3]:[0]:[32]:[10.1.0.1]/88
                       10.1.0.1                          100          0 i
 * i                   10.1.0.1                          100          0 i
@@ -776,14 +792,6 @@ Route Distinguisher: 10.1.0.1:32967
 * i                   10.1.0.1                          100          0 i
 
 Route Distinguisher: 10.1.0.2:32867    (L2VNI 100)
-*>i[2]:[0]:[0]:[48]:[0050.7966.6812]:[0]:[0.0.0.0]/216
-                      10.1.0.1                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6814]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6812]:[32]:[172.16.100.10]/272
-                      10.1.0.1                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6814]:[32]:[172.16.100.20]/272
-                      10.1.0.3                          100          0 i
 *>i[3]:[0]:[32]:[10.1.0.1]/88
                       10.1.0.1                          100          0 i
 *>l[3]:[0]:[32]:[10.1.0.2]/88
@@ -796,8 +804,6 @@ Route Distinguisher: 10.1.0.2:32967    (L2VNI 200)
                       10.1.0.2                          100      32768 i
 *>i[2]:[0]:[0]:[48]:[0050.7966.6815]:[0]:[0.0.0.0]/216
                       10.1.0.3                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6815]:[32]:[172.16.200.20]/272
-                      10.1.0.3                          100          0 i
 *>i[3]:[0]:[32]:[10.1.0.1]/88
                       10.1.0.1                          100          0 i
 *>l[3]:[0]:[32]:[10.1.0.2]/88
@@ -805,18 +811,7 @@ Route Distinguisher: 10.1.0.2:32967    (L2VNI 200)
 *>i[3]:[0]:[32]:[10.1.0.3]/88
                       10.1.0.3                          100          0 i
 
-Route Distinguisher: 10.1.0.3:3
-*>i[2]:[0]:[0]:[48]:[5000.1000.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100          0 i
-* i                   10.1.0.3                          100          0 i
-
 Route Distinguisher: 10.1.0.3:32867
-*>i[2]:[0]:[0]:[48]:[0050.7966.6814]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100          0 i
-* i                   10.1.0.3                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6814]:[32]:[172.16.100.20]/272
-                      10.1.0.3                          100          0 i
-* i                   10.1.0.3                          100          0 i
 *>i[3]:[0]:[32]:[10.1.0.3]/88
                       10.1.0.3                          100          0 i
 * i                   10.1.0.3                          100          0 i
@@ -825,26 +820,26 @@ Route Distinguisher: 10.1.0.3:32967
 *>i[2]:[0]:[0]:[48]:[0050.7966.6815]:[0]:[0.0.0.0]/216
                       10.1.0.3                          100          0 i
 * i                   10.1.0.3                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6815]:[32]:[172.16.200.20]/272
-                      10.1.0.3                          100          0 i
-* i                   10.1.0.3                          100          0 i
 *>i[3]:[0]:[32]:[10.1.0.3]/88
                       10.1.0.3                          100          0 i
 * i                   10.1.0.3                          100          0 i
 
-Route Distinguisher: 10.1.0.2:3    (L3VNI 2000)
-*>i[2]:[0]:[0]:[48]:[5000.0e00.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.1                          100          0 i
-*>i[2]:[0]:[0]:[48]:[5000.1000.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100          0 i
-*>l[2]:[0]:[0]:[48]:[5000.1100.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.2                          100      32768 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6812]:[32]:[172.16.100.10]/272
-                      10.1.0.1                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6814]:[32]:[172.16.100.20]/272
-                      10.1.0.3                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6815]:[32]:[172.16.200.20]/272
-                      10.1.0.3                          100          0 i
+Leaf-2# show nve vni
+
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100      UnicastBGP        Up    CP   L2 [100]
+nve1      200      UnicastBGP        Up    CP   L2 [200]
+
+
+Leaf-2# show nve interface
+Interface: nve1, State: Up, encapsulation: VXLAN
+ VPC Capability: VPC-VIP-Only [not-notified]
+ Local Router MAC: 5000.1100.1b08
+ Host Learning Mode: Control-Plane
+ Source-Interface: loopback2 (primary: 10.1.0.2, secondary: 0.0.0.0)
+
+
 ```
 
 
@@ -858,27 +853,8 @@ Route Distinguisher: 10.1.0.2:3    (L3VNI 2000)
 ```
 
 Leaf-3# sh bgp l2vpn evpn
-BGP routing table information for VRF default, address family L2VPN EVPN
-BGP table version is 229, Local Router ID is 10.1.0.3
-Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
-Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
-njected
-Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - b
-est2
-
    Network            Next Hop            Metric     LocPrf     Weight Path
-Route Distinguisher: 10.1.0.1:3
-* i[2]:[0]:[0]:[48]:[5000.0e00.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.1                          100          0 i
-*>i                   10.1.0.1                          100          0 i
-
 Route Distinguisher: 10.1.0.1:32867
-* i[2]:[0]:[0]:[48]:[0050.7966.6812]:[0]:[0.0.0.0]/216
-                      10.1.0.1                          100          0 i
-*>i                   10.1.0.1                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6812]:[32]:[172.16.100.10]/272
-                      10.1.0.1                          100          0 i
-* i                   10.1.0.1                          100          0 i
 * i[3]:[0]:[32]:[10.1.0.1]/88
                       10.1.0.1                          100          0 i
 *>i                   10.1.0.1                          100          0 i
@@ -888,33 +864,20 @@ Route Distinguisher: 10.1.0.1:32967
                       10.1.0.1                          100          0 i
 *>i                   10.1.0.1                          100          0 i
 
-Route Distinguisher: 10.1.0.2:3
-*>i[2]:[0]:[0]:[48]:[5000.1100.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.2                          100          0 i
-* i                   10.1.0.2                          100          0 i
-
 Route Distinguisher: 10.1.0.2:32867
-*>i[3]:[0]:[32]:[10.1.0.2]/88
-                      10.1.0.2                          100          0 i
-* i                   10.1.0.2                          100          0 i
-
-Route Distinguisher: 10.1.0.2:32967
-* i[2]:[0]:[0]:[48]:[0050.7966.6813]:[0]:[0.0.0.0]/216
+* i[3]:[0]:[32]:[10.1.0.2]/88
                       10.1.0.2                          100          0 i
 *>i                   10.1.0.2                          100          0 i
-*>i[3]:[0]:[32]:[10.1.0.2]/88
+
+Route Distinguisher: 10.1.0.2:32967
+*>i[2]:[0]:[0]:[48]:[0050.7966.6813]:[0]:[0.0.0.0]/216
                       10.1.0.2                          100          0 i
 * i                   10.1.0.2                          100          0 i
+* i[3]:[0]:[32]:[10.1.0.2]/88
+                      10.1.0.2                          100          0 i
+*>i                   10.1.0.2                          100          0 i
 
 Route Distinguisher: 10.1.0.3:32867    (L2VNI 100)
-*>i[2]:[0]:[0]:[48]:[0050.7966.6812]:[0]:[0.0.0.0]/216
-                      10.1.0.1                          100          0 i
-*>l[2]:[0]:[0]:[48]:[0050.7966.6814]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100      32768 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6812]:[32]:[172.16.100.10]/272
-                      10.1.0.1                          100          0 i
-*>l[2]:[0]:[0]:[48]:[0050.7966.6814]:[32]:[172.16.100.20]/272
-                      10.1.0.3                          100      32768 i
 *>i[3]:[0]:[32]:[10.1.0.1]/88
                       10.1.0.1                          100          0 i
 *>i[3]:[0]:[32]:[10.1.0.2]/88
@@ -927,8 +890,6 @@ Route Distinguisher: 10.1.0.3:32967    (L2VNI 200)
                       10.1.0.2                          100          0 i
 *>l[2]:[0]:[0]:[48]:[0050.7966.6815]:[0]:[0.0.0.0]/216
                       10.1.0.3                          100      32768 i
-*>l[2]:[0]:[0]:[48]:[0050.7966.6815]:[32]:[172.16.200.20]/272
-                      10.1.0.3                          100      32768 i
 *>i[3]:[0]:[32]:[10.1.0.1]/88
                       10.1.0.1                          100          0 i
 *>i[3]:[0]:[32]:[10.1.0.2]/88
@@ -936,50 +897,25 @@ Route Distinguisher: 10.1.0.3:32967    (L2VNI 200)
 *>l[3]:[0]:[32]:[10.1.0.3]/88
                       10.1.0.3                          100      32768 i
 
-Route Distinguisher: 10.1.0.3:3    (L3VNI 2000)
-*>i[2]:[0]:[0]:[48]:[5000.0e00.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.1                          100          0 i
-*>l[2]:[0]:[0]:[48]:[5000.1000.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100      32768 i
-*>i[2]:[0]:[0]:[48]:[5000.1100.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.2                          100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6812]:[32]:[172.16.100.10]/272
-                      10.1.0.1                          100          0 i
+Leaf-3# show nve vni
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100      UnicastBGP        Up    CP   L2 [100]
+nve1      200      UnicastBGP        Up    CP   L2 [200]
 
+Leaf-3# show nve interface
+Interface: nve1, State: Up, encapsulation: VXLAN
+ VPC Capability: VPC-VIP-Only [not-notified]
+ Local Router MAC: 5000.1000.1b08
+ Host Learning Mode: Control-Plane
+ Source-Interface: loopback2 (primary: 10.1.0.3, secondary: 0.0.0.0)
 
 
 ```
 - #### Проверка связанности хостов
 
 ```
-VPCS1> ping 172.16.200.10
-84 bytes from 172.16.200.10 icmp_seq=1 ttl=62 time=15.258 ms
-84 bytes from 172.16.200.10 icmp_seq=2 ttl=62 time=14.683 ms
-84 bytes from 172.16.200.10 icmp_seq=3 ttl=62 time=13.479 ms
-84 bytes from 172.16.200.10 icmp_seq=4 ttl=62 time=13.968 ms
-84 bytes from 172.16.200.10 icmp_seq=5 ttl=62 time=17.691 ms
-
-VPCS2> ping 172.16.100.10
-84 bytes from 172.16.100.10 icmp_seq=1 ttl=62 time=11.168 ms
-84 bytes from 172.16.100.10 icmp_seq=2 ttl=62 time=14.478 ms
-84 bytes from 172.16.100.10 icmp_seq=3 ttl=62 time=12.703 ms
-84 bytes from 172.16.100.10 icmp_seq=4 ttl=62 time=14.105 ms
-84 bytes from 172.16.100.10 icmp_seq=5 ttl=62 time=12.260 ms
-
-VPCS3> ping 172.16.200.10
-84 bytes from 172.16.200.10 icmp_seq=1 ttl=62 time=48.669 ms
-84 bytes from 172.16.200.10 icmp_seq=2 ttl=62 time=23.180 ms
-84 bytes from 172.16.200.10 icmp_seq=3 ttl=62 time=28.885 ms
-84 bytes from 172.16.200.10 icmp_seq=4 ttl=62 time=16.711 ms
-84 bytes from 172.16.200.10 icmp_seq=5 ttl=62 time=14.302 ms
-
-VPCS4> ping 172.16.100.10
-84 bytes from 172.16.100.10 icmp_seq=1 ttl=62 time=44.282 ms
-84 bytes from 172.16.100.10 icmp_seq=2 ttl=62 time=18.590 ms
-84 bytes from 172.16.100.10 icmp_seq=3 ttl=62 time=12.054 ms
-84 bytes from 172.16.100.10 icmp_seq=4 ttl=62 time=44.098 ms
-84 bytes from 172.16.100.10 icmp_seq=5 ttl=62 time=15.935 ms
-  
+?
 ```
 ```
 
