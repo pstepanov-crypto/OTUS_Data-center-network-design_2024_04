@@ -12,7 +12,7 @@
 
 ### Схема сети
 
-![](images/Overlay_VXLAN_L3.png)
+![](images/VxLAN_L3VNI.PNG)
 
 ### Конфигурация оборудования
 
