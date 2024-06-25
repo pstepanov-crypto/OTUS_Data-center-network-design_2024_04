@@ -1225,41 +1225,28 @@ user@debian:~$ ip a
 
 ```
 
-- #### client-5
+- #### VPC2
 
 ```
-client-5> ping 192.168.13.13 -c 2
+VPCS2> ping 172.16.100.20
+172.16.100.20 icmp_seq=1 timeout
+84 bytes from 172.16.100.20 icmp_seq=2 ttl=63 time=6.425 ms
+84 bytes from 172.16.100.20 icmp_seq=3 ttl=63 time=4.216 ms
+84 bytes from 172.16.100.20 icmp_seq=4 ttl=63 time=4.107 ms
+84 bytes from 172.16.100.20 icmp_seq=5 ttl=63 time=5.393 ms
 
-84 bytes from 192.168.13.13 icmp_seq=1 ttl=64 time=16.972 ms
-84 bytes from 192.168.13.13 icmp_seq=2 ttl=64 time=19.694 ms
-
-client-5> ping 192.168.23.13 -c 2
-
-84 bytes from 192.168.23.13 icmp_seq=1 ttl=64 time=18.810 ms
-84 bytes from 192.168.23.13 icmp_seq=2 ttl=64 time=18.078 ms
-
-client-5> ping 192.168.23.23 -c 2
-
-84 bytes from 192.168.23.23 icmp_seq=1 ttl=63 time=20.676 ms
-84 bytes from 192.168.23.23 icmp_seq=2 ttl=63 time=5.268 ms
 
 ```
 
-- #### client-6
+- #### VPC2
 
 ```
-client-6> ping 192.168.13.13 -c 2
+VPCS2> ping 172.16.200.20
 
-84 bytes from 192.168.13.13 icmp_seq=1 ttl=64 time=17.158 ms
-84 bytes from 192.168.13.13 icmp_seq=2 ttl=64 time=20.698 ms
+84 bytes from 172.16.200.20 icmp_seq=1 ttl=63 time=10.976 ms
+84 bytes from 172.16.200.20 icmp_seq=2 ttl=63 time=4.679 ms
+84 bytes from 172.16.200.20 icmp_seq=3 ttl=63 time=7.146 ms
+84 bytes from 172.16.200.20 icmp_seq=4 ttl=63 time=4.220 ms
+84 bytes from 172.16.200.20 icmp_seq=5 ttl=63 time=4.436 ms
 
-client-6> ping 192.168.23.13 -c 2
-
-84 bytes from 192.168.23.13 icmp_seq=1 ttl=64 time=17.195 ms
-84 bytes from 192.168.23.13 icmp_seq=2 ttl=64 time=17.211 ms
-
-client-6> ping 192.168.13.23 -c 2
-
-84 bytes from 192.168.13.23 icmp_seq=1 ttl=63 time=5.679 ms
-84 bytes from 192.168.13.23 icmp_seq=2 ttl=63 time=4.960 ms
 ```
