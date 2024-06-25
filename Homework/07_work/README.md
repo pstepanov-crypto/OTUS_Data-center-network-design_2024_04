@@ -622,192 +622,247 @@ user@debian:~$ ip a
 - #### leaf-1
 
 ```
-leaf-1#sh mlag
-MLAG Configuration:
-domain-id                          :               mlag1
-local-interface                    :            Vlan4094
-peer-address                       :        10.100.100.1
-peer-link                          :       Port-Channel1
-peer-config                        :          consistent
+Leaf-1#  sh vpc
+Legend:
+                (*) - local vPC is down, forwarding via vPC peer-link
 
-MLAG Status:
-state                              :              Active
-negotiation status                 :           Connected
-peer-link status                   :                  Up
-local-int status                   :                  Up
-system-id                          :   52:00:00:5b:6f:f5
-dual-primary detection             :            Disabled
-dual-primary interface errdisabled :               False
+vPC domain id                     : 101
+Peer status                       : peer adjacency formed ok
+vPC keep-alive status             : peer is alive
+Configuration consistency status  : success
+Per-vlan consistency status       : success
+Type-2 consistency status         : success
+vPC role                          : secondary
+Number of vPCs configured         : 1
+Peer Gateway                      : Enabled
+Dual-active excluded VLANs        : -
+Graceful Consistency Check        : Enabled
+Auto-recovery status              : Enabled, timer is off.(timeout = 240s)
+Delay-restore status              : Timer is off.(timeout = 30s)
+Delay-restore SVI status          : Timer is off.(timeout = 100s)
+Operational Layer3 Peer-router    : Enabled
+Virtual-peerlink mode             : Disabled
 
-MLAG Ports:
-Disabled                           :                   0
-Configured                         :                   0
-Inactive                           :                   0
-Active-partial                     :                   0
-Active-full                        :                   1
-```
-```
-leaf-2#sh mlag interfaces detail
-                                                            local/remote
-   mlag             state       local       remote        oper        config       last change    changes
----------- ----------------- ----------- ------------ ----------- ------------- ----------------- -------
-      5       active-full         Po5          Po5       up/up       ena/ena       0:26:56 ago          8
-```
-```
-leaf-1#sh port-channel 5 detailed
-Port Channel Port-Channel5 (Fallback State: Unconfigured):
-Minimum links: unconfigured
-Minimum speed: unconfigured
-Current weight/Max weight: 1/16
-  Active Ports:
-       Port                Time Became Active       Protocol       Mode      Weight
-    ------------------- ------------------------ -------------- ------------ ------
-       Ethernet5           19:29:00                 LACP           Active      1
-       PeerEthernet5       19:29:01                 LACP           Active      0
+vPC Peer-link status
+---------------------------------------------------------------------
+id    Port   Status Active vlans
+--    ----   ------ -------------------------------------------------
+1     Po1    up     1,100,200,2000
+
+
+vPC status
+----------------------------------------------------------------------------
+Id    Port          Status Consistency Reason                Active vlans
+--    ------------  ------ ----------- ------                ---------------
+101   Po101         down*  success     success               -
+
 
 ```
 ```
-leaf-1#sh bgp evpn
-BGP routing table information for VRF default
-Router identifier 10.1.0.1, local AS number 65001
-Route status codes: s - suppressed, * - valid, > - active, E - ECMP head, e - ECMP
-                    S - Stale, c - Contributing to ECMP, b - backup
-                    % - Pending BGP convergence
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
+Leaf-2#  sh vpc
+Legend:
+                (*) - local vPC is down, forwarding via vPC peer-link
 
-          Network                Next Hop              Metric  LocPref Weight  Path
- * >Ec   RD: 65003:10013 mac-ip 0050.7966.6807
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10013 mac-ip 0050.7966.6807
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >Ec   RD: 65003:10013 mac-ip 0050.7966.6807 192.168.13.23
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10013 mac-ip 0050.7966.6807 192.168.13.23
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >Ec   RD: 65003:10023 mac-ip 0050.7966.680b
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10023 mac-ip 0050.7966.680b
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >Ec   RD: 65003:10023 mac-ip 0050.7966.680b 192.168.23.23
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10023 mac-ip 0050.7966.680b 192.168.23.23
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >     RD: 65001:10013 mac-ip 5000.006f.20c3
-                                 -                     -       -       0       i
- * >     RD: 65001:10023 mac-ip 5000.006f.20c3
-                                 -                     -       -       0       i
- * >     RD: 65001:10013 imet 10.100.0.1
-                                 -                     -       -       0       i
- * >     RD: 65001:10023 imet 10.100.0.1
-                                 -                     -       -       0       i
- * >Ec   RD: 65003:10013 imet 10.100.0.3
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10013 imet 10.100.0.3
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >Ec   RD: 65003:10023 imet 10.100.0.3
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10023 imet 10.100.0.3
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >     RD: 65001:10001 ip-prefix 192.168.13.0/24
-                                 -                     -       -       0       i
- * >Ec   RD: 65003:10001 ip-prefix 192.168.13.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10001 ip-prefix 192.168.13.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >     RD: 65001:10001 ip-prefix 192.168.23.0/24
-                                 -                     -       -       0       i
- * >Ec   RD: 65003:10001 ip-prefix 192.168.23.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10001 ip-prefix 192.168.23.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
+vPC domain id                     : 101
+Peer status                       : peer adjacency formed ok
+vPC keep-alive status             : peer is alive
+Configuration consistency status  : success
+Per-vlan consistency status       : success
+Type-2 consistency status         : success
+vPC role                          : primary
+Number of vPCs configured         : 1
+Peer Gateway                      : Enabled
+Dual-active excluded VLANs        : -
+Graceful Consistency Check        : Enabled
+Auto-recovery status              : Enabled, timer is off.(timeout = 240s)
+Delay-restore status              : Timer is off.(timeout = 30s)
+Delay-restore SVI status          : Timer is off.(timeout = 100s)
+Operational Layer3 Peer-router    : Enabled
+Virtual-peerlink mode             : Disabled
+
+vPC Peer-link status
+---------------------------------------------------------------------
+id    Port   Status Active vlans
+--    ----   ------ -------------------------------------------------
+1     Po1    up     1,100,200,2000
+
+
+vPC status
+----------------------------------------------------------------------------
+Id    Port          Status Consistency Reason                Active vlans
+--    ------------  ------ ----------- ------                ---------------
+101   Po101         down*  success     success               -
+
 
 ```
 ```
-leaf-1#sh ip route vrf OTUS-PROD
+Leaf-1# sh bgp l2vpn evpn
+BGP routing table information for VRF default, address family L2VPN EVPN
+BGP table version is 39, Local Router ID is 10.1.0.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
+njected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - b
+est2
 
- B E      192.168.13.23/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- C        192.168.13.0/24 is directly connected, Vlan13
- B E      192.168.23.23/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- C        192.168.23.0/24 is directly connected, Vlan23
-```
-```
-leaf-1#show vxlan address-table
-          Vxlan Mac Address Table
-----------------------------------------------------------------------
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 10.1.0.1:32867    (L2VNI 100)
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
 
-VLAN  Mac Address     Type      Prt  VTEP             Moves   Last Move
-----  -----------     ----      ---  ----             -----   ---------
-  13  0050.7966.6807  EVPN      Vx1  10.100.0.3       1       0:03:02 ago
-  23  0050.7966.680b  EVPN      Vx1  10.100.0.3       1       0:03:06 ago
-4092  5000.00c3.da3f  EVPN      Vx1  10.100.0.3       1       0:41:58 ago
-Total Remote Mac Addresses for this criterion: 3
+Route Distinguisher: 10.1.0.1:32967    (L2VNI 200)
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
+
+Route Distinguisher: 10.1.0.3:3
+*>i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.3:32867
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.3:32967
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.1:4    (L3VNI 2000)
+*>l[2]:[0]:[0]:[48]:[5000.0300.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+
 
 ```
 ```
-leaf-1#sh interfaces vxlan 1
-Vxlan1 is up, line protocol is up (connected)
-  Hardware is Vxlan
-  Source interface is Loopback100 and is active with 10.100.0.1
-  Virtual VTEP source interface is 'Loopback100'
-  Replication/Flood Mode is headend with Flood List Source: EVPN
-  Remote MAC learning via EVPN
-  VNI mapping to VLANs
-  Static VLAN to VNI mapping is
-    [13, 10013]       [23, 10023]
-  Dynamic VLAN to VNI mapping for 'evpn' is
-    [4092, 10001]
-  Note: All Dynamic VLANs used by VCS are internal VLANs.
-        Use 'show vxlan vni' for details.
-  Static VRF to VNI mapping is
-   [OTUS-PROD, 10001]
-  Headend replication flood vtep list is:
-    13 10.100.0.3
-    23 10.100.0.3
-  MLAG Shared Router MAC is 0000.0000.0000
-```
-```  
-leaf-1#show vxlan vni
-VNI to VLAN Mapping for Vxlan1
-VNI         VLAN       Source       Interface           802.1Q Tag
------------ ---------- ------------ ------------------- ----------
-10013       13         static       Port-Channel5       13
-                                    Vxlan1              13
-10023       23         static       Port-Channel5       23
-                                    Vxlan1              23
+Leaf-1# sh ip route vrf main
+172.16.100.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 03:21:38, direct
+172.16.100.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 03:21:38, local
+172.16.100.20/32, ubest/mbest: 1/0
+    *via 10.1.0.3%default, [200/0], 00:01:17, bgp-65200, internal, tag 65200, se
+gid: 2000 tunnelid: 0xa010003 encap: VXLAN
 
-VNI to dynamic VLAN Mapping for Vxlan1
-VNI         VLAN       VRF             Source
------------ ---------- --------------- ------------
-10001       4092       OTUS-PROD       evpn
+172.16.200.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 03:21:38, direct
+172.16.200.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 03:21:38, local
+172.16.200.20/32, ubest/mbest: 1/0
+    *via 10.1.0.3%default, [200/0], 00:01:28, bgp-65200, internal, tag 65200, se
+gid: 2000 tunnelid: 0xa010003 encap: VXLAN
+
+```
+```
+Leaf-1# sh nve peers
+Interface Peer-IP                                 State LearnType Uptime   Route
+r-Mac
+--------- --------------------------------------  ----- --------- -------- -----
+------------
+nve1      10.1.0.3                                Up    CP        00:35:29 5000.
+0500.1b08
+
+
+```
+```
+Leaf-1# show vpc consistency-parameters global
+
+    Legend:
+        Type 1 : vPC will be suspended in case of mismatch
+
+Name                        Type  Local Value            Peer Value
+-------------               ----  ---------------------- -----------------------
+STP MST Simulate PVST       1     Enabled                Enabled
+STP Port Type, Edge         1     Normal, Disabled,      Normal, Disabled,
+BPDUFilter, Edge BPDUGuard        Enabled                Enabled
+STP MST Region Name         1     N-Leafs101-102         N-Leafs101-102
+STP Disabled                1     None                   None
+STP Mode                    1     MST                    MST
+STP Bridge Assurance        1     Enabled                Enabled
+STP Loopguard               1     Enabled                Enabled
+STP MST Region Instance to  1
+ VLAN Mapping
+STP MST Region Revision     1     1                      1
+Interface-vlan admin up     2     100,200,2000           100,200,2000
+Interface-vlan routing      2     1,100,200,2000         1,100,200,2000
+capability
+Nve1 Adm St, Src Adm St,    1     Up, Up, 10.6.255.200,  Up, Up, 10.6.255.200,
+Sec IP, Host Reach, VMAC          CP, TRUE, Disabled,    CP, TRUE, Disabled,
+Adv, SA,mcast l2, mcast           0.0.0.0, 0.0.0.0,      0.0.0.0, 0.0.0.0,
+l3, IR BGP,MS Adm St, Reo         Disabled, Down,        Disabled, Down,
+                                  0.0.0.0                0.0.0.0
+Xconnect Vlans              1
+QoS (Cos)                   2     ([0-7], [], [], [],    ([0-7], [], [], [],
+                                  [], [], [], [])        [], [], [], [])
+Network QoS (MTU)           2     (1500, 1500, 1500,     (1500, 1500, 1500,
+                                  1500, 0, 0, 0, 0)      1500, 0, 0, 0, 0)
+Network Qos (Pause:         2     (F, F, F, F, F, F, F,  (F, F, F, F, F, F, F,
+T->Enabled, F->Disabled)          F)                     F)
+Input Queuing (Bandwidth)   2     (0, 0, 0, 0, 0, 0, 0,  (0, 0, 0, 0, 0, 0, 0,
+                                  0)                     0)
+Input Queuing (Absolute     2     (F, F, F, F, F, F, F,  (F, F, F, F, F, F, F,
+Priority: T->Enabled,             F)                     F)
+F->Disabled)
+Output Queuing (Bandwidth   2     (100, 0, 0, 0, 0, 0,   (100, 0, 0, 0, 0, 0,
+Remaining)                        0, 0)                  0, 0)
+Output Queuing (Absolute    2     (F, F, F, T, F, F, F,  (F, F, F, T, F, F, F,
+Priority: T->Enabled,             F)                     F)
+F->Disabled)
+Allowed VLANs               -     1,100,200,2000         1,100,200,2000
+Local suspended VLANs       -     -                      -
+
+
 ```
 
 - #### leaf-2
 
 ```
-leaf-2#sh mlag
-MLAG Configuration:
-domain-id                          :               mlag1
-local-interface                    :            Vlan4094
-peer-address                       :        10.100.100.0
-peer-link                          :       Port-Channel1
-peer-config                        :          consistent
+Leaf-2# sh vpc
+Legend:
+                (*) - local vPC is down, forwarding via vPC peer-link
 
-MLAG Status:
-state                              :              Active
-negotiation status                 :           Connected
-peer-link status                   :                  Up
-local-int status                   :                  Up
-system-id                          :   52:00:00:5b:6f:f5
-dual-primary detection             :            Disabled
-dual-primary interface errdisabled :               False
+vPC domain id                     : 101
+Peer status                       : peer adjacency formed ok
+vPC keep-alive status             : peer is alive
+Configuration consistency status  : success
+Per-vlan consistency status       : success
+Type-2 consistency status         : success
+vPC role                          : primary
+Number of vPCs configured         : 1
+Peer Gateway                      : Enabled
+Dual-active excluded VLANs        : -
+Graceful Consistency Check        : Enabled
+Auto-recovery status              : Enabled, timer is off.(timeout = 240s)
+Delay-restore status              : Timer is off.(timeout = 30s)
+Delay-restore SVI status          : Timer is off.(timeout = 100s)
+Operational Layer3 Peer-router    : Enabled
+Virtual-peerlink mode             : Disabled
 
-MLAG Ports:
-Disabled                           :                   0
-Configured                         :                   0
-Inactive                           :                   0
-Active-partial                     :                   0
-Active-full                        :                   1
+vPC Peer-link status
+---------------------------------------------------------------------
+id    Port   Status Active vlans
+--    ----   ------ -------------------------------------------------
+1     Po1    up     1,100,200,2000
+
+
+vPC status
+----------------------------------------------------------------------------
+Id    Port          Status Consistency Reason                Active vlans
+--    ------------  ------ ----------- ------                ---------------
+101   Po101         down*  success     success               -
+
 ```
 ```
 leaf-2#sh mlag interfaces detail
@@ -817,253 +872,320 @@ leaf-2#sh mlag interfaces detail
       5       active-full         Po5          Po5       up/up       ena/ena       0:26:56 ago          8
 ```
 ```
-leaf-2#sh port-channel 5 detailed
-Port Channel Port-Channel5 (Fallback State: Unconfigured):
-Minimum links: unconfigured
-Minimum speed: unconfigured
-Current weight/Max weight: 1/16
-  Active Ports:
-       Port                Time Became Active       Protocol       Mode      Weight
-    ------------------- ------------------------ -------------- ------------ ------
-       Ethernet5           19:29:01                 LACP           Active      1
-       PeerEthernet5       19:29:00                 LACP           Active      0
-```
-```
-leaf-2#sh bgp evpn
-BGP routing table information for VRF default
-Router identifier 10.1.0.2, local AS number 65001
-Route status codes: s - suppressed, * - valid, > - active, E - ECMP head, e - ECMP
-                    S - Stale, c - Contributing to ECMP, b - backup
-                    % - Pending BGP convergence
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
+Leaf-2# show vpc consistency-parameters global
 
-          Network                Next Hop              Metric  LocPref Weight  Path
- * >Ec   RD: 65003:10013 mac-ip 0050.7966.6807
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10013 mac-ip 0050.7966.6807
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >Ec   RD: 65003:10013 mac-ip 0050.7966.6807 192.168.13.23
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10013 mac-ip 0050.7966.6807 192.168.13.23
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >Ec   RD: 65003:10023 mac-ip 0050.7966.680b
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10023 mac-ip 0050.7966.680b
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >Ec   RD: 65003:10023 mac-ip 0050.7966.680b 192.168.23.23
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10023 mac-ip 0050.7966.680b 192.168.23.23
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >     RD: 65001:10013 mac-ip 5000.006f.20c3
-                                 -                     -       -       0       i
- * >     RD: 65001:10023 mac-ip 5000.006f.20c3
-                                 -                     -       -       0       i
- * >     RD: 65001:10013 imet 10.100.0.1
-                                 -                     -       -       0       i
- * >     RD: 65001:10023 imet 10.100.0.1
-                                 -                     -       -       0       i
- * >Ec   RD: 65003:10013 imet 10.100.0.3
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10013 imet 10.100.0.3
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >Ec   RD: 65003:10023 imet 10.100.0.3
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10023 imet 10.100.0.3
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >     RD: 65001:10001 ip-prefix 192.168.13.0/24
-                                 -                     -       -       0       i
- * >Ec   RD: 65003:10001 ip-prefix 192.168.13.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10001 ip-prefix 192.168.13.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >     RD: 65001:10001 ip-prefix 192.168.23.0/24
-                                 -                     -       -       0       i
- * >Ec   RD: 65003:10001 ip-prefix 192.168.23.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10001 ip-prefix 192.168.23.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
-```
-```
-leaf-2#sh ip route vrf OTUS-PROD
+    Legend:
+        Type 1 : vPC will be suspended in case of mismatch
 
- B E      192.168.13.23/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- C        192.168.13.0/24 is directly connected, Vlan13
- B E      192.168.23.23/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- C        192.168.23.0/24 is directly connected, Vlan23
-```
-```
-leaf-2#show vxlan address-table
-          Vxlan Mac Address Table
-----------------------------------------------------------------------
+Name                        Type  Local Value            Peer Value
+-------------               ----  ---------------------- -----------------------
+STP MST Simulate PVST       1     Enabled                Enabled
+STP Port Type, Edge         1     Normal, Disabled,      Normal, Disabled,
+BPDUFilter, Edge BPDUGuard        Enabled                Enabled
+STP MST Region Name         1     N-Leafs101-102         N-Leafs101-102
+STP Disabled                1     None                   None
+STP Mode                    1     MST                    MST
+STP Bridge Assurance        1     Enabled                Enabled
+STP Loopguard               1     Enabled                Enabled
+STP MST Region Instance to  1
+ VLAN Mapping
+STP MST Region Revision     1     1                      1
+Interface-vlan admin up     2     100,200,2000           100,200,2000
+Interface-vlan routing      2     1,100,200,2000         1,100,200,2000
+capability
+Nve1 Adm St, Src Adm St,    1     Up, Up, 10.6.255.200,  Up, Up, 10.6.255.200,
+Sec IP, Host Reach, VMAC          CP, TRUE, Disabled,    CP, TRUE, Disabled,
+Adv, SA,mcast l2, mcast           0.0.0.0, 0.0.0.0,      0.0.0.0, 0.0.0.0,
+l3, IR BGP,MS Adm St, Reo         Disabled, Down,        Disabled, Down,
+                                  0.0.0.0                0.0.0.0
+Xconnect Vlans              1
+QoS (Cos)                   2     ([0-7], [], [], [],    ([0-7], [], [], [],
+                                  [], [], [], [])        [], [], [], [])
+Network QoS (MTU)           2     (1500, 1500, 1500,     (1500, 1500, 1500,
+                                  1500, 0, 0, 0, 0)      1500, 0, 0, 0, 0)
+Network Qos (Pause:         2     (F, F, F, F, F, F, F,  (F, F, F, F, F, F, F,
+T->Enabled, F->Disabled)          F)                     F)
+Input Queuing (Bandwidth)   2     (0, 0, 0, 0, 0, 0, 0,  (0, 0, 0, 0, 0, 0, 0,
+                                  0)                     0)
+Input Queuing (Absolute     2     (F, F, F, F, F, F, F,  (F, F, F, F, F, F, F,
+Priority: T->Enabled,             F)                     F)
+F->Disabled)
+Output Queuing (Bandwidth   2     (100, 0, 0, 0, 0, 0,   (100, 0, 0, 0, 0, 0,
+Remaining)                        0, 0)                  0, 0)
+Output Queuing (Absolute    2     (F, F, F, T, F, F, F,  (F, F, F, T, F, F, F,
+Priority: T->Enabled,             F)                     F)
+F->Disabled)
+Allowed VLANs               -     1,100,200,2000         1,100,200,2000
+Local suspended VLANs       -     -                      -
 
-VLAN  Mac Address     Type      Prt  VTEP             Moves   Last Move
-----  -----------     ----      ---  ----             -----   ---------
-  13  0050.7966.6807  EVPN      Vx1  10.100.0.3       1       0:03:07 ago
-  23  0050.7966.680b  EVPN      Vx1  10.100.0.3       1       0:03:11 ago
-4092  5000.00c3.da3f  EVPN      Vx1  10.100.0.3       1       0:42:03 ago
-Total Remote Mac Addresses for this criterion: 3
 ```
 ```
-leaf-2#sh interfaces vxlan 1
-Vxlan1 is up, line protocol is up (connected)
-  Hardware is Vxlan
-  Source interface is Loopback100 and is active with 10.100.0.1
-  Virtual VTEP source interface is 'Loopback100'
-  Replication/Flood Mode is headend with Flood List Source: EVPN
-  Remote MAC learning via EVPN
-  VNI mapping to VLANs
-  Static VLAN to VNI mapping is
-    [13, 10013]       [23, 10023]
-  Dynamic VLAN to VNI mapping for 'evpn' is
-    [4092, 10001]
-  Note: All Dynamic VLANs used by VCS are internal VLANs.
-        Use 'show vxlan vni' for details.
-  Static VRF to VNI mapping is
-   [OTUS-PROD, 10001]
-  Headend replication flood vtep list is:
-    13 10.100.0.3
-    23 10.100.0.3
-  MLAG Shared Router MAC is 0000.0000.0000
+Leaf-2# sh bgp l2vpn evpn
+BGP routing table information for VRF default, address family L2VPN EVPN
+BGP table version is 55, Local Router ID is 10.1.0.2
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
+njected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - b
+est2
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 10.1.0.2:32867    (L2VNI 100)
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.20]/272
+                      10.1.0.3                          100          0 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
+
+Route Distinguisher: 10.1.0.2:32967    (L2VNI 200)
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
+
+Route Distinguisher: 10.1.0.3:3
+* i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.3:32867
+* i[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i                   10.1.0.3                          100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.20]/272
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+* i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.3:32967
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+* i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 i
+*>i                   10.1.0.3                          100          0 i
+* i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.2:4    (L3VNI 2000)
+*>l[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.20]/272
+                      10.1.0.3                          100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 i
+
+```
+```
+Leaf-2# sh ip route vrf main
+172.16.100.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 02:28:08, direct
+172.16.100.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 02:28:08, local
+172.16.100.20/32, ubest/mbest: 1/0
+    *via 10.1.0.3%default, [200/0], 00:08:02, bgp-65200, internal, tag 65200, se
+gid: 2000 tunnelid: 0xa010003 encap: VXLAN
+
+172.16.200.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 02:28:08, direct
+172.16.200.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 02:28:08, local
+172.16.200.20/32, ubest/mbest: 1/0
+    *via 10.1.0.3%default, [200/0], 00:08:13, bgp-65200, internal, tag 65200, se
+gid: 2000 tunnelid: 0xa010003 encap: VXLAN
+
+```
+```
+Leaf-2# sh l2route mac-ip all detail
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote (V):vPC link
+(Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+(Ps):Peer Sync (Ro):Re-Originated (Orp):Orphan
+Topology    Mac Address    Host IP                                 Prod   Flags
+        Seq No     Next-Hops
+----------- -------------- --------------------------------------- ------ ------
+---- ---------- ---------------------------------------
+100         0050.7966.6807 172.16.100.20                           BGP    --
+        0         10.1.0.3 (Label: 100)
+            encap-type:1
+200         0050.7966.6808 172.16.200.20                           BGP    --
+        0         10.1.0.3 (Label: 200)
+            encap-type:1
+
+```
+```
+Leaf-2# sh nve peers
+Interface Peer-IP                                 State LearnType Uptime   Route
+r-Mac
+--------- --------------------------------------  ----- --------- -------- -----
+------------
+nve1      10.1.0.3                                Up    CP        00:54:35 5000.
+0500.1b08
+
 ```
 ```  
-leaf-2#show vxlan vni
-VNI to VLAN Mapping for Vxlan1
-VNI         VLAN       Source       Interface           802.1Q Tag
------------ ---------- ------------ ------------------- ----------
-10013       13         static       Port-Channel5       13
-                                    Vxlan1              13
-10023       23         static       Port-Channel5       23
-                                    Vxlan1              23
+Leaf-2# show nve vni
+Codes: CP - Control Plane        DP - Data Plane
+       UC - Unconfigured         SA - Suppress ARP
+       SU - Suppress Unknown Unicast
+       Xconn - Crossconnect
+       MS-IR - Multisite Ingress Replication
 
-VNI to dynamic VLAN Mapping for Vxlan1
-VNI         VLAN       VRF             Source
------------ ---------- --------------- ------------
-10001       4092       OTUS-PROD       evpn
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100      UnicastBGP        Up    CP   L2 [100]
+nve1      200      UnicastBGP        Up    CP   L2 [200]
+nve1      2000     n/a               Up    CP   L3 [main]
+
+
 ```
 
 - #### leaf-3
 
 ```
-leaf-3#sh ip route vrf OTUS-PROD
+Leaf-3# sh l2route mac-ip all detail
+Flags -(Rmac):Router MAC (Stt):Static (L):Local (R):Remote (V):vPC link
+(Dup):Duplicate (Spl):Split (Rcv):Recv(D):Del Pending (S):Stale (C):Clear
+(Ps):Peer Sync (Ro):Re-Originated (Orp):Orphan
+Topology    Mac Address    Host IP                                 Prod   Flags
+        Seq No     Next-Hops
+----------- -------------- --------------------------------------- ------ ------
+---- ---------- ---------------------------------------
+100         0050.7966.6807 172.16.100.20                           HMM    L,
+        0         Local
+            L3-Info: 2000
+            Sent To: BGP
+200         0050.7966.6808 172.16.200.20                           HMM    L,
+        0         Local
+            L3-Info: 2000
+            Sent To: BGP
 
- C        192.168.13.0/24 is directly connected, Vlan13
- C        192.168.23.0/24 is directly connected, Vlan23
 ```
 ```
-leaf-3#sh bgp evpn route-type mac-ip
-BGP routing table information for VRF default
-Router identifier 10.1.0.3, local AS number 65003
-Route status codes: s - suppressed, * - valid, > - active, E - ECMP head, e - ECMP
-                    S - Stale, c - Contributing to ECMP, b - backup
-                    % - Pending BGP convergence
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
+Leaf-3# sh bgp l2vpn evpn
+BGP routing table information for VRF default, address family L2VPN EVPN
+BGP table version is 41, Local Router ID is 10.1.0.3
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
+njected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - b
+est2
 
-          Network                Next Hop              Metric  LocPref Weight  Path
- * >     RD: 65003:10013 mac-ip 0050.7966.6807
-                                 -                     -       -       0       i
- * >     RD: 65003:10013 mac-ip 0050.7966.6807 192.168.13.23
-                                 -                     -       -       0       i
- * >     RD: 65003:10023 mac-ip 0050.7966.680b
-                                 -                     -       -       0       i
- * >     RD: 65003:10023 mac-ip 0050.7966.680b 192.168.23.23
-                                 -                     -       -       0       i
- * >Ec   RD: 65001:10013 mac-ip 5000.006f.20c3
-                                 10.100.0.1            -       100     0       65000 65001 i
- *  ec   RD: 65001:10013 mac-ip 5000.006f.20c3
-                                 10.100.0.1            -       100     0       65000 65001 i
- * >Ec   RD: 65001:10023 mac-ip 5000.006f.20c3
-                                 10.100.0.1            -       100     0       65000 65001 i
- *  ec   RD: 65001:10023 mac-ip 5000.006f.20c3
-                                 10.100.0.1            -       100     0       65000 65001 i
- * >Ec   RD: 65001:10013 imet 10.100.0.1
-                                 10.100.0.1            -       100     0       65000 65001 i
- *  ec   RD: 65001:10013 imet 10.100.0.1
-                                 10.100.0.1            -       100     0       65000 65001 i
- * >Ec   RD: 65001:10023 imet 10.100.0.1
-                                 10.100.0.1            -       100     0       65000 65001 i
- *  ec   RD: 65001:10023 imet 10.100.0.1
-                                 10.100.0.1            -       100     0       65000 65001 i
- * >     RD: 65003:10013 imet 10.100.0.3
-                                 -                     -       -       0       i
- * >     RD: 65003:10023 imet 10.100.0.3
-                                 -                     -       -       0       i
- * >Ec   RD: 65001:10001 ip-prefix 192.168.13.0/24
-                                 10.100.0.1            -       100     0       65000 65001 i
- *  ec   RD: 65001:10001 ip-prefix 192.168.13.0/24
-                                 10.100.0.1            -       100     0       65000 65001 i
- * >     RD: 65003:10001 ip-prefix 192.168.13.0/24
-                                 -                     -       -       0       i
- * >Ec   RD: 65001:10001 ip-prefix 192.168.23.0/24
-                                 10.100.0.1            -       100     0       65000 65001 i
- *  ec   RD: 65001:10001 ip-prefix 192.168.23.0/24
-                                 10.100.0.1            -       100     0       65000 65001 i
- * >     RD: 65003:10001 ip-prefix 192.168.23.0/24
-                                 -                     -       -       0       i
-```
-```
-leaf-3#show vxlan address-table
-          Vxlan Mac Address Table
-----------------------------------------------------------------------
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 10.1.0.1:4
+*>i[2]:[0]:[0]:[48]:[5000.0300.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
 
-VLAN  Mac Address     Type      Prt  VTEP             Moves   Last Move
-----  -----------     ----      ---  ----             -----   ---------
-  13  5000.006f.20c3  EVPN      Vx1  10.100.0.1       1       0:03:28 ago
-  23  5000.006f.20c3  EVPN      Vx1  10.100.0.1       1       0:09:28 ago
-4094  5000.00be.a1e3  EVPN      Vx1  10.100.0.1       1       0:48:20 ago
-Total Remote Mac Addresses for this criterion: 3
-```
-```
-leaf-3#sh interfaces vxlan 1
-Vxlan1 is up, line protocol is up (connected)
-  Hardware is Vxlan
-  Source interface is Loopback100 and is active with 10.100.0.3
-  Replication/Flood Mode is headend with Flood List Source: EVPN
-  Remote MAC learning via EVPN
-  VNI mapping to VLANs
-  Static VLAN to VNI mapping is
-    [13, 10013]       [23, 10023]
-  Dynamic VLAN to VNI mapping for 'evpn' is
-    [4094, 10001]
-  Note: All Dynamic VLANs used by VCS are internal VLANs.
-        Use 'show vxlan vni' for details.
-  Static VRF to VNI mapping is
-   [OTUS-PROD, 10001]
-  Headend replication flood vtep list is:
-    13 10.100.0.1
-    23 10.100.0.1
-  Shared Router MAC is 0000.0000.0000
-```
-```
-leaf-3#show vxlan vni
-VNI to VLAN Mapping for Vxlan1
-VNI         VLAN       Source       Interface       802.1Q Tag
------------ ---------- ------------ --------------- ----------
-10013       13         static       Ethernet3       untagged
-                                    Vxlan1          13
-10023       23         static       Ethernet4       untagged
-                                    Vxlan1          23
+Route Distinguisher: 10.1.0.1:32867
+*>i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
 
-VNI to dynamic VLAN Mapping for Vxlan1
-VNI         VLAN       VRF             Source
------------ ---------- --------------- ------------
-10001       4094       OTUS-PROD       evpn
+Route Distinguisher: 10.1.0.1:32967
+*>i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
+
+Route Distinguisher: 10.1.0.2:4
+* i[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
+
+Route Distinguisher: 10.1.0.2:32867
+* i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
+
+Route Distinguisher: 10.1.0.2:32967
+* i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
+
+Route Distinguisher: 10.1.0.3:32867    (L2VNI 100)
+*>l[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100      32768 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.20]/272
+                      10.1.0.3                          100      32768 i
+*>l[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100      32768 i
+*>i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
+
+Route Distinguisher: 10.1.0.3:32967    (L2VNI 200)
+*>l[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100      32768 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100      32768 i
+*>l[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100      32768 i
+*>i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
+
+Route Distinguisher: 10.1.0.3:3    (L3VNI 2000)
+*>i[2]:[0]:[0]:[48]:[5000.0300.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+*>i[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+*>l[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100      32768 i
+
+```
+```
+Leaf-3# sh nve peers
+Interface Peer-IP                                 State LearnType Uptime   Route
+r-Mac
+--------- --------------------------------------  ----- --------- -------- -----
+------------
+nve1      10.6.255.200                            Up    CP        00:58:37 n/a
+
+```
+```
+Leaf-3# show interface nve 1
+nve1 is up
+admin state is up,  Hardware: NVE
+  MTU 9216 bytes
+  Encapsulation VXLAN
+  Auto-mdix is turned off
+  RX
+    ucast: 0 pkts, 0 bytes - mcast: 2 pkts, 148 bytes
+  TX
+    ucast: 5 pkts, 604 bytes - mcast: 0 pkts, 0 bytes
+
+```
+```
+Leaf-3# show nve vni
+Codes: CP - Control Plane        DP - Data Plane
+       UC - Unconfigured         SA - Suppress ARP
+       SU - Suppress Unknown Unicast
+       Xconn - Crossconnect
+       MS-IR - Multisite Ingress Replication
+
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100      UnicastBGP        Up    CP   L2 [100]
+nve1      200      UnicastBGP        Up    CP   L2 [200]
+nve1      2000     n/a               Up    CP   L3 [main]
+
 ```
 
 - #### server-1
 
 ```
-server-1#sh port-channel 5 detailed
-Port Channel Port-Channel5 (Fallback State: Unconfigured):
-Minimum links: unconfigured
-Minimum speed: unconfigured
-Current weight/Max weight: 2/16
-  Active Ports:
-       Port            Time Became Active       Protocol       Mode      Weight
-    --------------- ------------------------ -------------- ------------ ------
-       Ethernet1       19:29:01                 LACP           Active      1
-       Ethernet2       19:29:01                 LACP           Active      1
+
 ```
 
 - #### client-5
