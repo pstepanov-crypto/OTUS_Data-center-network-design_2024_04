@@ -430,54 +430,148 @@ evpn
 - #### [leaf-3](config/leaf-3.conf)
 
 ```
-vlan 13,23
+nv overlay evpn
+feature ospf
+feature bgp
+feature fabric forwarding
+feature interface-vlan
+feature vn-segment-vlan-based
+feature bfd
+clock timezone MSK 3 0
+feature nv overlay
 
-vrf instance OTUS-PROD
+fabric forwarding anycast-gateway-mac 0000.dead.beef
+vlan 1,100,200,2000
+vlan 100
+  name Hosts
+  vn-segment 100
+vlan 200
+  name Servers
+  vn-segment 200
+vlan 2000
+  name VRF_MAIN_VXLAN_FORWARD
+  vn-segment 2000
 
-interface Ethernet3
-   description to-clien-5
-   switchport access vlan 13
+vrf context main
+  vni 2000
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
+vrf context management
 
-interface Ethernet4
-   description to-clien-6
-   switchport access vlan 23
+interface Vlan1
 
-interface Vlan13
-   vrf OTUS-PROD
-   ip address virtual 192.168.13.254/24
+interface Vlan100
+  no shutdown
+  vrf member main
+  no ip redirects
+  ip address 172.16.100.1/24
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
 
-interface Vlan23
-   vrf OTUS-PROD
-   ip address virtual 192.168.23.254/24
+interface Vlan200
+  no shutdown
+  vrf member main
+  no ip redirects
+  ip address 172.16.200.1/24
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
 
-interface Vxlan1
-   vxlan source-interface Loopback100
-   vxlan udp-port 4789
-   vxlan vlan 13 vni 10013
-   vxlan vlan 23 vni 10023
-   vxlan vrf OTUS-PROD vni 10001
+interface Vlan2000
+  no shutdown
+  mtu 9216
+  vrf member main
+  no ip redirects
+  ip forward
+  no ipv6 redirects
 
-ip virtual-router mac-address 00:00:00:00:00:03
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  advertise virtual-rmac
+  source-interface loopback2
+  member vni 100
+    ingress-replication protocol bgp
+  member vni 200
+    ingress-replication protocol bgp
+  member vni 2000 associate-vrf
 
-ip routing vrf OTUS-PROD
+interface Ethernet1/1
+  description to-spine-1
+  no switchport
+  no ip redirects
+  ip address 10.6.1.5/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
 
-router bgp 65003
+interface Ethernet1/2
+  description to-spine-2
+  no switchport
+  no ip redirects
+  ip address 10.6.2.5/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
 
-   vlan 13
-      rd 65003:10013
-      route-target both 13:13
-      redistribute learned
-   !
-   vlan 23
-      rd 65003:10023
-      route-target both 23:23
-      redistribute learned
+interface Ethernet1/3
+  description VPC3
+  switchport access vlan 100
 
-   vrf OTUS-PROD
-      rd 65003:10001
-      route-target import evpn 10001:10001
-      route-target export evpn 10001:10001
-      redistribute connected
+interface Ethernet1/4
+  description VPC4
+  switchport access vlan 200
+
+interface mgmt0
+  vrf member management
+
+interface loopback2
+  ip address 10.1.0.3/32
+  ip router ospf UNDERLAY area 0.0.0.30
+icam monitor scale
+
+line console
+line vty
+router ospf UNDERLAY
+  bfd
+  router-id 10.1.0.3
+  passive-interface default
+router bgp 65200
+  router-id 10.1.0.3
+  address-family ipv4 unicast
+    maximum-paths 2
+  address-family l2vpn evpn
+    advertise-pip
+  template peer RR
+    bfd
+    remote-as 65200
+    log-neighbor-changes
+    update-source loopback2
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+  neighbor 10.1.1.0
+    inherit peer RR
+    address-family l2vpn evpn
+  neighbor 10.2.1.0
+    inherit peer RR
+    address-family l2vpn evpn
+  vrf main
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+      maximum-paths 2
+evpn
+  vni 100 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 200 l2
+    rd auto
+    route-target import auto
+    route-target export auto
 ```
 
 - #### [server-1](config/server-1.conf)
