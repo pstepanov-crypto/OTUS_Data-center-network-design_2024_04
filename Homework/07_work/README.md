@@ -225,83 +225,206 @@ evpn
 - #### [leaf-2](config/leaf-2.conf)
 
 ```
-spanning-tree mode mstp
-no spanning-tree vlan-id 4094
+cfs eth distribute
+nv overlay evpn
+feature ospf
+feature bgp
+feature fabric forwarding
+feature interface-vlan
+feature vn-segment-vlan-based
+feature lacp
+feature vpc
+feature bfd
+clock timezone MSK 3 0
+feature nv overlay
 
-vlan 13,23
+no password strength-check
+username admin password 5 $5$KIOBMB$/BR2tcIpAyJuzrRj/KMxrGo5rFx9.mAPt0SKsyc8YU/
+ role network-admin
+ip domain-lookup
+spanning-tree mode mst
+copp profile strict
 
-vlan 4094
-   trunk group mlagpeer
+fabric forwarding anycast-gateway-mac 0000.dead.beef
+vlan 1,100,200,2000
+vlan 100
+  name Hosts
+  vn-segment 100
+vlan 200
+  name Servers
+  vn-segment 200
+vlan 2000
+  name VRF_MAIN_VXLAN_FORWARD
+  vn-segment 2000
 
-vrf instance OTUS-PROD
+spanning-tree port type edge bpduguard default
+spanning-tree loopguard default
+spanning-tree mst 0-1 priority 4096
+spanning-tree mst configuration
+  name N-Leafs101-102
+  revision 1
+  instance 1 vlan 1-4094
+vrf context VPC
+vrf context main
+  vni 2000
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
+vrf context management
+vpc domain 101
+  peer-switch
+  role priority 50
+  peer-keepalive destination 1.1.1.1 source 1.1.1.2 vrf VPC
+  peer-gateway
+  layer3 peer-router
+  auto-recovery
+  delay restore interface-vlan 100
+  ip arp synchronize
 
-interface Port-Channel1
-   description from-MLAG
-   switchport mode trunk
-   switchport trunk group mlagpeer
 
-interface Port-Channel5
-   description from-MLAG-server
-   switchport trunk allowed vlan 13,23
-   switchport mode trunk
-   mlag 5
+interface Vlan1
+  no ip redirects
+  no ipv6 redirects
 
-interface Ethernet3
-   description to-leaf-1
-   channel-group 1 mode active
+interface Vlan100
+  no shutdown
+  vrf member main
+  no ip redirects
+  ip address 172.16.100.1/24
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
 
-interface Ethernet4
-   description to-leaf-1
-   channel-group 1 mode active
+interface Vlan200
+  no shutdown
+  vrf member main
+  no ip redirects
+  ip address 172.16.200.1/24
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
 
-interface Ethernet5
-   description to-server-1
-   channel-group 5 mode active
+interface Vlan2000
+  no shutdown
+  mtu 9216
+  vrf member main
+  no ip redirects
+  ip forward
+  no ipv6 redirects
 
-interface Vlan13
-   vrf OTUS-PROD
-   ip address virtual 192.168.13.254/24
+interface port-channel1
+  description vpc-per-link
+  switchport mode trunk
+  spanning-tree port type network
+  vpc peer-link
 
-interface Vlan23
-   vrf OTUS-PROD
-   ip address virtual 192.168.23.254/24
+interface port-channel101
+  switchport access vlan 100
+  vpc 101
 
-interface Vlan4094
-   ip address 10.100.100.1/31
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  advertise virtual-rmac
+  source-interface loopback2
+  member vni 100
+    ingress-replication protocol bgp
+  member vni 200
+    ingress-replication protocol bgp
+  member vni 2000 associate-vrf
 
-interface Vxlan1
-   vxlan source-interface Loopback100
-   vxlan udp-port 4789
-   vxlan vlan 13 vni 10013
-   vxlan vlan 23 vni 10023
-   vxlan vrf OTUS-PROD vni 10001
-   vxlan virtual-vtep local-interface Loopback100
+interface Ethernet1/1
+  description to-spine-1
+  no switchport
+  no ip redirects
+  ip address 10.6.1.3/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
 
-ip virtual-router mac-address 00:00:00:00:00:01
+interface Ethernet1/2
+  description to-spine-2
+  no switchport
+  no ip redirects
+  ip address 10.6.2.3/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
 
-mlag configuration
-   domain-id mlag1
-   local-interface Vlan4094
-   peer-address 10.100.100.0
-   peer-link Port-Channel1
+interface Ethernet1/3
+  description VPC1
+  switchport access vlan 100
+  spanning-tree guard root
+  channel-group 101 mode active
 
-router bgp 65001
+interface Ethernet1/4
+  description vpc-per-link
+  switchport mode trunk
+  channel-group 1 mode active
 
-   vlan 13
-      rd 65001:10013
-      route-target both 13:13
-      redistribute learned
-   
-   vlan 23
-      rd 65001:10023
-      route-target both 23:23
-      redistribute learned
+interface Ethernet1/5
+  description vpc-per-link
+  switchport mode trunk
+  channel-group 1 mode active
 
-   vrf OTUS-PROD
-      rd 65001:10001
-      route-target import evpn 10001:10001
-      route-target export evpn 10001:10001
-      redistribute connected
+interface Ethernet1/6
+  description vpc-keepalive
+  no switchport
+  vrf member VPC
+  ip address 1.1.1.2/30
+  no shutdown
+
+interface mgmt0
+  vrf member management
+
+interface loopback2
+  description VTEP
+  ip address 10.1.0.2/32
+  ip address 10.6.255.200/32 secondary
+  ip router ospf UNDERLAY area 0.0.0.30
+icam monitor scale
+
+line console
+line vty
+router ospf UNDERLAY
+  bfd
+  router-id 10.1.0.2
+  passive-interface default
+router bgp 65200
+  router-id 10.1.0.2
+  address-family ipv4 unicast
+    maximum-paths 2
+  address-family l2vpn evpn
+    advertise-pip
+  template peer RR
+    bfd
+    remote-as 65200
+    log-neighbor-changes
+    update-source loopback2
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+  neighbor 10.1.1.0
+    inherit peer RR
+    address-family l2vpn evpn
+  neighbor 10.2.1.0
+    inherit peer RR
+    address-family l2vpn evpn
+  vrf main
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+      maximum-paths 2
+evpn
+  vni 100 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 200 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+
 ```
 
 - #### [leaf-3](config/leaf-3.conf)
