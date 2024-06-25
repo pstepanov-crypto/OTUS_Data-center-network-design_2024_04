@@ -577,25 +577,43 @@ evpn
 - #### [server-1](config/server-1.conf)
 
 ```
-vlan 13,23
+#bond0
+auto bond0
+iface bond0 inet static
+    address 172.16.100.10
+    netmask 255.255.255.0
+    gateway 172.16.100.1
+    bond-slaves ens3 ens4
+    bond-mode 802.3ad
+    bond-miimon 100
 
-interface Port-Channel5
-   switchport trunk allowed vlan 13,23
-   switchport mode trunk
-
-interface Ethernet1
-   channel-group 5 mode active
-
-interface Ethernet2
-   channel-group 5 mode active
-
-interface Vlan13
-   ip address 192.168.13.13/24
-
-interface Vlan23
-   ip address 192.168.23.13/24
-
-ip routing
+user@debian:~$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: ens3: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 50:69:1e:00:06:00 brd ff:ff:ff:ff:ff:ff
+3: ens4: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 50:69:1e:00:06:01 brd ff:ff:ff:ff:ff:ff
+4: ens5: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc pfifo_fast state UP group default qlen 1000
+    link/ether 50:00:00:06:00:fe brd ff:ff:ff:ff:ff:ff
+    inet 169.254.2.101/30 brd 169.254.2.103 scope link dynamic noprefixroute ens5
+       valid_lft 85316sec preferred_lft 85316sec
+    inet6 fec0::9de:a56e:ca2a:7041/64 scope site temporary dynamic
+       valid_lft 86311sec preferred_lft 14311sec
+    inet6 fec0::5200:ff:fe06:fe/64 scope site dynamic mngtmpaddr noprefixroute
+       valid_lft 86311sec preferred_lft 14311sec
+    inet6 fe80::5200:ff:fe06:fe/64 scope link noprefixroute
+       valid_lft forever preferred_lft forever
+5: bond0: <NO-CARRIER,BROADCAST,MULTICAST,MASTER,UP> mtu 1500 qdisc noqueue state DOWN group default qlen 1000
+    link/ether 82:cd:ba:d4:ca:45 brd ff:ff:ff:ff:ff:ff
+    inet 172.16.100.10/24 brd 172.16.100.255 scope global bond0
+       valid_lft forever preferred_lft forever
+    inet6 fe80::5269:1eff:fe00:600/64 scope link
+       valid_lft forever preferred_lft forever
 ```
 ---
 
