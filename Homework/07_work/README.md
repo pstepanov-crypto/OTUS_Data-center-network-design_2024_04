@@ -228,7 +228,7 @@ Ethernet1/3 is down (suspended(no LACP PDUs))
 admin state is up, Dedicated Interface
   Belongs to Po101
   Hardware: 100/1000/10000 Ethernet, address: 5000.0300.0103 (bia 5000.0300.0103)
-  Description: VPC1
+  Description: Server1
   MTU 1500 bytes, BW 1000000 Kbit , DLY 10 usec
   reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, medium is broadcast
