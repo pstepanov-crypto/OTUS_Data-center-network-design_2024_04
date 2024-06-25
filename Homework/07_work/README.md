@@ -13,7 +13,7 @@
 
 ### Схема сети
 
-![](images/Overlay_vPC.png)
+![](images/VPC.PNG)
 
 ### Конфигурация оборудования
 
