@@ -702,11 +702,6 @@ Interface: nve1, State: Up, encapsulation: VXLAN
 ```
 
 
-```
-
-
-```
-
 - #### Проверка связанности Leaf-3
 
 ```
