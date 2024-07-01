@@ -20,44 +20,218 @@
 - #### [leaf-1](config/leaf-1.conf)
 
 ```
-vlan 11
+cfs eth distribute
+nv overlay evpn
+feature ospf
+feature bgp
+feature fabric forwarding
+feature interface-vlan
+feature vn-segment-vlan-based
+feature lacp
+feature vpc
+feature lldp
+feature bfd
+clock timezone MSK 3 0
+feature nv overlay
 
-vrf instance OTUS-PROD
+spanning-tree mode mst
 
-interface Ethernet3
-   description to-client-1
-   switchport access vlan 11
+fabric forwarding anycast-gateway-mac 0000.dead.beef
+vlan 1,100,200,1000,2000
+vlan 100
+  name Hosts
+  vn-segment 100
+vlan 200
+  name Servers
+  vn-segment 200
+vlan 1000
+  name router-link
+vlan 2000
+  name VRF_MAIN_VXLAN_FORWARD
+  vn-segment 2000
 
-interface Ethernet4
-   description to-client-2
-   switchport access vlan 11
+spanning-tree port type edge bpduguard default
+spanning-tree loopguard default
+spanning-tree mst 0-1 priority 4096
+spanning-tree mst configuration
+  name N-Leafs101-102
+  revision 1
+  instance 1 vlan 1-4094
+ip prefix-list VXLAN-TO-EXT seq 5 permit 0.0.0.0/0 le 31
+route-map PERMIT permit 10
+vrf context VPC
+vrf context main
+  vni 2000
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
+vrf context management
+vpc domain 101
+  peer-switch
+  role priority 100
+  peer-keepalive destination 1.1.1.2 source 1.1.1.1 vrf VPC
+  peer-gateway
+  layer3 peer-router
+  auto-recovery
+  delay restore interface-vlan 100
+  ip arp synchronize
 
-interface Vlan11
-   vrf OTUS-PROD
-   ip address virtual 192.168.11.254/24
+interface Vlan100
+  no shutdown
+  vrf member main
+  no ip redirects
+  ip address 172.16.100.1/24
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
 
-interface Vxlan1
-   vxlan source-interface Loopback100
-   vxlan udp-port 4789
-   vxlan vlan 11 vni 10011
-   vxlan vrf OTUS-PROD vni 10001
+interface Vlan200
+  no shutdown
+  vrf member main
+  no ip redirects
+  ip address 172.16.200.1/24
+  no ipv6 redirects
+  fabric forwarding mode anycast-gateway
 
-ip virtual-router mac-address 00:00:00:00:00:01
+interface Vlan1000
+  description SVI_LINK_ROUTER
+  no shutdown
+  vrf member main
+  no ip redirects
+  ip address 172.17.2.2/29
+  no ipv6 redirects
 
-ip routing vrf OTUS-PROD
+interface Vlan2000
+  no shutdown
+  mtu 9216
+  vrf member main
+  no ip redirects
+  ip forward
+  no ipv6 redirects
 
-router bgp 65001
+interface port-channel1
+  description vpc-per-link
+  switchport mode trunk
+  spanning-tree port type network
+  vpc peer-link
 
-   vlan 11
-      rd 65001:10011
-      route-target both 11:11
-      redistribute learned
+interface nve1
+  no shutdown
+  host-reachability protocol bgp
+  advertise virtual-rmac
+  source-interface loopback2
+  member vni 100
+    ingress-replication protocol bgp
+  member vni 200
+    ingress-replication protocol bgp
+  member vni 2000 associate-vrf
 
-   vrf OTUS-PROD
-      rd 65001:10001
-      route-target import evpn 10001:10001
-      route-target export evpn 10001:10001
-      redistribute connected
+interface Ethernet1/1
+  description to-spine-1
+  no switchport
+  no ip redirects
+  ip address 10.6.1.1/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  no shutdown
+
+interface Ethernet1/2
+  description to-spine-2
+  no switchport
+  no ip redirects
+  ip address 10.6.2.1/31
+  ip ospf network point-to-point
+  no ip ospf passive-interface
+  ip router ospf UNDERLAY area 0.0.0.30
+  ip ospf bfd
+  no shutdown
+
+interface Ethernet1/3
+  description VPC1
+  switchport access vlan 100
+
+interface Ethernet1/4
+  description vpc-per-link
+  switchport mode trunk
+  channel-group 1 mode active
+
+interface Ethernet1/5
+  description vpc-per-link
+  switchport mode trunk
+  channel-group 1 mode active
+
+interface Ethernet1/6
+  description vpc-keepalive
+  no switchport
+  vrf member VPC
+  ip address 1.1.1.1/30
+  no shutdown
+
+interface Ethernet1/7
+  description LINK_TO_ROUTER
+  switchport mode trunk
+  switchport trunk allowed vlan 1000
+
+interface loopback2
+  description VTEP
+  ip address 10.1.0.1/32
+  ip address 10.6.255.200/32 secondary
+  ip router ospf UNDERLAY area 0.0.0.30
+icam monitor scale
+
+line console
+line vty
+router ospf UNDERLAY
+  bfd
+  router-id 10.1.0.1
+router bgp 65200
+  router-id 10.1.0.1
+  address-family ipv4 unicast
+    maximum-paths 2
+  address-family l2vpn evpn
+    advertise-pip
+  template peer OVERLAY_LOCAL
+    remote-as 65201
+    log-neighbor-changes
+    address-family ipv4 unicast
+      route-map PERMIT out
+      soft-reconfiguration inbound always
+  template peer RR
+    bfd
+    remote-as 65200
+    log-neighbor-changes
+    update-source loopback2
+    address-family l2vpn evpn
+      send-community
+      send-community extended
+  neighbor 10.1.1.0
+    inherit peer RR
+    address-family l2vpn evpn
+  neighbor 10.2.1.0
+    inherit peer RR
+    address-family l2vpn evpn
+  vrf main
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+      redistribute direct route-map PERMIT
+      maximum-paths 2
+    neighbor 172.17.2.1
+      inherit peer OVERLAY_LOCAL
+      remote-as 65201
+      address-family ipv4 unicast
+        send-community
+        send-community extended
+        prefix-list VXLAN-TO-EXT out
+evpn
+  vni 100 l2
+    rd auto
+    route-target import auto
+    route-target export auto
+  vni 200 l2
+    rd auto
+    route-target import auto
+    route-target export auto
 ```
 
 - #### [leaf-2](config/leaf-2.conf)
