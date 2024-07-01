@@ -711,359 +711,546 @@ ip route 0.0.0.0 0.0.0.0 Null0
 - #### leaf-1
 
 ```
-leaf-1#sh ip route vrf OTUS-PROD
+Leaf-1# sh ip route vrf main
+0.0.0.0/0, ubest/mbest: 1/0
+    *via 172.17.2.1, [20/0], 00:59:19, bgp-65200, external, tag 65201
+8.8.8.8/32, ubest/mbest: 1/0
+    *via 172.17.2.1, [20/0], 00:59:19, bgp-65200, external, tag 65201
+172.16.100.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 06:19:16, direct
+172.16.100.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 06:19:16, local
+172.16.100.20/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.20, Vlan100, [190/0], 01:35:44, hmm
+172.16.100.30/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.30, Vlan100, [190/0], 02:06:12, hmm
+172.16.200.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 06:19:16, direct
+172.16.200.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 06:19:16, local
+172.16.200.20/32, ubest/mbest: 1/0
+    *via 10.1.0.3%default, [200/0], 06:19:07, bgp-65200, internal, tag 65200, se
+gid: 2000 tunnelid: 0xa010003 encap: VXLAN
 
- B E      0.0.0.0/0 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
+172.17.2.0/29, ubest/mbest: 1/0, attached
+    *via 172.17.2.2, Vlan1000, [0/0], 00:59:55, direct
+172.17.2.2/32, ubest/mbest: 1/0, attached
+    *via 172.17.2.2, Vlan1000, [0/0], 00:59:55, local
 
- B E      8.8.4.4/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- B E      8.8.8.8/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- B E      10.200.0.1/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- B E      172.20.0.0/24 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- B E      192.168.11.21/32 [200/0] via VTEP 10.100.0.2 VNI 10001 router-mac 50:00:00:5b:6f:f5 local-interface Vxlan1
- C        192.168.11.0/24 is directly connected, Vlan11
- B E      192.168.22.22/32 [200/0] via VTEP 10.100.0.2 VNI 10001 router-mac 50:00:00:5b:6f:f5 local-interface Vxlan1
- B E      192.168.22.31/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- B E      192.168.22.32/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- B E      192.168.22.0/24 [200/0] via VTEP 10.100.0.2 VNI 10001 router-mac 50:00:00:5b:6f:f5 local-interface Vxlan1
-                                  via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
-```
-```
-leaf-1#sh bgp evpn route-type ip-prefix ipv4
-BGP routing table information for VRF default
-Router identifier 10.1.0.1, local AS number 65001
-Route status codes: s - suppressed, * - valid, > - active, E - ECMP head, e - ECMP
-                    S - Stale, c - Contributing to ECMP, b - backup
-                    % - Pending BGP convergence
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
 
-          Network                Next Hop              Metric  LocPref Weight  Path
- * >Ec   RD: 65003:10001 ip-prefix 0.0.0.0/0
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- *  ec   RD: 65003:10001 ip-prefix 0.0.0.0/0
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- * >Ec   RD: 65003:10001 ip-prefix 8.8.4.4/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- *  ec   RD: 65003:10001 ip-prefix 8.8.4.4/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- * >Ec   RD: 65003:10001 ip-prefix 8.8.8.8/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 i
- *  ec   RD: 65003:10001 ip-prefix 8.8.8.8/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 i
- * >Ec   RD: 65003:10001 ip-prefix 10.200.0.1/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- *  ec   RD: 65003:10001 ip-prefix 10.200.0.1/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- * >Ec   RD: 65003:10001 ip-prefix 172.20.0.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10001 ip-prefix 172.20.0.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >     RD: 65001:10001 ip-prefix 192.168.11.0/24
-                                 -                     -       -       0       i
- * >Ec   RD: 65002:10001 ip-prefix 192.168.11.0/24
-                                 10.100.0.2            -       100     0       65000 65002 i
- *  ec   RD: 65002:10001 ip-prefix 192.168.11.0/24
-                                 10.100.0.2            -       100     0       65000 65002 i
- * >Ec   RD: 65002:10001 ip-prefix 192.168.22.0/24
-                                 10.100.0.2            -       100     0       65000 65002 i
- *  ec   RD: 65002:10001 ip-prefix 192.168.22.0/24
-                                 10.100.0.2            -       100     0       65000 65002 i
- * >Ec   RD: 65003:10001 ip-prefix 192.168.22.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10001 ip-prefix 192.168.22.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
+
 ```
 ```
-leaf-1#sh interfaces vxlan 1
-Vxlan1 is up, line protocol is up (connected)
-  Hardware is Vxlan
-  Source interface is Loopback100 and is active with 10.100.0.1
-  Replication/Flood Mode is headend with Flood List Source: EVPN
-  Remote MAC learning via EVPN
-  VNI mapping to VLANs
-  Static VLAN to VNI mapping is
-    [11, 10011]
-  Dynamic VLAN to VNI mapping for 'evpn' is
-    [4094, 10001]
-  Note: All Dynamic VLANs used by VCS are internal VLANs.
-        Use 'show vxlan vni' for details.
-  Static VRF to VNI mapping is
-   [OTUS-PROD, 10001]
-  Headend replication flood vtep list is:
-    11 10.100.0.2
-  Shared Router MAC is 0000.0000.0000
+Leaf-1# sh bgp l2vpn evpn
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 10.1.0.1:32867    (L2VNI 100)
+*>l[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.6810]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>l[2]:[0]:[0]:[48]:[5ea4.c2b6.6e04]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.20]/272
+                      10.6.255.200                      100      32768 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
+                      10.6.255.200                      100      32768 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
+
+Route Distinguisher: 10.1.0.1:32967    (L2VNI 200)
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
+
+Route Distinguisher: 10.1.0.2:4
+*>i[5]:[0]:[0]:[0]:[0.0.0.0]/224
+                      10.1.0.2                          100          0 65201 i
+* i                   10.1.0.2                          100          0 65201 i
+* i[5]:[0]:[0]:[24]:[172.16.100.0]/224
+                      10.1.0.2                 0        100          0 ?
+*>i                   10.1.0.2                 0        100          0 ?
+* i[5]:[0]:[0]:[24]:[172.16.200.0]/224
+                      10.1.0.2                 0        100          0 ?
+*>i                   10.1.0.2                 0        100          0 ?
+* i[5]:[0]:[0]:[29]:[172.17.2.0]/224
+                      10.1.0.2                 0        100          0 ?
+*>i                   10.1.0.2                 0        100          0 ?
+* i[5]:[0]:[0]:[32]:[8.8.8.8]/224
+                      10.1.0.2                 0        100          0 65201 i
+*>i                   10.1.0.2                 0        100          0 65201 i
+
+Route Distinguisher: 10.1.0.3:3
+*>i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+* i[5]:[0]:[0]:[24]:[172.16.100.0]/224
+                      10.1.0.3                 0        100          0 ?
+*>i                   10.1.0.3                 0        100          0 ?
+* i[5]:[0]:[0]:[24]:[172.16.200.0]/224
+                      10.1.0.3                 0        100          0 ?
+*>i                   10.1.0.3                 0        100          0 ?
+
+Route Distinguisher: 10.1.0.3:32867
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.3:32967
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.1:4    (L3VNI 2000)
+*>l[2]:[0]:[0]:[48]:[5000.0300.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 i
+* i[5]:[0]:[0]:[0]:[0.0.0.0]/224
+                      10.1.0.2                          100          0 65201 i
+*>l                   10.1.0.1                                       0 65201 i
+* i[5]:[0]:[0]:[24]:[172.16.100.0]/224
+                      10.1.0.3                 0        100          0 ?
+* i                   10.1.0.2                 0        100          0 ?
+*>l                   10.1.0.1                 0        100      32768 ?
+* i[5]:[0]:[0]:[24]:[172.16.200.0]/224
+                      10.1.0.3                 0        100          0 ?
+* i                   10.1.0.2                 0        100          0 ?
+*>l                   10.1.0.1                 0        100      32768 ?
+* i[5]:[0]:[0]:[29]:[172.17.2.0]/224
+                      10.1.0.2                 0        100          0 ?
+*>l                   10.1.0.1                 0        100      32768 ?
+* i[5]:[0]:[0]:[32]:[8.8.8.8]/224
+                      10.1.0.2                 0        100          0 65201 i
+*>l                   10.1.0.1                 0                     0 65201 i
+
+```
+```
+Leaf-1# sh nve peers
+Interface Peer-IP                                 State LearnType Uptime   Route
+r-Mac
+--------- --------------------------------------  ----- --------- -------- -----
+------------
+nve1      10.1.0.2                                Up    CP        01:58:02 5000.
+0400.1b08
+nve1      10.1.0.3                                Up    CP        06:21:09 5000.
+0500.1b08
+
 
 ```
 ```  
-leaf-1#show vxlan vni
-VNI to VLAN Mapping for Vxlan1
-VNI         VLAN       Source       Interface       802.1Q Tag
------------ ---------- ------------ --------------- ----------
-10011       11         static       Ethernet3       untagged
-                                    Ethernet4       untagged
-                                    Vxlan1          11
+Leaf-1# show nve vni
+Codes: CP - Control Plane        DP - Data Plane
+       UC - Unconfigured         SA - Suppress ARP
+       SU - Suppress Unknown Unicast
+       Xconn - Crossconnect
+       MS-IR - Multisite Ingress Replication
 
-VNI to dynamic VLAN Mapping for Vxlan1
-VNI         VLAN       VRF             Source
------------ ---------- --------------- ------------
-10001       4094       OTUS-PROD       evpn
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100      UnicastBGP        Up    CP   L2 [100]
+nve1      200      UnicastBGP        Up    CP   L2 [200]
+nve1      2000     n/a               Up    CP   L3 [main]
+
 ```
 
 - #### leaf-2
 
 ```
-leaf-2#sh ip route vrf OTUS-PROD
+Leaf-2# sh ip route vrf main
+0.0.0.0/0, ubest/mbest: 1/0
+    *via 172.17.2.1, [20/0], 00:43:59, bgp-65200, external, tag 65201
+8.8.8.8/32, ubest/mbest: 1/0
+    *via 172.17.2.1, [20/0], 00:44:54, bgp-65200, external, tag 65201
+172.16.100.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 09:23:23, direct
+172.16.100.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 09:23:23, local
+172.16.100.20/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.20, Vlan100, [190/0], 01:36:50, hmm
+172.16.100.30/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.30, Vlan100, [190/0], 02:07:18, hmm
+172.16.200.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 09:23:23, direct
+172.16.200.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 09:23:23, local
+172.16.200.20/32, ubest/mbest: 1/0
+    *via 10.1.0.3%default, [200/0], 08:29:21, bgp-65200, internal, tag 65200, se
+gid: 2000 tunnelid: 0xa010003 encap: VXLAN
 
- B E      0.0.0.0/0 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
+172.17.2.0/29, ubest/mbest: 1/0, attached
+    *via 172.17.2.3, Vlan1000, [0/0], 00:45:21, direct
+172.17.2.3/32, ubest/mbest: 1/0, attached
+    *via 172.17.2.3, Vlan1000, [0/0], 00:45:21, local
 
- B E      8.8.4.4/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- B E      8.8.8.8/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- B E      10.200.0.1/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- B E      172.20.0.0/24 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- B E      192.168.11.11/32 [200/0] via VTEP 10.100.0.1 VNI 10001 router-mac 50:00:00:be:a1:e3 local-interface Vxlan1
- B E      192.168.11.12/32 [200/0] via VTEP 10.100.0.1 VNI 10001 router-mac 50:00:00:be:a1:e3 local-interface Vxlan1
- C        192.168.11.0/24 is directly connected, Vlan11
- B E      192.168.22.31/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- B E      192.168.22.32/32 [200/0] via VTEP 10.100.0.3 VNI 10001 router-mac 50:00:00:c3:da:3f local-interface Vxlan1
- C        192.168.22.0/24 is directly connected, Vlan22
 ```
 ```
-leaf-2#sh bgp evpn route-type ip-prefix ipv4
-BGP routing table information for VRF default
-Router identifier 10.1.0.2, local AS number 65002
-Route status codes: s - suppressed, * - valid, > - active, E - ECMP head, e - ECMP
-                    S - Stale, c - Contributing to ECMP, b - backup
-                    % - Pending BGP convergence
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
+Leaf-2# sh bgp l2vpn evpn
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 10.1.0.1:4
+*>i[5]:[0]:[0]:[0]:[0.0.0.0]/224
+                      10.1.0.1                          100          0 65201 i
+* i                   10.1.0.1                          100          0 65201 i
+* i[5]:[0]:[0]:[24]:[172.16.100.0]/224
+                      10.1.0.1                 0        100          0 ?
+*>i                   10.1.0.1                 0        100          0 ?
+* i[5]:[0]:[0]:[24]:[172.16.200.0]/224
+                      10.1.0.1                 0        100          0 ?
+*>i                   10.1.0.1                 0        100          0 ?
+* i[5]:[0]:[0]:[29]:[172.17.2.0]/224
+                      10.1.0.1                 0        100          0 ?
+*>i                   10.1.0.1                 0        100          0 ?
+*>i[5]:[0]:[0]:[32]:[8.8.8.8]/224
+                      10.1.0.1                 0        100          0 65201 i
+* i                   10.1.0.1                 0        100          0 65201 i
 
-          Network                Next Hop              Metric  LocPref Weight  Path
- * >Ec   RD: 65003:10001 ip-prefix 0.0.0.0/0
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- *  ec   RD: 65003:10001 ip-prefix 0.0.0.0/0
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- * >Ec   RD: 65003:10001 ip-prefix 8.8.4.4/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- *  ec   RD: 65003:10001 ip-prefix 8.8.4.4/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- * >Ec   RD: 65003:10001 ip-prefix 8.8.8.8/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 i
- *  ec   RD: 65003:10001 ip-prefix 8.8.8.8/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 i
- * >Ec   RD: 65003:10001 ip-prefix 10.200.0.1/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- *  ec   RD: 65003:10001 ip-prefix 10.200.0.1/32
-                                 10.100.0.3            -       100     0       65000 65003 64999 ?
- * >Ec   RD: 65003:10001 ip-prefix 172.20.0.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10001 ip-prefix 172.20.0.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- * >Ec   RD: 65001:10001 ip-prefix 192.168.11.0/24
-                                 10.100.0.1            -       100     0       65000 65001 i
- *  ec   RD: 65001:10001 ip-prefix 192.168.11.0/24
-                                 10.100.0.1            -       100     0       65000 65001 i
- * >     RD: 65002:10001 ip-prefix 192.168.11.0/24
-                                 -                     -       -       0       i
- * >     RD: 65002:10001 ip-prefix 192.168.22.0/24
-                                 -                     -       -       0       i
- * >Ec   RD: 65003:10001 ip-prefix 192.168.22.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
- *  ec   RD: 65003:10001 ip-prefix 192.168.22.0/24
-                                 10.100.0.3            -       100     0       65000 65003 i
+Route Distinguisher: 10.1.0.2:32867    (L2VNI 100)
+*>l[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.6810]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.20]/272
+                      10.6.255.200                      100      32768 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
+                      10.6.255.200                      100      32768 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
+
+Route Distinguisher: 10.1.0.2:32967    (L2VNI 200)
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
+
+Route Distinguisher: 10.1.0.3:3
+*>i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+* i[5]:[0]:[0]:[24]:[172.16.100.0]/224
+                      10.1.0.3                 0        100          0 ?
+*>i                   10.1.0.3                 0        100          0 ?
+* i[5]:[0]:[0]:[24]:[172.16.200.0]/224
+                      10.1.0.3                 0        100          0 ?
+*>i                   10.1.0.3                 0        100          0 ?
+
+Route Distinguisher: 10.1.0.3:32867
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.3:32967
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+* i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.2:4    (L3VNI 2000)
+*>l[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 i
+*>l[5]:[0]:[0]:[0]:[0.0.0.0]/224
+                      10.1.0.2                                       0 65201 i
+* i                   10.1.0.1                          100          0 65201 i
+* i[5]:[0]:[0]:[24]:[172.16.100.0]/224
+                      10.1.0.3                 0        100          0 ?
+*>l                   10.1.0.2                 0        100      32768 ?
+* i                   10.1.0.1                 0        100          0 ?
+* i[5]:[0]:[0]:[24]:[172.16.200.0]/224
+                      10.1.0.3                 0        100          0 ?
+*>l                   10.1.0.2                 0        100      32768 ?
+* i                   10.1.0.1                 0        100          0 ?
+*>l[5]:[0]:[0]:[29]:[172.17.2.0]/224
+                      10.1.0.2                 0        100      32768 ?
+* i                   10.1.0.1                 0        100          0 ?
+*>l[5]:[0]:[0]:[32]:[8.8.8.8]/224
+                      10.1.0.2                 0                     0 65201 i
+* i                   10.1.0.1                 0        100          0 65201 i
+
 ```
 ```
-leaf-2#sh interfaces vxlan 1
-Vxlan1 is up, line protocol is up (connected)
-  Hardware is Vxlan
-  Source interface is Loopback100 and is active with 10.100.0.2
-  Replication/Flood Mode is headend with Flood List Source: EVPN
-  Remote MAC learning via EVPN
-  VNI mapping to VLANs
-  Static VLAN to VNI mapping is
-    [11, 10011]       [22, 10022]
-  Dynamic VLAN to VNI mapping for 'evpn' is
-    [4094, 10001]
-  Note: All Dynamic VLANs used by VCS are internal VLANs.
-        Use 'show vxlan vni' for details.
-  Static VRF to VNI mapping is
-   [OTUS-PROD, 10001]
-  Headend replication flood vtep list is:
-    11 10.100.0.1
-    22 10.100.0.3
-  Shared Router MAC is 0000.0000.0000
+Leaf-2# sh nve peers
+Interface Peer-IP                                 State LearnType Uptime   Route
+r-Mac
+--------- --------------------------------------  ----- --------- -------- -----
+------------
+nve1      10.1.0.1                                Up    CP        06:21:07 5000.
+0300.1b08
+nve1      10.1.0.3                                Up    CP        09:03:25 5000.
+0500.1b08
+
 ```
 ```  
-leaf-2#show vxlan vni
-VNI to VLAN Mapping for Vxlan1
-VNI         VLAN       Source       Interface       802.1Q Tag
------------ ---------- ------------ --------------- ----------
-10011       11         static       Ethernet3       untagged
-                                    Vxlan1          11
-10022       22         static       Ethernet4       untagged
-                                    Vxlan1          22
+Leaf-2# show nve vni
+Codes: CP - Control Plane        DP - Data Plane
+       UC - Unconfigured         SA - Suppress ARP
+       SU - Suppress Unknown Unicast
+       Xconn - Crossconnect
+       MS-IR - Multisite Ingress Replication
 
-VNI to dynamic VLAN Mapping for Vxlan1
-VNI         VLAN       VRF             Source
------------ ---------- --------------- ------------
-10001       4094       OTUS-PROD       evpn
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100      UnicastBGP        Up    CP   L2 [100]
+nve1      200      UnicastBGP        Up    CP   L2 [200]
+nve1      2000     n/a               Up    CP   L3 [main]
+
 ```
 
 - #### leaf-3
 
 ```
-leaf-3#sh ip route vrf OTUS-PROD
+Leaf-3# sh ip route vrf main
 
- B E      0.0.0.0/0 [200/0] via 172.20.0.254, Vlan1000
+0.0.0.0/0, ubest/mbest: 1/0
+    *via 10.1.0.1%default, [200/0], 01:02:09, bgp-65200, internal, tag 65201, se
+gid: 2000 tunnelid: 0xa010001 encap: VXLAN
+8.8.8.8/32, ubest/mbest: 1/0
+    *via 10.1.0.1%default, [200/0], 01:02:09, bgp-65200, internal, tag 65201, se
+gid: 2000 tunnelid: 0xa010001 encap: VXLAN
+172.16.100.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 09:09:15, direct
+172.16.100.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 09:09:15, local
+172.16.100.20/32, ubest/mbest: 1/0
+    *via 10.6.255.200%default, [200/0], 01:38:34, bgp-65200, internal, tag 65200
+, segid: 2000 tunnelid: 0xa06ffc8 encap: VXLAN
+172.16.100.30/32, ubest/mbest: 1/0
+    *via 10.6.255.200%default, [200/0], 02:09:02, bgp-65200, internal, tag 65200
+, segid: 2000 tunnelid: 0xa06ffc8 encap: VXLAN
 
- B E      8.8.4.4/32 [200/0] via 172.20.0.254, Vlan1000
- B E      8.8.8.8/32 [200/0] via 172.20.0.254, Vlan1000
- B E      10.200.0.1/32 [200/0] via 172.20.0.254, Vlan1000
- C        172.20.0.0/24 is directly connected, Vlan1000
- B E      192.168.11.11/32 [200/0] via VTEP 10.100.0.1 VNI 10001 router-mac 50:00:00:be:a1:e3 local-interface Vxlan1
- B E      192.168.11.12/32 [200/0] via VTEP 10.100.0.1 VNI 10001 router-mac 50:00:00:be:a1:e3 local-interface Vxlan1
- B E      192.168.11.21/32 [200/0] via VTEP 10.100.0.2 VNI 10001 router-mac 50:00:00:5b:6f:f5 local-interface Vxlan1
- B E      192.168.11.0/24 [200/0] via VTEP 10.100.0.2 VNI 10001 router-mac 50:00:00:5b:6f:f5 local-interface Vxlan1
-                                  via VTEP 10.100.0.1 VNI 10001 router-mac 50:00:00:be:a1:e3 local-interface Vxlan1
- B E      192.168.22.22/32 [200/0] via VTEP 10.100.0.2 VNI 10001 router-mac 50:00:00:5b:6f:f5 local-interface Vxlan1
- C        192.168.22.0/24 is directly connected, Vlan22
-```
-```
-leaf-3#sh bgp evpn route-type ip-prefix ipv4
-BGP routing table information for VRF default
-Router identifier 10.1.0.3, local AS number 65003
-Route status codes: s - suppressed, * - valid, > - active, E - ECMP head, e - ECMP
-                    S - Stale, c - Contributing to ECMP, b - backup
-                    % - Pending BGP convergence
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
-
-          Network                Next Hop              Metric  LocPref Weight  Path
- * >     RD: 65003:10001 ip-prefix 0.0.0.0/0
-                                 -                     0       100     0       64999 ?
- * >     RD: 65003:10001 ip-prefix 8.8.4.4/32
-                                 -                     0       100     0       64999 ?
- * >     RD: 65003:10001 ip-prefix 8.8.8.8/32
-                                 -                     0       100     0       64999 i
- * >     RD: 65003:10001 ip-prefix 10.200.0.1/32
-                                 -                     0       100     0       64999 ?
- * >     RD: 65003:10001 ip-prefix 172.20.0.0/24
-                                 -                     -       -       0       i
- *       RD: 65003:10001 ip-prefix 172.20.0.0/24
-                                 -                     0       100     0       64999 ?
- * >Ec   RD: 65001:10001 ip-prefix 192.168.11.0/24
-                                 10.100.0.1            -       100     0       65000 65001 i
- *  ec   RD: 65001:10001 ip-prefix 192.168.11.0/24
-                                 10.100.0.1            -       100     0       65000 65001 i
- * >Ec   RD: 65002:10001 ip-prefix 192.168.11.0/24
-                                 10.100.0.2            -       100     0       65000 65002 i
- *  ec   RD: 65002:10001 ip-prefix 192.168.11.0/24
-                                 10.100.0.2            -       100     0       65000 65002 i
- * >Ec   RD: 65002:10001 ip-prefix 192.168.22.0/24
-                                 10.100.0.2            -       100     0       65000 65002 i
- *  ec   RD: 65002:10001 ip-prefix 192.168.22.0/24
-                                 10.100.0.2            -       100     0       65000 65002 i
- * >     RD: 65003:10001 ip-prefix 192.168.22.0/24
-                                 -                     -       -       0       i
-```
-```
-leaf-3#sh interfaces vxlan 1
-Vxlan1 is up, line protocol is up (connected)
-  Hardware is Vxlan
-  Source interface is Loopback100 and is active with 10.100.0.3
-  Replication/Flood Mode is headend with Flood List Source: EVPN
-  Remote MAC learning via EVPN
-  VNI mapping to VLANs
-  Static VLAN to VNI mapping is
-    [22, 10022]
-  Dynamic VLAN to VNI mapping for 'evpn' is
-    [4094, 10001]
-  Note: All Dynamic VLANs used by VCS are internal VLANs.
-        Use 'show vxlan vni' for details.
-  Static VRF to VNI mapping is
-   [OTUS-PROD, 10001]
-  Headend replication flood vtep list is:
-    22 10.100.0.2
-  Shared Router MAC is 0000.0000.0000
-```
-```
-leaf-3#show vxlan vni
-VNI to VLAN Mapping for Vxlan1
-VNI         VLAN       Source       Interface       802.1Q Tag
------------ ---------- ------------ --------------- ----------
-10022       22         static       Ethernet3       untagged
-                                    Ethernet4       untagged
-                                    Vxlan1          22
-
-VNI to dynamic VLAN Mapping for Vxlan1
-VNI         VLAN       VRF             Source
------------ ---------- --------------- ------------
-10001       4094       OTUS-PROD       evpn
-```
-
-- #### client-1
+172.16.200.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 09:09:15, direct
+172.16.200.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 09:09:15, local
+172.16.200.20/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.20, Vlan200, [190/0], 08:31:05, hmm
+172.17.2.0/29, ubest/mbest: 1/0
+    *via 10.1.0.1%default, [200/0], 01:02:45, bgp-65200, internal, tag 65200, se
+gid: 2000 tunnelid: 0xa010001 encap: VXLAN
 
 ```
-client-1> ping 192.168.11.12 -c 2
+```
+Leaf-3# sh bgp l2vpn evpn
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 10.1.0.1:4
+* i[2]:[0]:[0]:[48]:[5000.0300.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
+*>i[5]:[0]:[0]:[0]:[0.0.0.0]/224
+                      10.1.0.1                          100          0 65201 i
+* i                   10.1.0.1                          100          0 65201 i
+* i[5]:[0]:[0]:[24]:[172.16.100.0]/224
+                      10.1.0.1                 0        100          0 ?
+*>i                   10.1.0.1                 0        100          0 ?
+* i[5]:[0]:[0]:[24]:[172.16.200.0]/224
+                      10.1.0.1                 0        100          0 ?
+*>i                   10.1.0.1                 0        100          0 ?
+* i[5]:[0]:[0]:[29]:[172.17.2.0]/224
+                      10.1.0.1                 0        100          0 ?
+*>i                   10.1.0.1                 0        100          0 ?
+*>i[5]:[0]:[0]:[32]:[8.8.8.8]/224
+                      10.1.0.1                 0        100          0 65201 i
+* i                   10.1.0.1                 0        100          0 65201 i
 
-84 bytes from 192.168.11.12 icmp_seq=1 ttl=64 time=6.718 ms
-84 bytes from 192.168.11.12 icmp_seq=2 ttl=64 time=3.473 ms
+Route Distinguisher: 10.1.0.1:32867
+* i[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
+* i[2]:[0]:[0]:[48]:[0050.7966.6810]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.20]/272
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
+* i[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
+*>i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
 
-client-1> ping 192.168.11.21 -c 2
+Route Distinguisher: 10.1.0.1:32967
+*>i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
 
-84 bytes from 192.168.11.21 icmp_seq=1 ttl=64 time=12.843 ms
-84 bytes from 192.168.11.21 icmp_seq=2 ttl=64 time=11.981 ms
+Route Distinguisher: 10.1.0.2:4
+* i[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
+*>i[5]:[0]:[0]:[0]:[0.0.0.0]/224
+                      10.1.0.2                          100          0 65201 i
+* i                   10.1.0.2                          100          0 65201 i
+* i[5]:[0]:[0]:[24]:[172.16.100.0]/224
+                      10.1.0.2                 0        100          0 ?
+*>i                   10.1.0.2                 0        100          0 ?
+* i[5]:[0]:[0]:[24]:[172.16.200.0]/224
+                      10.1.0.2                 0        100          0 ?
+*>i                   10.1.0.2                 0        100          0 ?
+* i[5]:[0]:[0]:[29]:[172.17.2.0]/224
+                      10.1.0.2                 0        100          0 ?
+*>i                   10.1.0.2                 0        100          0 ?
+* i[5]:[0]:[0]:[32]:[8.8.8.8]/224
+                      10.1.0.2                 0        100          0 65201 i
+*>i                   10.1.0.2                 0        100          0 65201 i
 
-client-1> ping 192.168.22.22 -c 2
+Route Distinguisher: 10.1.0.2:32867
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
+* i[2]:[0]:[0]:[48]:[0050.7966.6810]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.20]/272
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
+* i[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
+* i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
 
-84 bytes from 192.168.22.22 icmp_seq=1 ttl=62 time=17.394 ms
-84 bytes from 192.168.22.22 icmp_seq=2 ttl=62 time=12.500 ms
+Route Distinguisher: 10.1.0.2:32967
+* i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
 
-client-1> ping 192.168.22.31 -c 2
+Route Distinguisher: 10.1.0.3:32867    (L2VNI 100)
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
+* i[2]:[0]:[0]:[48]:[0050.7966.6810]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+*>i                   10.6.255.200                      100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.20]/272
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
+*>l[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100      32768 i
+*>i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
 
-84 bytes from 192.168.22.31 icmp_seq=1 ttl=62 time=18.353 ms
-84 bytes from 192.168.22.31 icmp_seq=2 ttl=62 time=11.603 ms
+Route Distinguisher: 10.1.0.3:32967    (L2VNI 200)
+*>l[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100      32768 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100      32768 i
+*>l[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100      32768 i
+*>i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
 
-client-1> ping 192.168.22.32 -c 2
+Route Distinguisher: 10.1.0.3:3    (L3VNI 2000)
+*>i[2]:[0]:[0]:[48]:[5000.0300.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+*>i[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 i
+*>l[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100      32768 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.20]/272
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
+                      10.6.255.200                      100          0 i
+* i                   10.6.255.200                      100          0 i
+* i[5]:[0]:[0]:[0]:[0.0.0.0]/224
+                      10.1.0.2                          100          0 65201 i
+*>i                   10.1.0.1                          100          0 65201 i
+*>l[5]:[0]:[0]:[24]:[172.16.100.0]/224
+                      10.1.0.3                 0        100      32768 ?
+* i                   10.1.0.2                 0        100          0 ?
+* i                   10.1.0.1                 0        100          0 ?
+*>l[5]:[0]:[0]:[24]:[172.16.200.0]/224
+                      10.1.0.3                 0        100      32768 ?
+* i                   10.1.0.2                 0        100          0 ?
+* i                   10.1.0.1                 0        100          0 ?
+* i[5]:[0]:[0]:[29]:[172.17.2.0]/224
+                      10.1.0.2                 0        100          0 ?
+*>i                   10.1.0.1                 0        100          0 ?
+* i[5]:[0]:[0]:[32]:[8.8.8.8]/224
+                      10.1.0.2                 0        100          0 65201 i
+*>i                   10.1.0.1                 0        100          0 65201 i
 
-84 bytes from 192.168.22.32 icmp_seq=1 ttl=62 time=16.225 ms
-84 bytes from 192.168.22.32 icmp_seq=2 ttl=62 time=12.242 ms
+```
+```
+Leaf-3# sh nve peers
+Interface Peer-IP                                 State LearnType Uptime   Route
+r-Mac
+--------- --------------------------------------  ----- --------- -------- -----
+------------
+nve1      10.1.0.1                                Up    CP        06:23:46 5000.
+0300.1b08
+nve1      10.1.0.2                                Up    CP        02:01:56 5000.
+0400.1b08
+nve1      10.6.255.200                            Up    CP        09:06:04 0200.
+0a06.ffc8
 
-client-1> ping 8.8.8.8 -c 2
+```
+```
+Leaf-3# show nve vni
+Interface VNI      Multicast-group   State Mode Type [BD/VRF]      Flags
+--------- -------- ----------------- ----- ---- ------------------ -----
+nve1      100      UnicastBGP        Up    CP   L2 [100]
+nve1      200      UnicastBGP        Up    CP   L2 [200]
+nve1      2000     n/a               Up    CP   L3 [main]
 
-84 bytes from 8.8.8.8 icmp_seq=1 ttl=253 time=13.354 ms
-84 bytes from 8.8.8.8 icmp_seq=2 ttl=253 time=15.227 ms
 ```
 
-- #### client-4
+- #### VPC-1
 
 ```
-client-4> ping 192.168.11.11 -c 2
+VPCS-1> ping 8.8.8.8
+84 bytes from 8.8.8.8 icmp_seq=1 ttl=254 time=16.042 ms
+84 bytes from 8.8.8.8 icmp_seq=2 ttl=254 time=12.088 ms
+84 bytes from 8.8.8.8 icmp_seq=3 ttl=254 time=13.999 ms
+84 bytes from 8.8.8.8 icmp_seq=4 ttl=254 time=11.256 ms
+84 bytes from 8.8.8.8 icmp_seq=5 ttl=254 time=9.745 ms
 
-84 bytes from 192.168.11.11 icmp_seq=1 ttl=62 time=18.603 ms
-84 bytes from 192.168.11.11 icmp_seq=2 ttl=62 time=11.262 ms
-
-client-4> ping 192.168.11.12 -c 2
-
-84 bytes from 192.168.11.12 icmp_seq=1 ttl=62 time=18.301 ms
-84 bytes from 192.168.11.12 icmp_seq=2 ttl=62 time=14.211 ms
-
-client-4> ping 192.168.11.21 -c 2
-
-84 bytes from 192.168.11.21 icmp_seq=1 ttl=63 time=10.425 ms
-84 bytes from 192.168.11.21 icmp_seq=2 ttl=63 time=5.281 ms
-
-client-4> ping 192.168.22.31 -c 2
-
-84 bytes from 192.168.22.31 icmp_seq=1 ttl=64 time=14.184 ms
-84 bytes from 192.168.22.31 icmp_seq=2 ttl=64 time=15.091 ms
-
-client-4> ping 192.168.22.32 -c 2
-
-84 bytes from 192.168.22.32 icmp_seq=1 ttl=64 time=8.892 ms
-84 bytes from 192.168.22.32 icmp_seq=2 ttl=64 time=13.229 ms
-
-client-4> ping 8.8.8.8 -c 2
-
-84 bytes from 8.8.8.8 icmp_seq=1 ttl=253 time=14.873 ms
-84 bytes from 8.8.8.8 icmp_seq=2 ttl=253 time=13.024 ms
 ```
+
+- #### VPC-2
+
+```
+VPCS-2> ping 8.8.8.8
+84 bytes from 8.8.8.8 icmp_seq=1 ttl=254 time=12.358 ms
+84 bytes from 8.8.8.8 icmp_seq=2 ttl=254 time=355.811 ms
+84 bytes from 8.8.8.8 icmp_seq=3 ttl=254 time=6.270 ms
+84 bytes from 8.8.8.8 icmp_seq=4 ttl=254 time=10.399 ms
+84 bytes from 8.8.8.8 icmp_seq=5 ttl=254 time=6.149 ms
+```
+
+```
+
