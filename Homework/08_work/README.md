@@ -555,13 +555,16 @@ clock timezone MSK 3 0
 feature nv overlay
 
 fabric forwarding anycast-gateway-mac 0000.dead.beef
-vlan 1,100,200,1000,2000
+vlan 1,100,200,900,999-1000,2000
 vlan 100
   name Hosts
   vn-segment 100
 vlan 200
   name Servers
   vn-segment 200
+vlan 900
+  name DMZ
+  vn-segment 900
 vlan 1000
   name link_to_router
 vlan 2000
@@ -570,6 +573,12 @@ vlan 2000
 
 ip prefix-list VXLAN-TO-EXT seq 5 permit 0.0.0.0/0 le 31
 route-map PERMIT permit 10
+vrf context DMZ
+  vni 900
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
 vrf context main
   vni 2000
   rd auto
@@ -586,7 +595,7 @@ interface Vlan1
 
 interface Vlan100
   no shutdown
-  vrf member main
+  vrf member DMZ
   no ip redirects
   ip address 172.16.100.1/24
   no ipv6 redirects
@@ -599,6 +608,21 @@ interface Vlan200
   ip address 172.16.200.1/24
   no ipv6 redirects
   fabric forwarding mode anycast-gateway
+
+interface Vlan900
+  no shutdown
+  mtu 9216
+  vrf member DMZ
+  no ip redirects
+  no ipv6 redirects
+
+interface Vlan999
+  description SVI_LINK_ROUTER
+  no shutdown
+  vrf member DMZ
+  no ip redirects
+  ip address 172.18.2.4/29
+  no ipv6 redirects
 
 interface Vlan1000
   description SVI_LINK_ROUTER
@@ -625,6 +649,7 @@ interface nve1
     ingress-replication protocol bgp
   member vni 200
     ingress-replication protocol bgp
+  member vni 900 associate-vrf
   member vni 2000 associate-vrf
 
 interface Ethernet1/1
@@ -647,13 +672,12 @@ interface Ethernet1/2
   ip router ospf UNDERLAY area 0.0.0.30
   no shutdown
 
-interface Ethernet1/3
-  description VPC3
-  switchport access vlan 100
-
 interface Ethernet1/4
   description VPC4
   switchport access vlan 200
+
+interface mgmt0
+  vrf member management
 
 interface loopback2
   ip address 10.1.0.3/32
@@ -692,18 +716,16 @@ router bgp 65200
   neighbor 10.2.1.0
     inherit peer RR
     address-family l2vpn evpn
+  vrf DMZ
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+      redistribute direct route-map PERMIT
+      maximum-paths 2
   vrf main
     address-family ipv4 unicast
       advertise l2vpn evpn
       redistribute direct route-map PERMIT
       maximum-paths 2
-    neighbor 172.17.2.1
-      inherit peer OVERLAY_LOCAL
-      remote-as 65201
-      address-family ipv4 unicast
-        send-community
-        send-community extended
-        prefix-list VXLAN-TO-EXT out
 evpn
   vni 100 l2
     rd auto
@@ -713,6 +735,7 @@ evpn
     rd auto
     route-target import auto
     route-target export auto
+
 ```
 
 - #### [router](config/router.conf)
