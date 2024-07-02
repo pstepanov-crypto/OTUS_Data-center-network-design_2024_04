@@ -718,20 +718,6 @@ evpn
 - #### [router](config/router.conf)
 
 ```
-Router#sh run
-Building configuration...
-
-Current configuration : 3886 bytes
-!
-! Last configuration change at 17:46:46 UTC Mon Jul 1 2024
-!
-version 15.5
-service timestamps debug datetime msec
-service timestamps log datetime msec
-no service password-encryption
-!
-hostname Router
-!
 interface Loopback1
  ip address 8.8.8.8 255.255.255.255
 !
@@ -740,9 +726,13 @@ interface Loopback2
 !
 interface GigabitEthernet0/0
  no ip address
- duplex auto
+ duplex full
  speed auto
  media-type rj45
+!
+interface GigabitEthernet0/0.999
+ encapsulation dot1Q 999
+ ip address 172.18.2.1 255.255.255.248
 !
 interface GigabitEthernet0/0.1000
  encapsulation dot1Q 1000
@@ -775,6 +765,9 @@ router bgp 65201
  neighbor 172.17.2.2 remote-as 65200
  neighbor 172.17.2.3 remote-as 65200
  neighbor 172.17.2.4 remote-as 65200
+ neighbor 172.18.2.2 remote-as 65200
+ neighbor 172.18.2.3 remote-as 65200
+ neighbor 172.18.2.4 remote-as 65200
  !
  address-family ipv4
   network 8.8.8.8 mask 255.255.255.255
@@ -785,6 +778,12 @@ router bgp 65201
   neighbor 172.17.2.3 default-originate
   neighbor 172.17.2.4 activate
   neighbor 172.17.2.4 default-originate
+  neighbor 172.18.2.2 activate
+  neighbor 172.18.2.2 default-originate
+  neighbor 172.18.2.3 activate
+  neighbor 172.18.2.3 default-originate
+  neighbor 172.18.2.4 activate
+  neighbor 172.18.2.4 default-originate
  exit-address-family
 !
 ip forward-protocol nd
@@ -793,6 +792,7 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 ip route 0.0.0.0 0.0.0.0 Null0
+
 ```
 ---
 
