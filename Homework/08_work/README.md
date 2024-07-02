@@ -20,6 +20,8 @@
 - #### [leaf-1](config/leaf-1.conf)
 
 ```
+Leaf-1# sh run
+
 cfs eth distribute
 nv overlay evpn
 feature ospf
@@ -37,13 +39,18 @@ feature nv overlay
 spanning-tree mode mst
 
 fabric forwarding anycast-gateway-mac 0000.dead.beef
-vlan 1,100,200,1000,2000
+vlan 1,100,200,900,999-1000,2000
 vlan 100
   name Hosts
   vn-segment 100
 vlan 200
   name Servers
   vn-segment 200
+vlan 900
+  name DMZ
+  vn-segment 900
+vlan 999
+  name link_to_r2
 vlan 1000
   name router-link
 vlan 2000
@@ -59,6 +66,12 @@ spanning-tree mst configuration
   instance 1 vlan 1-4094
 ip prefix-list VXLAN-TO-EXT seq 5 permit 0.0.0.0/0 le 31
 route-map PERMIT permit 10
+vrf context DMZ
+  vni 900
+  rd auto
+  address-family ipv4 unicast
+    route-target both auto
+    route-target both auto evpn
 vrf context VPC
 vrf context main
   vni 2000
@@ -77,9 +90,15 @@ vpc domain 101
   delay restore interface-vlan 100
   ip arp synchronize
 
+
+interface Vlan1
+  vrf member main
+  no ip redirects
+  no ipv6 redirects
+
 interface Vlan100
   no shutdown
-  vrf member main
+  vrf member DMZ
   no ip redirects
   ip address 172.16.100.1/24
   no ipv6 redirects
@@ -92,6 +111,21 @@ interface Vlan200
   ip address 172.16.200.1/24
   no ipv6 redirects
   fabric forwarding mode anycast-gateway
+
+interface Vlan900
+  no shutdown
+  mtu 9216
+  vrf member DMZ
+  no ip redirects
+  no ipv6 redirects
+
+interface Vlan999
+  description SVI_LINK_ROUTER
+  no shutdown
+  vrf member DMZ
+  no ip redirects
+  ip address 172.18.2.2/29
+  no ipv6 redirects
 
 interface Vlan1000
   description SVI_LINK_ROUTER
@@ -124,6 +158,7 @@ interface nve1
     ingress-replication protocol bgp
   member vni 200
     ingress-replication protocol bgp
+  member vni 900 associate-vrf
   member vni 2000 associate-vrf
 
 interface Ethernet1/1
@@ -171,7 +206,7 @@ interface Ethernet1/6
 interface Ethernet1/7
   description LINK_TO_ROUTER
   switchport mode trunk
-  switchport trunk allowed vlan 1000
+  switchport trunk allowed vlan 999-1000
 
 interface loopback2
   description VTEP
@@ -197,6 +232,7 @@ router bgp 65200
     address-family ipv4 unicast
       route-map PERMIT out
       soft-reconfiguration inbound always
+    address-family l2vpn evpn
   template peer RR
     bfd
     remote-as 65200
@@ -211,6 +247,18 @@ router bgp 65200
   neighbor 10.2.1.0
     inherit peer RR
     address-family l2vpn evpn
+  vrf DMZ
+    address-family ipv4 unicast
+      advertise l2vpn evpn
+      redistribute direct route-map PERMIT
+      maximum-paths 2
+    neighbor 172.18.2.1
+      inherit peer OVERLAY_LOCAL
+      remote-as 65201
+      address-family ipv4 unicast
+        send-community
+        send-community extended
+        prefix-list VXLAN-TO-EXT out
   vrf main
     address-family ipv4 unicast
       advertise l2vpn evpn
@@ -222,7 +270,7 @@ router bgp 65200
       address-family ipv4 unicast
         send-community
         send-community extended
-        prefix-list VXLAN-TO-EXT out
+        no prefix-list VXLAN-TO-EXT out
 evpn
   vni 100 l2
     rd auto
@@ -232,6 +280,7 @@ evpn
     rd auto
     route-target import auto
     route-target export auto
+
 ```
 
 - #### [leaf-2](config/leaf-2.conf)
