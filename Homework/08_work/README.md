@@ -803,29 +803,36 @@ ip route 0.0.0.0 0.0.0.0 Null0
 ```
 Leaf-1# sh ip route vrf main
 0.0.0.0/0, ubest/mbest: 1/0
-    *via 172.17.2.1, [20/0], 00:59:19, bgp-65200, external, tag 65201
+    *via 172.17.2.1, [20/0], 02:12:26, bgp-65200, external, tag 65201
 8.8.8.8/32, ubest/mbest: 1/0
-    *via 172.17.2.1, [20/0], 00:59:19, bgp-65200, external, tag 65201
-172.16.100.0/24, ubest/mbest: 1/0, attached
-    *via 172.16.100.1, Vlan100, [0/0], 06:19:16, direct
-172.16.100.1/32, ubest/mbest: 1/0, attached
-    *via 172.16.100.1, Vlan100, [0/0], 06:19:16, local
-172.16.100.20/32, ubest/mbest: 1/0, attached
-    *via 172.16.100.20, Vlan100, [190/0], 01:35:44, hmm
-172.16.100.30/32, ubest/mbest: 1/0, attached
-    *via 172.16.100.30, Vlan100, [190/0], 02:06:12, hmm
+    *via 172.17.2.1, [20/0], 02:12:26, bgp-65200, external, tag 65201
 172.16.200.0/24, ubest/mbest: 1/0, attached
-    *via 172.16.200.1, Vlan200, [0/0], 06:19:16, direct
+    *via 172.16.200.1, Vlan200, [0/0], 02:23:25, direct
 172.16.200.1/32, ubest/mbest: 1/0, attached
-    *via 172.16.200.1, Vlan200, [0/0], 06:19:16, local
-172.16.200.20/32, ubest/mbest: 1/0
-    *via 10.1.0.3%default, [200/0], 06:19:07, bgp-65200, internal, tag 65200, se
-gid: 2000 tunnelid: 0xa010003 encap: VXLAN
-
+    *via 172.16.200.1, Vlan200, [0/0], 02:23:25, local
+172.16.200.40/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.40, Vlan200, [190/0], 01:21:48, hmm
 172.17.2.0/29, ubest/mbest: 1/0, attached
-    *via 172.17.2.2, Vlan1000, [0/0], 00:59:55, direct
+    *via 172.17.2.2, Vlan1000, [0/0], 03:11:23, direct
 172.17.2.2/32, ubest/mbest: 1/0, attached
-    *via 172.17.2.2, Vlan1000, [0/0], 00:59:55, local
+    *via 172.17.2.2, Vlan1000, [0/0], 03:11:23, local
+
+Leaf-1# sh ip route vrf DMZ
+0.0.0.0/0, ubest/mbest: 1/0
+    *via 172.18.2.1, [20/0], 02:12:40, bgp-65200, external, tag 65201
+8.8.8.8/32, ubest/mbest: 1/0
+    *via 172.18.2.1, [20/0], 02:12:40, bgp-65200, external, tag 65201
+172.16.100.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 02:13:48, direct
+172.16.100.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 02:13:48, local
+172.16.100.30/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.30, Vlan100, [190/0], 01:27:22, hmm
+172.18.2.0/29, ubest/mbest: 1/0, attached
+    *via 172.18.2.2, Vlan999, [0/0], 02:30:03, direct
+172.18.2.2/32, ubest/mbest: 1/0, attached
+    *via 172.18.2.2, Vlan999, [0/0], 02:30:03, local
+
 
 
 
