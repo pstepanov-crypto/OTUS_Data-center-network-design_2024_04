@@ -13,7 +13,7 @@
 
 ### Схема сети
 
-![](images/overlay-5-type.PNG)
+![](images/overlay.PNG)
 
 ### Конфигурация оборудования
 
