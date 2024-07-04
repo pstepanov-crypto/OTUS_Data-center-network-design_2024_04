@@ -18,13 +18,9 @@
 
 ### [Презинтация проекта](file/presentation.pptx)
 
-### Схема существующей сети
-
-![](images/old_net.png)
-
 ### Схема проектируемой сети
 
-![](images/project_net.png)
+![](images/project.PNG)
 
 ### Конфигурация оборудования
 
