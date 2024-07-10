@@ -428,8 +428,11 @@ VPCS-1m> ping 172.16.100.50
 
 ```
 ```
-client-06> ping 192.168.20.8
+VPCS-2> ping 172.16.100.40
+84 bytes from 172.16.100.40 icmp_seq=1 ttl=64 time=28.659 ms
+84 bytes from 172.16.100.40 icmp_seq=2 ttl=64 time=19.523 ms
+84 bytes from 172.16.100.40 icmp_seq=3 ttl=64 time=18.584 ms
+84 bytes from 172.16.100.40 icmp_seq=4 ttl=64 time=20.837 ms
+84 bytes from 172.16.100.40 icmp_seq=5 ttl=64 time=14.572 ms
 
-84 bytes from 192.168.20.8 icmp_seq=1 ttl=64 time=9.813 ms
-84 bytes from 192.168.20.8 icmp_seq=2 ttl=64 time=14.500 ms
 ```
