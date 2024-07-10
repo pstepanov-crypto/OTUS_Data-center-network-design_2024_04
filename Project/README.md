@@ -419,20 +419,22 @@ VNI          VLAN       VRF        Source
 209999       4094       DEV        evpn
 ```
 ```
-VPCS-1m> ping 172.16.100.50
-84 bytes from 172.16.100.50 icmp_seq=1 ttl=64 time=17.860 ms
-84 bytes from 172.16.100.50 icmp_seq=2 ttl=64 time=20.599 ms
-84 bytes from 172.16.100.50 icmp_seq=3 ttl=64 time=26.576 ms
-84 bytes from 172.16.100.50 icmp_seq=4 ttl=64 time=16.061 ms
-84 bytes from 172.16.100.50 icmp_seq=5 ttl=64 time=16.364 ms
+VPCS-1m> ping 172.16.200.20
+84 bytes from 172.16.200.20 icmp_seq=1 ttl=62 time=25.278 ms
+84 bytes from 172.16.200.20 icmp_seq=2 ttl=62 time=17.525 ms
+84 bytes from 172.16.200.20 icmp_seq=3 ttl=62 time=18.453 ms
+84 bytes from 172.16.200.20 icmp_seq=4 ttl=62 time=19.638 ms
+84 bytes from 172.16.200.20 icmp_seq=5 ttl=62 time=20.356 ms
+
 
 ```
 ```
 VPCS-2> ping 172.16.100.40
-84 bytes from 172.16.100.40 icmp_seq=1 ttl=64 time=28.659 ms
-84 bytes from 172.16.100.40 icmp_seq=2 ttl=64 time=19.523 ms
-84 bytes from 172.16.100.40 icmp_seq=3 ttl=64 time=18.584 ms
-84 bytes from 172.16.100.40 icmp_seq=4 ttl=64 time=20.837 ms
-84 bytes from 172.16.100.40 icmp_seq=5 ttl=64 time=14.572 ms
+84 bytes from 172.16.100.40 icmp_seq=1 ttl=62 time=23.922 ms
+84 bytes from 172.16.100.40 icmp_seq=2 ttl=62 time=20.967 ms
+84 bytes from 172.16.100.40 icmp_seq=3 ttl=62 time=17.761 ms
+84 bytes from 172.16.100.40 icmp_seq=4 ttl=62 time=19.283 ms
+84 bytes from 172.16.100.40 icmp_seq=5 ttl=62 time=19.140 ms
+
 
 ```
