@@ -23,14 +23,14 @@
 ### Конфигурация оборудования
 
 #### POD 1
-- [POD1-Spine-1](config/Spine-1.conf)
+- [POD1-Spine-1](config/POD-1-Spine-1.conf)
 - [dc01-sp02](config/dc01-sp02.conf)
 - [dc01-le01](config/dc01-le01.conf)
 - [dc01-le03](config/dc01-le03.conf)
 - [dc01-bgw01](config/dc01-bgw01.conf)
 
 #### POD 2
-- [dc02-sp01](config/dc02-sp01.conf)
+- [POD2-Spine-m1](config/POD-2-Spine-m1.conf)
 - [dc02-sp02](config/dc02-sp02.conf)
 - [dc02-le01](config/dc02-le01.conf)
 - [dc02-le02](config/dc02-le02.conf)
