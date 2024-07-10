@@ -419,10 +419,13 @@ VNI          VLAN       VRF        Source
 209999       4094       DEV        evpn
 ```
 ```
-clinet-05> ping 192.168.10.7
+VPCS-1m> ping 172.16.100.50
+84 bytes from 172.16.100.50 icmp_seq=1 ttl=64 time=17.860 ms
+84 bytes from 172.16.100.50 icmp_seq=2 ttl=64 time=20.599 ms
+84 bytes from 172.16.100.50 icmp_seq=3 ttl=64 time=26.576 ms
+84 bytes from 172.16.100.50 icmp_seq=4 ttl=64 time=16.061 ms
+84 bytes from 172.16.100.50 icmp_seq=5 ttl=64 time=16.364 ms
 
-84 bytes from 192.168.10.7 icmp_seq=1 ttl=64 time=38.481 ms
-84 bytes from 192.168.10.7 icmp_seq=2 ttl=64 time=10.631 ms
 ```
 ```
 client-06> ping 192.168.20.8
