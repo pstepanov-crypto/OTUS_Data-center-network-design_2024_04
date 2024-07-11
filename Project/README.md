@@ -33,7 +33,7 @@
 - [POD2-Spine-m1](config/POD-2-Spine-m1.conf)
 - [POD2-Spine-m2](config/POD-2-Spine-m2.conf)
 - [POD2-Leaf-m1](config/POD-2-Leaf-m1.conf)
-- [dc02-le02](config/dc02-le02.conf)
+- [POD2-Leaf-m2](config/POD-2-Leaf-m2.conf)
 - [dc02-bgw01](config/dc02-bgw01.conf)
 - [dc02-bgw02](config/dc02-bgw02.conf)
 
