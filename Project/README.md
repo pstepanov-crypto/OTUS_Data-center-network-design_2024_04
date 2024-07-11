@@ -18,7 +18,7 @@
 
 ### Схема проектируемой сети
 
-![](images/project-multisite.PNG)
+![](images/project-multisite-pod.PNG)
 
 ### Конфигурация оборудования
 
