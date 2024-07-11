@@ -34,7 +34,7 @@
 - [POD2-BGW-Spine-m2](config/POD-2-Spine-m2.conf)
 - [POD2-Leaf-m1](config/POD-2-Leaf-m1.conf)
 - [POD2-Leaf-m2](config/POD-2-Leaf-m2.conf)
-- [dc02-bgw01](config/dc02-bgw01.conf)
+- [POD2-Leaf-m3](config/POD-2-Leaf-m3.conf)
 - [dc02-bgw02](config/dc02-bgw02.conf)
 
 ### Проверка (Underlay. POD 1)
