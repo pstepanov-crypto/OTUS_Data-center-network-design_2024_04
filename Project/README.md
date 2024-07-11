@@ -62,43 +62,26 @@ Spine-2# sh ip ospf neighbors
 ```
 ### Проверка (Overlay. POD 1)
 ```
-<IRF-01>disp bgp peer l2vpn evpn
+Spine-1# sh bgp l2vpn evpn summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.0.1        4 65200     118     117       17    0    0 01:52:16 0
+10.1.0.2        4 65200     115     115       17    0    0 01:49:50 0
+10.1.0.3        4 65200     115     115       17    0    0 01:49:46 0
+10.2.1.0        4 65200     121     116       17    0    0 01:50:45 5
+10.2.2.0        4 65202      64      59       17    0    0 00:53:09 5
 
- BGP local router ID: 10.12.1.0
- Local AS number: 65100
- Total number of peers: 2                 Peers in established state: 2
-
-  * - Dynamically created peer
-  Peer                    AS  MsgRcvd  MsgSent OutQ PrefRcv Up/Down  State
-
-  10.11.1.0            65100      138      122    0       5 01:05:32 Established
-  10.11.2.0            65100      143      113    0       5 01:05:32 Established
 ```
 ```
-<IRF-02>disp bgp peer l2vpn evpn
+Spine-2# sh bgp l2vpn evpn summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.0.1        4 65200     277     277       27    0    0 04:32:19 0
+10.1.0.2        4 65200     115     114       27    0    0 01:50:02 0
+10.1.0.3        4 65200     115     114       27    0    0 01:49:58 0
+10.1.1.0        4 65200     121     116       27    0    0 01:51:20 5
+10.2.3.0        4 65202      64      60       27    0    0 00:54:12 5
 
- BGP local router ID: 10.12.3.0
- Local AS number: 65100
- Total number of peers: 2                 Peers in established state: 2
-
-  * - Dynamically created peer
-  Peer                    AS  MsgRcvd  MsgSent OutQ PrefRcv Up/Down  State
-
-  10.11.1.0            65100      503      361    0       8 04:13:17 Established
-  10.11.2.0            65100      413      390    0       8 03:51:16 Established
 ```
 ```
-<IRF-03>disp bgp peer l2vpn evpn
-
- BGP local router ID: 10.13.5.0
- Local AS number: 65100
- Total number of peers: 2                 Peers in established state: 2
-
-  * - Dynamically created peer
-  Peer                    AS  MsgRcvd  MsgSent OutQ PrefRcv Up/Down  State
-
-  10.11.1.0            65100      155       93    0       6 01:09:16 Established
-  10.11.2.0            65100      175       93    0       6 01:09:16 Established
 ```
 ### Проверка (Route. POD 1)
 ```
