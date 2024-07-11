@@ -82,7 +82,6 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 
 ```
 ```
-```
 ### Проверка (Route. POD 1)
 ```
 <IRF-01>disp ip routing-table vpn-instance PROD
