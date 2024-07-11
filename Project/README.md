@@ -86,25 +86,20 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 ```
 ### Проверка (Route. POD 1)
 ```
-<IRF-01>disp ip routing-table vpn-instance PROD
+Leaf-1# show ip bgp vrf main summary
+172.16.100.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 04:45:52, direct
+172.16.100.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 04:45:52, local
+172.16.100.30/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.30, Vlan100, [190/0], 00:30:27, hmm
+172.16.100.50/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.50, Vlan100, [190/0], 00:30:22, hmm (no-redist)
+172.16.200.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 04:45:52, direct
+172.16.200.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 04:45:52, local
 
-Destinations : 14       Routes : 14
-
-Destination/Mask   Proto   Pre Cost        NextHop         Interface
-0.0.0.0/32         Direct  0   0           127.0.0.1       InLoop0
-127.0.0.0/8        Direct  0   0           127.0.0.1       InLoop0
-127.0.0.1/32       Direct  0   0           127.0.0.1       InLoop0
-127.255.255.255/32 Direct  0   0           127.0.0.1       InLoop0
-192.168.10.0/24    Direct  0   0           192.168.10.254  Vsi10
-192.168.10.2/32    BGP     255 0           10.12.3.0       Vsi1
-192.168.10.5/32    BGP     255 0           10.12.5.0       Vsi1
-192.168.10.7/32    BGP     255 0           10.12.5.0       Vsi1
-192.168.10.254/32  Direct  0   0           127.0.0.1       InLoop0
-192.168.10.255/32  Direct  0   0           192.168.10.254  Vsi10
-192.168.30.0/24    BGP     255 0           10.12.5.0       Vsi1
-224.0.0.0/4        Direct  0   0           0.0.0.0         NULL0
-224.0.0.0/24       Direct  0   0           0.0.0.0         NULL0
-255.255.255.255/32 Direct  0   0           127.0.0.1       InLoop0
 ```
 ```
 <IRF-01>disp ip routing-table vpn-instance DEV
@@ -259,39 +254,48 @@ round-trip min/avg/max/std-dev = 1.925/2.429/3.569/0.606 ms
 ```
 ### Проверка (Underlay. POD 2)
 ```
-dc02-sp01#show ip ospf neighbor
-Neighbor ID     Instance VRF      Pri State                  Dead Time   Address         Interface
-10.22.2.0       1        default  0   FULL                   00:00:32    10.25.1.3       Ethernet2
-10.22.1.0       1        default  0   FULL                   00:00:29    10.25.1.1       Ethernet1
-10.23.1.0       1        default  0   FULL                   00:00:33    10.25.1.5       Ethernet10
-10.23.2.0       1        default  0   FULL                   00:00:30    10.25.1.7       Ethernet11
+Spine-m1# sh ip ospf neighbors
+ OSPF Process ID UNDERLAY VRF default
+ Total number of neighbors: 4
+ Neighbor ID     Pri State            Up Time  Address         Interface
+ 10.2.0.1          1 FULL/ -          02:09:45 10.5.1.1        Eth1/1
+ 10.2.0.2          1 FULL/ -          01:29:12 10.5.1.3        Eth1/2
+ 10.2.0.3          1 FULL/ -          02:07:10 10.5.1.5        Eth1/3
+ 10.1.1.0          1 FULL/ -          01:27:28 172.17.1.1      Eth1/4
+
 ```
 ```
-dc02-sp02#show ip ospf neighbor
-Neighbor ID     Instance VRF      Pri State                  Dead Time   Address         Interface
-10.22.2.0       1        default  0   FULL                   00:00:32    10.25.2.3       Ethernet2
-10.22.1.0       1        default  0   FULL                   00:00:32    10.25.2.1       Ethernet1
-10.23.1.0       1        default  0   FULL                   00:00:30    10.25.2.5       Ethernet10
-10.23.2.0       1        default  0   FULL                   00:00:37    10.25.2.7       Ethernet11
+Spine-m2# sh ip ospf neighbors
+ OSPF Process ID UNDERLAY VRF default
+ Total number of neighbors: 4
+ Neighbor ID     Pri State            Up Time  Address         Interface
+ 10.2.0.1          1 FULL/ -          02:10:25 10.5.2.1        Eth1/1
+ 10.2.0.2          1 FULL/ -          01:29:52 10.5.2.3        Eth1/2
+ 10.2.0.3          1 FULL/ -          02:07:47 10.5.2.5        Eth1/3
+ 10.2.1.0          1 INIT/DROTHER     00:34:48 172.18.1.1      Eth1/4
+
+
 ```
 ### Проверка (Overlay. POD 2)
 ```
-dc02-le01#show bgp evpn summary
-BGP summary information for VRF default
-Router identifier 10.22.1.0, local AS number 65200
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.21.1.0        4 65200           5498      5481    0    0 03:53:39 Estab   19     19
-  10.21.2.0        4 65200           5487      5489    0    0 03:53:39 Estab   19     19
+Spine-m1# sh bgp l2vpn evpn summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.1.0        4 65200      93      94       21    0    0 01:28:05 0
+10.2.0.1        4 65202     141     136       21    0    0 02:09:01 5
+10.2.0.2        4 65202      96      96       21    0    0 01:30:13 0
+10.2.0.3        4 65202     134     134       21    0    0 02:08:10 0
+10.2.3.0        4 65202     143     136       21    0    0 02:10:51 5
+
 ```
 ```
-dc02-le01#show bgp evpn summary
-BGP summary information for VRF default
-Router identifier 10.22.1.0, local AS number 65200
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.21.1.0        4 65200           5521      5504    0    0 03:54:40 Estab   19     19
-  10.21.2.0        4 65200           5511      5513    0    0 03:54:40 Estab   19     19
+Spine-m2# sh bgp l2vpn evpn summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.2.0.1        4 65202     144     138       21    0    0 02:11:34 5
+10.2.0.2        4 65202      96      96       21    0    0 01:31:06 0
+10.2.0.3        4 65202     134     134       21    0    0 02:08:15 0
+10.2.1.0        4 65200      95      94       21    0    0 01:29:07 0
+10.2.2.0        4 65202     143     137       21    0    0 02:11:26 5
+
 ```
 ```
 dc02-bgw01#show bgp evpn summary
