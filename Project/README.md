@@ -71,6 +71,7 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 10.2.2.0        4 65202      64      59       17    0    0 00:53:09 5
 
 ```
+
 ```
 ```
 Spine-2# sh bgp l2vpn evpn summary
