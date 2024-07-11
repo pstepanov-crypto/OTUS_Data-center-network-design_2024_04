@@ -27,7 +27,7 @@
 - [POD1-Spine-2](config/POD-1-Spine-2.conf)
 - [POD1-Leaf-1](config/POD-1-Leaf-1.conf)
 - [POD1-Leaf-2](config/POD-1-Leaf-2.conf)
-- [dc01-bgw01](config/dc01-bgw01.conf)
+- [POD1-Leaf-3](config/POD-1-Leaf-3.conf)
 
 #### POD 2
 - [POD2-Spine-m1](config/POD-2-Spine-m1.conf)
