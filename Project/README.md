@@ -50,13 +50,15 @@ Spine-1# sh ip ospf neighbors
 
 ```
 ```
-<dc01-sp02>disp ospf peer
+Spine-2# sh ip ospf neighbors
+ OSPF Process ID UNDERLAY VRF default
+ Total number of neighbors: 4
+ Neighbor ID     Pri State            Up Time  Address         Interface
+ 10.1.0.1          1 FULL/ -          01:50:44 10.6.2.1        Eth1/1
+ 10.1.0.2          1 FULL/ -          01:49:26 10.6.2.3        Eth1/2
+ 10.1.0.3          1 FULL/ -          01:48:56 10.6.2.5        Eth1/3
+ 10.2.3.0          1 FULL/ -          00:00:33 172.18.1.2      Eth1/4
 
- Area: 0.0.0.0
- Router ID       Address         Pri Dead-Time  State             Interface
- 10.12.1.0       10.15.2.1       1   38         Full/ -           GE1/0
- 10.12.3.0       10.15.2.5       1   32         Full/ -           GE3/0
- 10.12.5.0       10.15.2.9       1   37         Full/ -           GE5/0
 ```
 ### Проверка (Overlay. POD 1)
 ```
