@@ -519,41 +519,7 @@ Route Distinguisher: 10.2.0.1:3    (L3VNI 2000)
 ```
 ```
 ```
-### Проверка (Route. POD 1)
-```
-dc02-le01#show ip route vrf PROD
 
- B I      10.23.1.1/32 [200/0] via VTEP 10.23.1.254 VNI 109999 router-mac 50:00:00:76:bd:1d local-interface Vxlan1
- B I      10.27.1.1/32 [200/0] via VTEP 10.23.1.254 VNI 109999 router-mac 50:00:00:ba:b7:36 local-interface Vxlan1
- C        192.168.10.0/24 is directly connected, Vlan10
- B I      192.168.30.0/24 [200/0] via VTEP 10.22.2.254 VNI 109999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
-
-dc02-le01#show ip route vrf DEV
-
- B I      10.27.1.3/32 [200/0] via VTEP 10.23.1.254 VNI 209999 router-mac 50:00:00:ba:b7:36 local-interface Vxlan1
- B I      192.168.20.8/32 [200/0] via VTEP 10.22.2.254 VNI 209999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
- C        192.168.20.0/24 is directly connected, Vlan20
-```
-```
-dc02-bgw01#sh ip route vrf PROD
-
- S        10.13.5.1/32 [1/0] via 10.27.1.1, Vlan10
- C        10.23.1.1/32 is directly connected, Loopback1
- C        10.27.1.0/31 is directly connected, Vlan10
- B I      192.168.10.0/24 [200/0] via VTEP 10.22.1.254 VNI 109999 router-mac 50:00:00:5f:63:6e local-interface Vxlan1
-                                  via VTEP 10.22.2.254 VNI 109999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
- B I      192.168.30.0/24 [200/0] via VTEP 10.22.2.254 VNI 109999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
-
-dc02-bgw01#sh ip route vrf DEV
-
- S        10.13.5.2/32 [1/0] via 10.27.1.3, Vlan20
- C        10.23.1.2/32 is directly connected, Loopback2
- C        10.27.1.2/31 is directly connected, Vlan20
- B I      192.168.20.6/32 [200/0] via VTEP 10.22.1.254 VNI 209999 router-mac 50:00:00:5f:63:6e local-interface Vxlan1
- B I      192.168.20.8/32 [200/0] via VTEP 10.22.2.254 VNI 209999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
- B I      192.168.20.0/24 [200/0] via VTEP 10.22.2.254 VNI 209999 router-mac 50:00:00:d0:ea:86 local-interface Vxlan1
-                                  via VTEP 10.22.1.254 VNI 209999 router-mac 50:00:00:5f:63:6e local-interface Vxlan1
-```
 ```
 
 ```
