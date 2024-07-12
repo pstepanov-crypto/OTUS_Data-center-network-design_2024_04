@@ -524,38 +524,6 @@ Route Distinguisher: 10.2.0.1:3    (L3VNI 2000)
 
 ```
 ```
-dc02-bgw01#show vxlan vni
-VNI to VLAN Mapping for Vxlan1
-VNI          VLAN       Source       Interface       802.1Q Tag
------------- ---------- ------------ --------------- ----------
-100010       10         static       Ethernet5       10
-                                     Vxlan1          10
-200020       20         static       Ethernet5       20
-                                     Vxlan1          20
-
-VNI to dynamic VLAN Mapping for Vxlan1
-VNI          VLAN       VRF        Source
------------- ---------- ---------- ------------
-109999       4090       PROD       evpn
-209999       4091       DEV        evpn
-```
-```
-dc02-le01#show vxlan vni
-VNI to VLAN Mapping for Vxlan1
-VNI          VLAN       Source       Interface       802.1Q Tag
------------- ---------- ------------ --------------- ----------
-100010       10         static       Ethernet3       untagged
-                                     Vxlan1          10
-200020       20         static       Ethernet4       untagged
-                                     Vxlan1          20
-
-VNI to dynamic VLAN Mapping for Vxlan1
-VNI          VLAN       VRF        Source
------------- ---------- ---------- ------------
-109999       4093       PROD       evpn
-209999       4094       DEV        evpn
-```
-```
 VPCS-1m> ping 172.16.200.20
 84 bytes from 172.16.200.20 icmp_seq=1 ttl=62 time=25.278 ms
 84 bytes from 172.16.200.20 icmp_seq=2 ttl=62 time=17.525 ms
