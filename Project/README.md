@@ -519,7 +519,7 @@ Route Distinguisher: 10.2.0.1:3    (L3VNI 2000)
 ```
 ```
 ```
-
+Проверка (Ping между POD)
 ```
 
 ```
