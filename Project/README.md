@@ -387,47 +387,137 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 
 ```
 ```
-dc02-bgw01#show bgp evpn summary
-BGP summary information for VRF default
-Router identifier 10.23.1.0, local AS number 65200
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.21.1.0        4 65200           5950      5904    0    0 04:12:04 Estab   17     17
-  10.21.2.0        4 65200           5659      5638    0    0 04:00:17 Estab   17     17
-```
-```
-dc02-bgw02#show bgp evpn summary
-BGP summary information for VRF default
-Router identifier 10.23.2.0, local AS number 65200
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  10.21.1.0        4 65200           5955      5892    0    0 04:12:22 Estab   22     22
-  10.21.2.0        4 65200           5679      5637    0    0 04:00:38 Estab   22     22
-```
-```
-dc02-bgw01#sh mlag
-MLAG Configuration:
-domain-id                          :               mlag1
-local-interface                    :            Vlan4094
-peer-address                       :           10.26.0.1
-peer-link                          :       Port-Channel1
-peer-config                        :          consistent
+Leaf-m1# sh ip route vrf main
+172.16.100.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 00:16:14, direct
+172.16.100.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 00:16:14, local
+172.16.100.30/32, ubest/mbest: 1/0
+    *via 10.6.255.200%default, [200/0], 00:06:35, bgp-65202, internal, tag 65200
+, segid: 2000 tunnelid: 0xa06ffc8 encap: VXLAN
 
-MLAG Status:
-state                              :              Active
-negotiation status                 :           Connected
-peer-link status                   :                  Up
-local-int status                   :                  Up
-system-id                          :   52:00:00:76:bd:1d
-dual-primary detection             :            Disabled
-dual-primary interface errdisabled :               False
+172.16.100.40/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.40, Vlan100, [190/0], 00:13:19, hmm
+172.16.100.50/32, ubest/mbest: 1/0
+    *via 10.6.255.200%default, [200/0], 00:06:35, bgp-65202, internal, tag 65200
+, segid: 2000 tunnelid: 0xa06ffc8 encap: VXLAN
 
-MLAG Ports:
-Disabled                           :                   0
-Configured                         :                   0
-Inactive                           :                   0
-Active-partial                     :                   0
-Active-full                        :                   0
+172.16.200.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 00:15:53, direct
+172.16.200.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 00:15:53, local
+172.16.200.20/32, ubest/mbest: 1/0
+    *via 10.1.0.3%default, [200/0], 00:06:35, bgp-65202, internal, tag 65200, se
+gid: 2000 tunnelid: 0xa010003 encap: VXLAN
+
+```
+```
+Leaf-m1# sh bgp l2vpn evpn
+BGP routing table information for VRF default, address family L2VPN EVPN
+BGP table version is 247, Local Router ID is 10.2.0.1
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
+njected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - b
+est2
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 10.1.0.1:4
+* i[2]:[0]:[0]:[48]:[5000.1400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 65200 i
+*>i                   10.6.255.200                      100          0 65200 i
+
+Route Distinguisher: 10.1.0.1:32867
+* i[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 65200 i
+*>i                   10.6.255.200                      100          0 65200 i
+* i[2]:[0]:[0]:[48]:[0050.7966.6810]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 65200 i
+*>i                   10.6.255.200                      100          0 65200 i
+* i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.50]/272
+                      10.6.255.200                      100          0 65200 i
+*>i                   10.6.255.200                      100          0 65200 i
+* i[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
+                      10.6.255.200                      100          0 65200 i
+*>i                   10.6.255.200                      100          0 65200 i
+* i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 65200 i
+*>i                   10.6.255.200                      100          0 65200 i
+
+Route Distinguisher: 10.1.0.1:32967
+* i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 65200 i
+*>i                   10.6.255.200                      100          0 65200 i
+
+Route Distinguisher: 10.1.0.3:3
+* i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 65200 i
+*>i                   10.1.0.3                          100          0 65200 i
+
+Route Distinguisher: 10.1.0.3:32867
+* i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 65200 i
+*>i                   10.1.0.3                          100          0 65200 i
+
+Route Distinguisher: 10.1.0.3:32967
+* i[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 65200 i
+*>i                   10.1.0.3                          100          0 65200 i
+* i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 65200 i
+*>i                   10.1.0.3                          100          0 65200 i
+* i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 65200 i
+*>i                   10.1.0.3                          100          0 65200 i
+
+Route Distinguisher: 10.2.0.1:32867    (L2VNI 100)
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 65200 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.680f]:[0]:[0.0.0.0]/216
+                      10.2.0.1                          100      32768 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6810]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 65200 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.50]/272
+                      10.6.255.200                      100          0 65200 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.680f]:[32]:[172.16.100.40]/272
+                      10.2.0.1                          100      32768 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
+                      10.6.255.200                      100          0 65200 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 65200 i
+*>l[3]:[0]:[32]:[10.2.0.1]/88
+                      10.2.0.1                          100      32768 i
+*>i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 65200 i
+
+Route Distinguisher: 10.2.0.1:32967    (L2VNI 200)
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 65200 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 65200 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 65200 i
+*>l[3]:[0]:[32]:[10.2.0.1]/88
+                      10.2.0.1                          100      32768 i
+*>i[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100          0 65200 i
+
+Route Distinguisher: 10.2.0.1:3    (L3VNI 2000)
+*>i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 65200 i
+*>l[2]:[0]:[0]:[48]:[5000.1300.1b08]:[0]:[0.0.0.0]/216
+                      10.2.0.1                          100      32768 i
+*>i[2]:[0]:[0]:[48]:[5000.1400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100          0 65200 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.50]/272
+                      10.6.255.200                      100          0 65200 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
+                      10.1.0.3                          100          0 65200 i
+*>i[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
+                      10.6.255.200                      100          0 65200 i
+
+```
+```
 ```
 ### Проверка (Route. POD 1)
 ```
