@@ -531,9 +531,8 @@ VPCS-1m> ping 172.16.200.20
 84 bytes from 172.16.200.20 icmp_seq=4 ttl=62 time=19.638 ms
 84 bytes from 172.16.200.20 icmp_seq=5 ttl=62 time=20.356 ms
 ```
-```
 
-```
+
 ```
 VPCS-2> ping 172.16.100.40
 84 bytes from 172.16.100.40 icmp_seq=1 ttl=62 time=23.922 ms
