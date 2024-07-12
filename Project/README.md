@@ -522,7 +522,7 @@ Route Distinguisher: 10.2.0.1:3    (L3VNI 2000)
 ### Проверка (Ping между POD)
 ```
 
-
+```
 ```
 VPCS-1m> ping 172.16.200.20
 84 bytes from 172.16.200.20 icmp_seq=1 ttl=62 time=25.278 ms
