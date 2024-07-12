@@ -86,19 +86,27 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 ```
 ### Проверка (Route. POD 1)
 ```
-Leaf-1# show ip bgp vrf main summary
+Leaf-1# sh ip route vrf main
 172.16.100.0/24, ubest/mbest: 1/0, attached
-    *via 172.16.100.1, Vlan100, [0/0], 04:45:52, direct
+    *via 172.16.100.1, Vlan100, [0/0], 15:42:01, direct
 172.16.100.1/32, ubest/mbest: 1/0, attached
-    *via 172.16.100.1, Vlan100, [0/0], 04:45:52, local
+    *via 172.16.100.1, Vlan100, [0/0], 15:42:01, local
 172.16.100.30/32, ubest/mbest: 1/0, attached
-    *via 172.16.100.30, Vlan100, [190/0], 00:30:27, hmm
+    *via 172.16.100.30, Vlan100, [190/0], 00:24:01, hmm
+172.16.100.40/32, ubest/mbest: 1/0
+    *via 10.2.0.1%default, [200/0], 00:04:14, bgp-65200, internal, tag 65202, se
+gid: 2000 tunnelid: 0xa020001 encap: VXLAN
+
 172.16.100.50/32, ubest/mbest: 1/0, attached
-    *via 172.16.100.50, Vlan100, [190/0], 00:30:22, hmm (no-redist)
+    *via 172.16.100.50, Vlan100, [190/0], 00:24:01, hmm (no-redist)
 172.16.200.0/24, ubest/mbest: 1/0, attached
-    *via 172.16.200.1, Vlan200, [0/0], 04:45:52, direct
+    *via 172.16.200.1, Vlan200, [0/0], 15:42:01, direct
 172.16.200.1/32, ubest/mbest: 1/0, attached
-    *via 172.16.200.1, Vlan200, [0/0], 04:45:52, local
+    *via 172.16.200.1, Vlan200, [0/0], 15:42:01, local
+172.16.200.20/32, ubest/mbest: 1/0
+    *via 10.1.0.3%default, [200/0], 00:04:58, bgp-65200, internal, tag 65200, se
+gid: 2000 tunnelid: 0xa010003 encap: VXLAN
+
 
 ```
 ```
