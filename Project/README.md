@@ -216,136 +216,49 @@ Route Distinguisher: 10.1.0.1:4    (L3VNI 2000)
 
 ```
 ```
-Leaf-3# sh ip route vrf main
+Leaf-2# sh ip route vrf main
+IP Route Table for VRF "main"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
 172.16.100.0/24, ubest/mbest: 1/0, attached
-    *via 172.16.100.1, Vlan100, [0/0], 15:35:11, direct
+    *via 172.16.100.1, Vlan100, [0/0], 01:23:47, direct, tag 65200
 172.16.100.1/32, ubest/mbest: 1/0, attached
-    *via 172.16.100.1, Vlan100, [0/0], 15:35:11, local
-172.16.100.30/32, ubest/mbest: 1/0
-    *via 10.6.255.200%default, [200/0], 00:10:50, bgp-65200, internal, tag 65200
-, segid: 2000 tunnelid: 0xa06ffc8 encap: VXLAN
-
-172.16.100.40/32, ubest/mbest: 1/0
-    *via 10.2.0.1%default, [200/0], 00:03:27, bgp-65200, internal, tag 65202, se
-gid: 2000 tunnelid: 0xa020001 encap: VXLAN
-
-172.16.100.50/32, ubest/mbest: 1/0
-    *via 10.6.255.200%default, [200/0], 00:10:50, bgp-65200, internal, tag 65200
-, segid: 2000 tunnelid: 0xa06ffc8 encap: VXLAN
-
+    *via 172.16.100.1, Vlan100, [0/0], 01:23:47, local, tag 65200
 172.16.200.0/24, ubest/mbest: 1/0, attached
-    *via 172.16.200.1, Vlan200, [0/0], 15:35:11, direct
+    *via 172.16.200.1, Vlan200, [0/0], 01:23:47, direct, tag 65200
 172.16.200.1/32, ubest/mbest: 1/0, attached
-    *via 172.16.200.1, Vlan200, [0/0], 15:35:11, local
-172.16.200.20/32, ubest/mbest: 1/0, attached
-    *via 172.16.200.20, Vlan200, [190/0], 00:14:35, hmm
+    *via 172.16.200.1, Vlan200, [0/0], 01:23:47, local, tag 65200
+
 
 ```
 ```
-Leaf-3# sh bgp l2vpn evpn
-BGP routing table information for VRF default, address family L2VPN EVPN
-BGP table version is 214, Local Router ID is 10.1.0.3
-Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
-Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
-njected
-Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - b
-est2
+Leaf-2# sh bgp l2vpn evpn summary
+BGP summary information for VRF default, address family L2VPN EVPN
+BGP router identifier 10.1.0.2, local AS number 65200
+BGP table version is 10, L2VPN EVPN config peers 3, capable peers 3
+2 network entries and 3 paths using 488 bytes of memory
+BGP attribute entries [3/516], BGP AS path entries [0/0]
+BGP community entries [0/0], BGP clusterlist entries [2/8]
 
-   Network            Next Hop            Metric     LocPrf     Weight Path
-Route Distinguisher: 10.1.0.1:4
-*>i[2]:[0]:[0]:[48]:[5000.1400.1b08]:[0]:[0.0.0.0]/216
-                      10.6.255.200                      100          0 i
-* i                   10.6.255.200                      100          0 i
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.1.0        4 65200      38      18       10    0    0 00:12:42 1
+10.2.0.2        4 65202      64      64       10    0    0 00:58:53 0
+10.2.1.0        4 65200      36      18       10    0    0 00:12:19 1
 
-Route Distinguisher: 10.1.0.1:32867
-* i[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
-                      10.6.255.200                      100          0 i
-*>i                   10.6.255.200                      100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6810]:[0]:[0.0.0.0]/216
-                      10.6.255.200                      100          0 i
-* i                   10.6.255.200                      100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.50]/272
-                      10.6.255.200                      100          0 i
-* i                   10.6.255.200                      100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
-                      10.6.255.200                      100          0 i
-* i                   10.6.255.200                      100          0 i
-*>i[3]:[0]:[32]:[10.6.255.200]/88
-                      10.6.255.200                      100          0 i
-* i                   10.6.255.200                      100          0 i
+Neighbor        T    AS PfxRcd     Type-2     Type-3     Type-4     Type-5
+10.1.1.0        I 65200 1          1          0          0          0
+10.2.0.2        E 65202 0          0          0          0          0
+10.2.1.0        I 65200 1          1          0          0          0
 
-Route Distinguisher: 10.1.0.1:32967
-*>i[3]:[0]:[32]:[10.6.255.200]/88
-                      10.6.255.200                      100          0 i
-* i                   10.6.255.200                      100          0 i
+```
+```
 
-Route Distinguisher: 10.1.0.3:32867    (L2VNI 100)
-*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
-                      10.6.255.200                      100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.680f]:[0]:[0.0.0.0]/216
-                      10.2.0.1                          100          0 65202 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6810]:[0]:[0.0.0.0]/216
-                      10.6.255.200                      100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.50]/272
-                      10.6.255.200                      100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.680f]:[32]:[172.16.100.40]/272
-                      10.2.0.1                          100          0 65202 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
-                      10.6.255.200                      100          0 i
-*>l[3]:[0]:[32]:[10.1.0.3]/88
-                      10.1.0.3                          100      32768 i
-*>i[3]:[0]:[32]:[10.2.0.1]/88
-                      10.2.0.1                          100          0 65202 i
-*>i[3]:[0]:[32]:[10.6.255.200]/88
-                      10.6.255.200                      100          0 i
 
-Route Distinguisher: 10.1.0.3:32967    (L2VNI 200)
-*>l[2]:[0]:[0]:[48]:[0050.7966.6808]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100      32768 i
-*>l[2]:[0]:[0]:[48]:[0050.7966.6808]:[32]:[172.16.200.20]/272
-                      10.1.0.3                          100      32768 i
-*>l[3]:[0]:[32]:[10.1.0.3]/88
-                      10.1.0.3                          100      32768 i
-*>i[3]:[0]:[32]:[10.2.0.1]/88
-                      10.2.0.1                          100          0 65202 i
-*>i[3]:[0]:[32]:[10.6.255.200]/88
-                      10.6.255.200                      100          0 i
-
-Route Distinguisher: 10.2.0.1:3
-*>i[2]:[0]:[0]:[48]:[5000.1300.1b08]:[0]:[0.0.0.0]/216
-                      10.2.0.1                          100          0 65202 i
-* i                   10.2.0.1                          100          0 65202 i
-
-Route Distinguisher: 10.2.0.1:32867
-* i[2]:[0]:[0]:[48]:[0050.7966.680f]:[0]:[0.0.0.0]/216
-                      10.2.0.1                          100          0 65202 i
-*>i                   10.2.0.1                          100          0 65202 i
-* i[2]:[0]:[0]:[48]:[0050.7966.680f]:[32]:[172.16.100.40]/272
-                      10.2.0.1                          100          0 65202 i
-*>i                   10.2.0.1                          100          0 65202 i
-*>i[3]:[0]:[32]:[10.2.0.1]/88
-                      10.2.0.1                          100          0 65202 i
-* i                   10.2.0.1                          100          0 65202 i
-
-Route Distinguisher: 10.2.0.1:32967
-*>i[3]:[0]:[32]:[10.2.0.1]/88
-                      10.2.0.1                          100          0 65202 i
-* i                   10.2.0.1                          100          0 65202 i
-
-Route Distinguisher: 10.1.0.3:3    (L3VNI 2000)
-*>l[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
-                      10.1.0.3                          100      32768 i
-*>i[2]:[0]:[0]:[48]:[5000.1300.1b08]:[0]:[0.0.0.0]/216
-                      10.2.0.1                          100          0 65202 i
-*>i[2]:[0]:[0]:[48]:[5000.1400.1b08]:[0]:[0.0.0.0]/216
-                      10.6.255.200                      100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.50]/272
-                      10.6.255.200                      100          0 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.680f]:[32]:[172.16.100.40]/272
-                      10.2.0.1                          100          0 65202 i
-*>i[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.100.30]/272
-                      10.6.255.200                      100          0 i
-
+```
+```
 ```
 ### Проверка (Underlay. POD 2)
 ```
@@ -393,28 +306,24 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 
 ```
 ```
-Leaf-m1# sh ip route vrf main
-172.16.100.0/24, ubest/mbest: 1/0, attached
-    *via 172.16.100.1, Vlan100, [0/0], 00:16:14, direct
-172.16.100.1/32, ubest/mbest: 1/0, attached
-    *via 172.16.100.1, Vlan100, [0/0], 00:16:14, local
-172.16.100.30/32, ubest/mbest: 1/0
-    *via 10.6.255.200%default, [200/0], 00:06:35, bgp-65202, internal, tag 65200
-, segid: 2000 tunnelid: 0xa06ffc8 encap: VXLAN
+Leaf-m1# show bgp l2vpn evpn route-type 4
+BGP routing table information for VRF default, address family L2VPN EVPN
+Route Distinguisher: 10.2.0.1:27001   (ES [0300.0000.00fe.b200.0309 0])
+BGP routing table entry for [4]:[0300.0000.00fe.b200.0309]:[32]:[10.2.0.1]/136,
+version 52
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
-172.16.100.40/32, ubest/mbest: 1/0, attached
-    *via 172.16.100.40, Vlan100, [190/0], 00:13:19, hmm
-172.16.100.50/32, ubest/mbest: 1/0
-    *via 10.6.255.200%default, [200/0], 00:06:35, bgp-65202, internal, tag 65200
-, segid: 2000 tunnelid: 0xa06ffc8 encap: VXLAN
+  Advertised path-id 1
+  Path type: local, path is valid, is best path, no labeled nexthop
+  AS-Path: NONE, path locally originated
+    10.2.0.1 (metric 0) from 0.0.0.0 (10.2.0.1)
+      Origin IGP, MED not set, localpref 100, weight 32768
+      Extcommunity: ENCAP:8 RT:0000.0000.feb2
 
-172.16.200.0/24, ubest/mbest: 1/0, attached
-    *via 172.16.200.1, Vlan200, [0/0], 00:15:53, direct
-172.16.200.1/32, ubest/mbest: 1/0, attached
-    *via 172.16.200.1, Vlan200, [0/0], 00:15:53, local
-172.16.200.20/32, ubest/mbest: 1/0
-    *via 10.1.0.3%default, [200/0], 00:06:35, bgp-65202, internal, tag 65200, se
-gid: 2000 tunnelid: 0xa010003 encap: VXLAN
+  Path-id 1 advertised to peers:
+    10.1.0.1           10.2.2.0
+
 
 ```
 ```
