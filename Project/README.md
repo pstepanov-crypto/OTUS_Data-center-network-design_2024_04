@@ -106,6 +106,24 @@ id: 2000 tunnelid: 0xa020001 encap: VXLAN
 
 ```
 ```
+Leaf-1# sh bgp l2vpn evpn summary
+BGP summary information for VRF default, address family L2VPN EVPN
+BGP router identifier 10.1.0.1, local AS number 65200
+BGP table version is 117, L2VPN EVPN config peers 3, capable peers 3
+28 network entries and 31 paths using 5872 bytes of memory
+BGP attribute entries [29/4988], BGP AS path entries [1/6]
+BGP community entries [0/0], BGP clusterlist entries [2/8]
+
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.1.0        4 65200     116     106      117    0    0 01:34:58 3
+10.2.0.1        4 65202     104      88      117    0    0 01:19:13 7
+10.2.1.0        4 65200     113     106      117    0    0 01:34:54 3
+
+Neighbor        T    AS PfxRcd     Type-2     Type-3     Type-4     Type-5
+10.1.1.0        I 65200 3          1          2          0          0
+10.2.0.1        E 65202 7          5          2          0          0
+10.2.1.0        I 65200 3          1          2          0          0
+
 ```
 ```
 Leaf-1# sh bgp l2vpn evpn
