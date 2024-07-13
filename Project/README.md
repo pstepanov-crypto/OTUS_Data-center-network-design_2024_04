@@ -287,6 +287,7 @@ Route Distinguisher: 10.1.0.2:4    (L3VNI 2000)
                       10.1.0.3                          100          0 i
 
 ```
+```
 Leaf-2# sh bgp l2vpn evpn summary
 BGP summary information for VRF default, address family L2VPN EVPN
 BGP router identifier 10.1.0.2, local AS number 65200
@@ -304,9 +305,6 @@ Neighbor        T    AS PfxRcd     Type-2     Type-3     Type-4     Type-5
 10.1.1.0        I 65200 3          1          2          0          0
 10.2.0.2        E 65202 0          0          0          0          0
 10.2.1.0        I 65200 3          1          2          0          0
-
-```
-
 
 ```
 ```
