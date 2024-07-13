@@ -470,7 +470,36 @@ Neighbor        T    AS PfxRcd     Type-2     Type-3     Type-4     Type-5
 10.2.3.0        I 65202 3          1          2          0          0
 ```
 ```
+```
+```
+Leaf-m1# sh ip route vrf main
+172.16.100.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 03:20:47, direct
+172.16.100.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 03:20:47, local
+172.16.100.40/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.40, Vlan100, [190/0], 02:09:59, hmm
+172.16.200.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 03:20:46, direct
+172.16.200.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 03:20:46, local
+```
+```
 
+```
+```
+Leaf-2# sh bgp l2vpn evpn summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.1.1.0        4 65200      94      66       94    0    0 00:30:48 3
+10.2.0.2        4 65202     114     128       94    0    0 00:30:47 0
+10.2.1.0        4 65200      91      66       94    0    0 00:30:46 3
+
+Neighbor        T    AS PfxRcd     Type-2     Type-3     Type-4     Type-5
+10.1.1.0        I 65200 3          1          2          0          0
+10.2.0.2        E 65202 0          0          0          0          0
+10.2.1.0        I 65200 3          1          2          0          0
+```
+```
 
 ```
 ### Проверка (Ping между POD)
