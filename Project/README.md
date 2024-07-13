@@ -547,6 +547,24 @@ Route Distinguisher: 10.1.0.2:4    (L3VNI 2000)
 *>i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
                       10.1.0.3                          100          0 i
 ```
+Leaf-2# sh ip route vrf main
+IP Route Table for VRF "main"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+172.16.100.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 02:11:01, direct, tag 65200
+172.16.100.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.1, Vlan100, [0/0], 02:11:01, local, tag 65200
+172.16.100.50/32, ubest/mbest: 1/0, attached
+    *via 172.16.100.50, Vlan100, [190/0], 00:32:22, hmm
+172.16.200.0/24, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 02:11:01, direct, tag 65200
+172.16.200.1/32, ubest/mbest: 1/0, attached
+    *via 172.16.200.1, Vlan200, [0/0], 02:11:01, local, tag 65200
+
 ```
 ```
 ### Проверка (Ping между POD)
