@@ -547,30 +547,34 @@ Leaf-m2# sh ip route vrf main
 ```
 ### Проверка (Ping между POD)
 ```
-VPCS-1m> ping 172.16.100.30
-84 bytes from 172.16.100.30 icmp_seq=1 ttl=64 time=30.706 ms
-84 bytes from 172.16.100.30 icmp_seq=2 ttl=64 time=33.076 ms
-84 bytes from 172.16.100.30 icmp_seq=3 ttl=64 time=21.028 ms
-84 bytes from 172.16.100.30 icmp_seq=4 ttl=64 time=31.581 ms
-84 bytes from 172.16.100.30 icmp_seq=5 ttl=64 time=18.329 ms
-
-```
-```
-VPCS-1m> ping 172.16.200.20
-84 bytes from 172.16.200.20 icmp_seq=1 ttl=62 time=25.278 ms
-84 bytes from 172.16.200.20 icmp_seq=2 ttl=62 time=17.525 ms
-84 bytes from 172.16.200.20 icmp_seq=3 ttl=62 time=18.453 ms
-84 bytes from 172.16.200.20 icmp_seq=4 ttl=62 time=19.638 ms
-84 bytes from 172.16.200.20 icmp_seq=5 ttl=62 time=20.356 ms
-```
+VPCS-1> ping 172.16.100.50
+172.16.100.50 icmp_seq=1 timeout
+172.16.100.50 icmp_seq=2 timeout
+172.16.100.50 icmp_seq=3 timeout
+172.16.100.50 icmp_seq=4 timeout
+172.16.100.50 icmp_seq=5 timeout
 
 
 ```
-VPCS-2> ping 172.16.100.40
-84 bytes from 172.16.100.40 icmp_seq=1 ttl=62 time=23.922 ms
-84 bytes from 172.16.100.40 icmp_seq=2 ttl=62 time=20.967 ms
-84 bytes from 172.16.100.40 icmp_seq=3 ttl=62 time=17.761 ms
-84 bytes from 172.16.100.40 icmp_seq=4 ttl=62 time=19.283 ms
-84 bytes from 172.16.100.40 icmp_seq=5 ttl=62 time=19.140 ms
+```
+
+VPCS-1m> ping 172.16.200.50
+172.16.200.50 icmp_seq=1 timeout
+172.16.200.50 icmp_seq=2 timeout
+172.16.200.50 icmp_seq=3 timeout
+172.16.200.50 icmp_seq=4 timeout
+172.16.200.50 icmp_seq=5 timeout
+
+```
+
+
+```
+VPCS-2> ping 172.16.200.70
+172.16.200.70 icmp_seq=1 timeout
+172.16.200.70 icmp_seq=2 timeout
+172.16.200.70 icmp_seq=3 timeout
+172.16.200.70 icmp_seq=4 timeout
+172.16.200.70 icmp_seq=5 timeout
+
 ```
 
