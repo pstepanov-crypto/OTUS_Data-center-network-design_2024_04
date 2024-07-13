@@ -496,7 +496,58 @@ Neighbor        T    AS PfxRcd     Type-2     Type-3     Type-4     Type-5
 10.2.1.0        I 65200 3          1          2          0          0
 ```
 ```
+Leaf-2# sh bgp l2vpn evpn
+ BGP routing table information for VRF default, address family L2VPN EVPN
+BGP table version is 94, Local Router ID is 10.1.0.2
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
+njected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - b
+est2
 
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 10.1.0.2:32867    (L2VNI 100)
+*>l[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>l[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.50]/272
+                      10.6.255.200                      100      32768 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
+
+Route Distinguisher: 10.1.0.2:32967    (L2VNI 200)
+*>l[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
+
+Route Distinguisher: 10.1.0.3:3
+* i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.3:32867
+* i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.3:32967
+* i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.2:4    (L3VNI 2000)
+*>l[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+```
+```
 ```
 ### Проверка (Ping между POD)
 ```
