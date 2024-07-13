@@ -235,25 +235,76 @@ IP Route Table for VRF "main"
 
 ```
 ```
+Leaf-2# sh bgp l2vpn evpn
+BGP routing table information for VRF default, address family L2VPN EVPN
+BGP table version is 94, Local Router ID is 10.1.0.2
+Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
+Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
+njected
+Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - b
+est2
+
+   Network            Next Hop            Metric     LocPrf     Weight Path
+Route Distinguisher: 10.1.0.2:32867    (L2VNI 100)
+*>l[2]:[0]:[0]:[48]:[0050.7966.6807]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>l[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>l[2]:[0]:[0]:[48]:[0050.7966.6807]:[32]:[172.16.100.50]/272
+                      10.6.255.200                      100      32768 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
+
+Route Distinguisher: 10.1.0.2:32967    (L2VNI 200)
+*>l[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>l[3]:[0]:[32]:[10.6.255.200]/88
+                      10.6.255.200                      100      32768 i
+
+Route Distinguisher: 10.1.0.3:3
+* i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+*>i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.3:32867
+* i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.3:32967
+* i[3]:[0]:[32]:[10.1.0.3]/88
+                      10.1.0.3                          100          0 i
+*>i                   10.1.0.3                          100          0 i
+
+Route Distinguisher: 10.1.0.2:4    (L3VNI 2000)
+*>l[2]:[0]:[0]:[48]:[5000.0400.1b08]:[0]:[0.0.0.0]/216
+                      10.6.255.200                      100      32768 i
+*>i[2]:[0]:[0]:[48]:[5000.0500.1b08]:[0]:[0.0.0.0]/216
+                      10.1.0.3                          100          0 i
+
+```
 Leaf-2# sh bgp l2vpn evpn summary
 BGP summary information for VRF default, address family L2VPN EVPN
 BGP router identifier 10.1.0.2, local AS number 65200
-BGP table version is 10, L2VPN EVPN config peers 3, capable peers 3
-2 network entries and 3 paths using 488 bytes of memory
-BGP attribute entries [3/516], BGP AS path entries [0/0]
+BGP table version is 94, L2VPN EVPN config peers 3, capable peers 3
+13 network entries and 16 paths using 3172 bytes of memory
+BGP attribute entries [14/2408], BGP AS path entries [0/0]
 BGP community entries [0/0], BGP clusterlist entries [2/8]
 
 Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-10.1.1.0        4 65200      38      18       10    0    0 00:12:42 1
-10.2.0.2        4 65202      64      64       10    0    0 00:58:53 0
-10.2.1.0        4 65200      36      18       10    0    0 00:12:19 1
+10.1.1.0        4 65200      64      39       94    0    0 00:03:41 3
+10.2.0.2        4 65202      87     101       94    0    0 00:03:39 0
+10.2.1.0        4 65200      61      39       94    0    0 00:03:39 3
 
 Neighbor        T    AS PfxRcd     Type-2     Type-3     Type-4     Type-5
-10.1.1.0        I 65200 1          1          0          0          0
+10.1.1.0        I 65200 3          1          2          0          0
 10.2.0.2        E 65202 0          0          0          0          0
-10.2.1.0        I 65200 1          1          0          0          0
+10.2.1.0        I 65200 3          1          2          0          0
 
-```
 ```
 
 
