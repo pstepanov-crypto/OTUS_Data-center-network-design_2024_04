@@ -528,7 +528,7 @@ Route Distinguisher: 10.2.0.2:3    (L3VNI 2000)
                       10.2.0.1                          100          0 i
 *>i[2]:[0]:[0]:[48]:[0050.7966.680f]:[32]:[172.16.100.40]/272
                       10.2.0.1                          100          0 i
-
+```
 ```
 Leaf-m2# sh ip route vrf main
 172.16.100.0/24, ubest/mbest: 1/0, attached
@@ -542,7 +542,7 @@ Leaf-m2# sh ip route vrf main
 172.16.200.70/32, ubest/mbest: 1/0, attached
     *via 172.16.200.70, Vlan200, [190/0], 00:51:59, hmm
 
-
+```
 ```
 ```
 ### Проверка (Ping между POD)
