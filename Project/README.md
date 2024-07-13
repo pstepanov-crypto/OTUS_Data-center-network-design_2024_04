@@ -469,8 +469,7 @@ Neighbor        T    AS PfxRcd     Type-2     Type-3     Type-4     Type-5
 10.2.2.0        I 65202 3          1          2          0          0
 10.2.3.0        I 65202 3          1          2          0          0
 ```
-```
-```
+
 ```
 Leaf-m1# sh ip route vrf main
 172.16.100.0/24, ubest/mbest: 1/0, attached
@@ -483,9 +482,6 @@ Leaf-m1# sh ip route vrf main
     *via 172.16.200.1, Vlan200, [0/0], 03:20:46, direct
 172.16.200.1/32, ubest/mbest: 1/0, attached
     *via 172.16.200.1, Vlan200, [0/0], 03:20:46, local
-```
-```
-
 ```
 ```
 Leaf-2# sh bgp l2vpn evpn summary
