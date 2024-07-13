@@ -23,17 +23,17 @@
 ### Конфигурация оборудования
 
 #### POD 1
-- [POD1-BGW-Spine-1](config/POD-1-Spine-1.conf)
-- [POD1-BGW-Spine-2](config/POD-1-Spine-2.conf)
-- [POD1-Leaf-1](config/POD-1-Leaf-1.conf)
-- [POD1-Leaf-2](config/POD-1-Leaf-2.conf)
+- [POD1-Spine-1](config/POD-1-Spine-1.conf)
+- [POD1-Spine-2](config/POD-1-Spine-2.conf)
+- [POD1-BorderLeaf-1](config/POD-1-Leaf-1.conf)
+- [POD1-BorderLeaf-2](config/POD-1-Leaf-2.conf)
 - [POD1-Leaf-3](config/POD-1-Leaf-3.conf)
 
 #### POD 2
-- [POD2-BGW-Spine-m1](config/POD-2-Spine-m1.conf)
-- [POD2-BGW-Spine-m2](config/POD-2-Spine-m2.conf)
-- [POD2-Leaf-m1](config/POD-2-Leaf-m1.conf)
-- [POD2-Leaf-m2](config/POD-2-Leaf-m2.conf)
+- [POD2-Spine-m1](config/POD-2-Spine-m1.conf)
+- [POD2-Spine-m2](config/POD-2-Spine-m2.conf)
+- [POD2-BorderLeaf-m1](config/POD-2-Leaf-m1.conf)
+- [POD2-BorderLeaf-m2](config/POD-2-Leaf-m2.conf)
 - [POD2-Leaf-m3](config/POD-2-Leaf-m3.conf)
 
 
