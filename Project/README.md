@@ -84,7 +84,7 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 ```
 
 ```
-### Проверка (Route. POD 1)
+### Проверка (Route. BorderLeaf-1 POD 1)
 ```
 Leaf-1# show bgp l2vpn evpn route-type 4
 BGP routing table information for VRF default, address family L2VPN EVPN
@@ -320,7 +320,9 @@ id: 2000 tunnelid: 0xa020001 encap: VXLAN
 2, segid: 2000 tunnelid: 0x14141414 encap: VXLAN
 
 
-
+```
+### Проверка (Route. BorderLeaf-2 POD 1)
+```
 ```
 ```
 Leaf-2# show bgp l2vpn evpn route-type 4
@@ -647,6 +649,10 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 10.2.2.0        4 65202      20       9       49    0    0 00:04:06 11
 
 
+
+```
+### Проверка (Route. BorderLeaf-1m POD 2)
+```
 ```
 ```
 
