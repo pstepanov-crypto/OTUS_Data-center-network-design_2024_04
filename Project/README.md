@@ -706,107 +706,26 @@ Flags: (0x000012) (high32 00000000) on xmit-list, is in l2rib/evpn, is not in HW
     10.1.0.1
 
 
-
-
-```
-```
-Leaf-m1# sh bgp l2vpn evpn
-BGP routing table information for VRF default, address family L2VPN EVPN
-BGP table version is 78, Local Router ID is 10.2.0.1
-Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
-Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
-njected
-Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - b
-est2
-
-   Network            Next Hop            Metric     LocPrf     Weight Path
-Route Distinguisher: 10.1.0.1:4
-  e[2]:[0]:[0]:[48]:[5000.1400.1b08]:[0]:[0.0.0.0]/216
-                      10.6.255.200                                   0 65200 i
-
-Route Distinguisher: 10.1.0.1:32867
-  e[2]:[0]:[0]:[48]:[5000.1400.1b08]:[0]:[0.0.0.0]/216
-                      10.6.255.200                                   0 65200 i
-  e[3]:[0]:[32]:[10.6.255.200]/88
-                      10.6.255.200                                   0 65200 i
-
-Route Distinguisher: 10.1.0.1:32967
-  e[2]:[0]:[0]:[48]:[0050.7966.6810]:[0]:[0.0.0.0]/216
-                      10.6.255.200                                   0 65200 i
-  e[2]:[0]:[0]:[48]:[5000.1400.1b08]:[0]:[0.0.0.0]/216
-                      10.6.255.200                                   0 65200 i
-  e[2]:[0]:[0]:[48]:[0050.7966.6810]:[32]:[172.16.200.50]/248
-                      10.6.255.200                                   0 65200 i
-  e[3]:[0]:[32]:[10.6.255.200]/88
-                      10.6.255.200                                   0 65200 i
-
-Route Distinguisher: 10.2.0.1:32867    (L2VNI 100)
-*>l[2]:[0]:[0]:[48]:[0050.7966.680f]:[0]:[0.0.0.0]/216
-                      10.2.0.1                          100      32768 i
-*>l[2]:[0]:[0]:[48]:[5000.1300.1b08]:[0]:[0.0.0.0]/216
-                      10.2.0.1                          100      32768 i
-*>l[2]:[0]:[0]:[48]:[0050.7966.680f]:[32]:[172.16.100.40]/272
-                      10.2.0.1                          100      32768 i
-*>l[3]:[0]:[32]:[10.2.0.1]/88
-                      10.2.0.1                          100      32768 i
-*>i[3]:[0]:[32]:[10.2.0.3]/88
-                      10.2.0.3                          100          0 i
-
-Route Distinguisher: 10.2.0.1:32967    (L2VNI 200)
-*>l[2]:[0]:[0]:[48]:[5000.1300.1b08]:[0]:[0.0.0.0]/216
-                      10.2.0.1                          100      32768 i
-*>l[3]:[0]:[32]:[10.2.0.1]/88
-                      10.2.0.1                          100      32768 i
-*>i[3]:[0]:[32]:[10.2.0.3]/88
-                      10.2.0.3                          100          0 i
-
-Route Distinguisher: 10.2.0.3:3
-*>i[2]:[0]:[0]:[48]:[5000.0e00.1b08]:[0]:[0.0.0.0]/216
-                      10.2.0.3                          100          0 i
-* i                   10.2.0.3                          100          0 i
-
-Route Distinguisher: 10.2.0.3:32867
-*>i[3]:[0]:[32]:[10.2.0.3]/88
-                      10.2.0.3                          100          0 i
-* i                   10.2.0.3                          100          0 i
-
-Route Distinguisher: 10.2.0.3:32967
-*>i[3]:[0]:[32]:[10.2.0.3]/88
-                      10.2.0.3                          100          0 i
-* i                   10.2.0.3                          100          0 i
-
-Route Distinguisher: 10.2.0.1:27001   (ES [0300.0000.00fe.b200.0309 0])
-*>l[4]:[0300.0000.00fe.b200.0309]:[32]:[10.2.0.1]/136
-                      10.2.0.1                          100      32768 i
-
-Route Distinguisher: 10.2.0.1:3    (L3VNI 2000)
-*>i[2]:[0]:[0]:[48]:[5000.0e00.1b08]:[0]:[0.0.0.0]/216
-                      10.2.0.3                          100          0 i
-*>l[2]:[0]:[0]:[48]:[5000.1300.1b08]:[0]:[0.0.0.0]/216
-                      10.2.0.1                          100      32768 i
-```
-```
-
-
 ```
 ```
 Leaf-m1# sh bgp l2vpn evpn summary
-BGP summary information for VRF default, address family L2VPN EVPN
-BGP router identifier 10.2.0.1, local AS number 65202
-BGP table version is 78, L2VPN EVPN config peers 3, capable peers 3
-21 network entries and 24 paths using 5124 bytes of memory
-BGP attribute entries [22/3784], BGP AS path entries [1/6]
-BGP community entries [0/0], BGP clusterlist entries [2/8]
-
 Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-10.1.0.1        4 65200     143     126       78    0    0 01:56:31 7
-10.2.2.0        4 65202     155     150       78    0    0 00:12:43 3
+10.1.0.1        4 65200     323     238      314    0    0 01:08:09 9
+10.2.2.0        4 65202     347     347      314    0    0 05:26:46 8
 10.2.3.0        4 65202      23      11       78    0    0 00:05:29 3
 
 Neighbor        T    AS PfxRcd     Type-2     Type-3     Type-4     Type-5
-10.1.0.1        E 65200 7          5          2          0          0
-10.2.2.0        I 65202 3          1          2          0          0
+10.1.0.1        E 65200 9          7          2          0          0
+10.2.2.0        I 65202 8          5          2          1          0
 10.2.3.0        I 65202 3          1          2          0          0
+
+```
+```
+
+
+```
+```
+
 ```
 
 ```
