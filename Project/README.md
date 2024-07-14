@@ -81,8 +81,8 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 10.1.1.0        4 65200     131      97      157    0    0 01:28:07 10
 
 ```
-
 ```
+
 ```
 ### Проверка (Route. POD 1)
 ```
