@@ -395,14 +395,6 @@ Neighbor        T    AS PfxRcd     Type-2     Type-3     Type-4     Type-5
 ```
 ```
 Leaf-2# sh bgp l2vpn evpn
-BGP routing table information for VRF default, address family L2VPN EVPN
-BGP table version is 625, Local Router ID is 10.1.0.2
-Status: s-suppressed, x-deleted, S-stale, d-dampened, h-history, *-valid, >-best
-Path type: i-internal, e-external, c-confed, l-local, a-aggregate, r-redist, I-i
-njected
-Origin codes: i - IGP, e - EGP, ? - incomplete, | - multipath, & - backup, 2 - b
-est2
-
    Network            Next Hop            Metric     LocPrf     Weight Path
 Route Distinguisher: 65202:100
 *>e[2]:[0]:[0]:[48]:[0050.7966.680f]:[0]:[0.0.0.0]/216
@@ -563,12 +555,6 @@ Route Distinguisher: 10.1.0.2:4    (L3VNI 2000)
 ```
 ```
 Leaf-2# sh ip route vrf main
-IP Route Table for VRF "main"
-'*' denotes best ucast next-hop
-'**' denotes best mcast next-hop
-'[x/y]' denotes [preference/metric]
-'%<string>' in via output denotes VRF <string>
-
 172.16.100.0/24, ubest/mbest: 1/0, attached
     *via 172.16.100.1, Vlan100, [0/0], 06:12:33, direct, tag 65200
 172.16.100.1/32, ubest/mbest: 1/0, attached
