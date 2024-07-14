@@ -649,11 +649,32 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 
 ```
 ```
+
 Leaf-m1# show bgp l2vpn evpn route-type 4
 BGP routing table information for VRF default, address family L2VPN EVPN
+Route Distinguisher: 10.2.0.2:27001
+BGP routing table entry for [4]:[0300.0000.00fe.b200.0309]:[32]:[10.2.0.2]/136,
+version 66
+Paths: (1 available, best #1)
+Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not i
+n HW
+
+  Advertised path-id 1
+  Path type: internal, path is valid, is best path, no labeled nexthop
+             Imported to 1 destination(s)
+             Imported paths list: esi_0300.0000.00fe.b200.0309
+  AS-Path: NONE, path sourced internal to AS
+    10.2.0.2 (metric 81) from 10.2.2.0 (10.2.2.0)
+      Origin IGP, MED not set, localpref 100, weight 0
+      Extcommunity: ENCAP:8 RT:0000.0000.feb2
+      Originator: 10.2.0.2 Cluster list: 10.2.2.0
+
+  Path-id 1 advertised to peers:
+    10.1.0.1
+
 Route Distinguisher: 10.2.0.1:27001   (ES [0300.0000.00fe.b200.0309 0])
 BGP routing table entry for [4]:[0300.0000.00fe.b200.0309]:[32]:[10.2.0.1]/136,
-version 52
+version 14
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
 
@@ -665,7 +686,25 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
       Extcommunity: ENCAP:8 RT:0000.0000.feb2
 
   Path-id 1 advertised to peers:
-    10.1.0.1           10.2.2.0           10.2.3.0
+    10.1.0.1           10.2.2.0
+BGP routing table entry for [4]:[0300.0000.00fe.b200.0309]:[32]:[10.2.0.2]/136,
+version 67
+Paths: (1 available, best #1)
+Flags: (0x000012) (high32 00000000) on xmit-list, is in l2rib/evpn, is not in HW
+
+  Advertised path-id 1
+  Path type: internal, path is valid, is best path, no labeled nexthop
+             Imported from 10.2.0.2:27001:[4]:[0300.0000.00fe.b200.0309]:[32]:[1
+0.2.0.2]/136
+  AS-Path: NONE, path sourced internal to AS
+    10.2.0.2 (metric 81) from 10.2.2.0 (10.2.2.0)
+      Origin IGP, MED not set, localpref 100, weight 0
+      Extcommunity: ENCAP:8 RT:0000.0000.feb2
+      Originator: 10.2.0.2 Cluster list: 10.2.2.0
+
+  Path-id 1 advertised to peers:
+    10.1.0.1
+
 
 
 
@@ -747,61 +786,6 @@ Route Distinguisher: 10.2.0.1:3    (L3VNI 2000)
                       10.2.0.1                          100      32768 i
 ```
 ```
-Leaf-m1# show bgp l2vpn evpn route-type 4
-BGP routing table information for VRF default, address family L2VPN EVPN
-Route Distinguisher: 10.2.0.2:27001
-BGP routing table entry for [4]:[0300.0000.00fe.b200.0309]:[32]:[10.2.0.2]/136,
-version 66
-Paths: (1 available, best #1)
-Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn, is not i
-n HW
-
-  Advertised path-id 1
-  Path type: internal, path is valid, is best path, no labeled nexthop
-             Imported to 1 destination(s)
-             Imported paths list: esi_0300.0000.00fe.b200.0309
-  AS-Path: NONE, path sourced internal to AS
-    10.2.0.2 (metric 81) from 10.2.2.0 (10.2.2.0)
-      Origin IGP, MED not set, localpref 100, weight 0
-      Extcommunity: ENCAP:8 RT:0000.0000.feb2
-      Originator: 10.2.0.2 Cluster list: 10.2.2.0
-
-  Path-id 1 advertised to peers:
-    10.1.0.1
-
-Route Distinguisher: 10.2.0.1:27001   (ES [0300.0000.00fe.b200.0309 0])
-BGP routing table entry for [4]:[0300.0000.00fe.b200.0309]:[32]:[10.2.0.1]/136,
-version 14
-Paths: (1 available, best #1)
-Flags: (0x000002) (high32 00000000) on xmit-list, is not in l2rib/evpn
-
-  Advertised path-id 1
-  Path type: local, path is valid, is best path, no labeled nexthop
-  AS-Path: NONE, path locally originated
-    10.2.0.1 (metric 0) from 0.0.0.0 (10.2.0.1)
-      Origin IGP, MED not set, localpref 100, weight 32768
-      Extcommunity: ENCAP:8 RT:0000.0000.feb2
-
-  Path-id 1 advertised to peers:
-    10.1.0.1           10.2.2.0
-BGP routing table entry for [4]:[0300.0000.00fe.b200.0309]:[32]:[10.2.0.2]/136,
-version 67
-Paths: (1 available, best #1)
-Flags: (0x000012) (high32 00000000) on xmit-list, is in l2rib/evpn, is not in HW
-
-  Advertised path-id 1
-  Path type: internal, path is valid, is best path, no labeled nexthop
-             Imported from 10.2.0.2:27001:[4]:[0300.0000.00fe.b200.0309]:[32]:[1
-0.2.0.2]/136
-  AS-Path: NONE, path sourced internal to AS
-    10.2.0.2 (metric 81) from 10.2.2.0 (10.2.2.0)
-      Origin IGP, MED not set, localpref 100, weight 0
-      Extcommunity: ENCAP:8 RT:0000.0000.feb2
-      Originator: 10.2.0.2 Cluster list: 10.2.2.0
-
-  Path-id 1 advertised to peers:
-    10.1.0.1
-
 
 
 ```
