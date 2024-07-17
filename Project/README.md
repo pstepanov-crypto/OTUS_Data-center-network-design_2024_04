@@ -855,6 +855,18 @@ Route Distinguisher: 10.2.0.1:3    (L3VNI 2000)
 ### Проверка (Route. BorderLeaf-2 POD 2)
 ```
 ```
+Leaf-2# sh nve peers
+Interface Peer-IP                                 State LearnType Uptime   Route
+r-Mac
+--------- --------------------------------------  ----- --------- -------- -----
+------------
+nve1      10.1.0.1                                Up    CP        01:04:44 5000.
+1400.1b08
+nve1      10.2.0.2                                Up    CP        01:09:10 5000.
+0d00.1b08
+nve1      30.30.30.30                             Up    CP        01:02:53 0200.
+1e1e.1e1e
+
 ```
 Leaf-m2# show bgp l2vpn evpn route-type 4
 BGP routing table information for VRF default, address family L2VPN EVPN
