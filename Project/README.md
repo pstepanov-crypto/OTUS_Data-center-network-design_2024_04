@@ -68,8 +68,6 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 10.1.0.2        4 65200       8       9      128    0    0 00:02:57 0
 10.1.0.3        4 65200      10       8      128    0    0 00:01:55 3
 10.2.1.0        4 65200     132      96      128    0    0 01:27:45 10
-
-
 ```
 
 ```
@@ -79,12 +77,26 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 10.1.0.2        4 65200       8       9      157    0    0 00:02:55 0
 10.1.0.3        4 65200      11       8      157    0    0 00:02:39 3
 10.1.1.0        4 65200     131      97      157    0    0 01:28:07 10
+```
+```
 
-```
-```
 
 ```
 ### Проверка (Route. BorderLeaf-1 POD 1)
+```
+Leaf-1# sh nve peers
+Interface Peer-IP                                 State LearnType Uptime   Route
+r-Mac
+--------- --------------------------------------  ----- --------- -------- -----
+------------
+nve1      10.1.0.2                                Up    CP        01:11:29 5000.
+0400.1b08
+nve1      10.2.0.1                                Up    CP        01:09:38 5000.
+1300.1b08
+nve1      20.20.20.20                             Up    CP        01:08:58 0200.
+1414.1414
+
+```
 ```
 Leaf-1# show bgp l2vpn evpn route-type 4
 BGP routing table information for VRF default, address family L2VPN EVPN
