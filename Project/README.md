@@ -323,6 +323,18 @@ id: 2000 tunnelid: 0xa020001 encap: VXLAN
 ```
 ### Проверка (Route. BorderLeaf-2 POD 1)
 ```
+Leaf-2# sh nve peers
+Interface Peer-IP                                 State LearnType Uptime   Route
+r-Mac
+--------- --------------------------------------  ----- --------- -------- -----
+------------
+nve1      10.1.0.1                                Up    CP        01:07:31 5000.
+1400.1b08
+nve1      10.2.0.2                                Up    CP        01:11:57 5000.
+0d00.1b08
+nve1      30.30.30.30                             Up    CP        01:05:40 0200.
+1e1e.1e1e
+
 ```
 ```
 Leaf-2# show bgp l2vpn evpn route-type 4
