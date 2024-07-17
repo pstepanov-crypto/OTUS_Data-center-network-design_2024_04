@@ -1113,5 +1113,12 @@ VPC-2> ping 172.16.100.40
 84 bytes from 172.16.100.40 icmp_seq=4 ttl=61 time=975.405 ms
 84 bytes from 172.16.100.40 icmp_seq=5 ttl=61 time=499.015 ms
 
+VPC3-m> ping 172.16.100.80
+84 bytes from 172.16.100.80 icmp_seq=1 ttl=63 time=22.456 ms
+84 bytes from 172.16.100.80 icmp_seq=2 ttl=63 time=66.907 ms
+84 bytes from 172.16.100.80 icmp_seq=3 ttl=63 time=789.755 ms
+84 bytes from 172.16.100.80 icmp_seq=4 ttl=63 time=554.016 ms
+84 bytes from 172.16.100.80 icmp_seq=5 ttl=63 time=377.905 ms
+
 ```
 
