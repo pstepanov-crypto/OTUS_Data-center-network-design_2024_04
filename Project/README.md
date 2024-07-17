@@ -665,6 +665,20 @@ Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
 ```
 ### Проверка (Route. BorderLeaf-1m POD 2)
 ```
+Leaf-m1# sh nve peers
+Interface Peer-IP                                 State LearnType Uptime   Route
+r-Mac
+--------- --------------------------------------  ----- --------- -------- -----
+------------
+nve1      10.1.0.1                                Up    CP        01:07:11 5000.
+1400.1b08
+nve1      10.2.0.2                                Up    CP        01:07:11 5000.
+0d00.1b08
+nve1      10.2.0.3                                Up    CP        00:08:30 5000.
+0e00.1b08
+nve1      10.10.10.10                             Up    CP        01:07:11 0200.
+0a0a.0a0a
+
 ```
 ```
 
